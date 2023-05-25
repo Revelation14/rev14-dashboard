@@ -7,6 +7,7 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
   sidebarOutsideClick,
 }) => {
   const [sidebarStatus, setSidebarStatus] = useState(true);
+  const [hovered, setHovered] = useState(false);
 
   // const sidebarClose = () => {
   //   setSidebarStatus(false);
@@ -21,6 +22,7 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
       setSidebarStatus(true);
     }
   }, [sidebarOutsideClick]);
+
   return (
     <nav className="mx-4 my-6 flex flex-col space-y-4">
       <NavItem
@@ -28,7 +30,18 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
         sidebarStatus={sidebarStatus}
         menuTitle="Insights"
       >
-        <Image src="/assets/icons/chart.svg" alt="" height={16} width={16} />
+        <Image
+          src={
+            hovered
+              ? '/assets/icons/white-chart.svg'
+              : '/assets/icons/chart.svg'
+          }
+          alt=""
+          height={16}
+          width={16}
+          onMouseOver={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        />
       </NavItem>
 
       <NavItem

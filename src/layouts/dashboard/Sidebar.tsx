@@ -34,6 +34,9 @@ const Sidebar: React.FC<ISidebarProps> = ({ mobileNavsidebar }) => {
             sidebarStatus
             menuTitle="Profile"
             hasHover={false}
+            color="text-black"
+            fontweight="font-medium"
+            fontSize="text-base"
           >
             <Image
               src="/assets/images/Photo.png"

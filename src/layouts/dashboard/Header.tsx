@@ -3,8 +3,6 @@
 import Image from 'next/image';
 import React from 'react';
 
-import Logo from './sidebar/Logo';
-
 interface IHeaderProps {
   mobileNavsidebar: boolean;
   setMobileNavsidebar: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,7 +23,9 @@ const Header: React.FC<IHeaderProps> = ({
         onClick={() => setMobileNavsidebar(!mobileNavsidebar)}
       >
         {!mobileNavsidebar ? (
-          <Logo />
+          <div className="p-4">
+            <Image src="/assets/icons/menu.svg" alt="" width={30} height={32} />
+          </div>
         ) : (
           <div className="rounded-full bg-gray-150 p-4">
             <Image
