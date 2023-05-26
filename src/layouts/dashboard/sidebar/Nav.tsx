@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/mouse-events-have-key-events */
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 
@@ -7,15 +8,9 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
   sidebarOutsideClick,
 }) => {
   const [sidebarStatus, setSidebarStatus] = useState(true);
-  const [hovered, setHovered] = useState(false);
-
-  // const sidebarClose = () => {
-  //   setSidebarStatus(false);
-  // };
-
-  // const sidebarOpen = () => {
-  //   setSidebarStatus(true);
-  // };
+  const [insightsHovered, setInsightsHovered] = useState(false);
+  const [contributorHovered, setContributorHovered] = useState(false);
+  const [devotionHovered, setDevotionHovered] = useState(false);
 
   useEffect(() => {
     if (sidebarOutsideClick) {
@@ -25,41 +20,71 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
 
   return (
     <nav className="mx-4 my-6 flex flex-col space-y-4">
-      <NavItem
-        hrefLink="/insights"
-        sidebarStatus={sidebarStatus}
-        menuTitle="Insights"
+      <div
+        onMouseOver={() => setInsightsHovered(true)}
+        onMouseLeave={() => setInsightsHovered(false)}
       >
-        <Image
-          src={
-            hovered
-              ? '/assets/icons/white-chart.svg'
-              : '/assets/icons/chart.svg'
-          }
-          alt=""
-          height={16}
-          width={16}
-          onMouseOver={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-        />
-      </NavItem>
+        <NavItem
+          hrefLink="/insights"
+          sidebarStatus={sidebarStatus}
+          menuTitle="Insights"
+        >
+          <Image
+            src={
+              insightsHovered
+                ? '/assets/icons/white-chart.svg'
+                : '/assets/icons/chart.svg'
+            }
+            alt=""
+            height={16}
+            width={16}
+          />
+        </NavItem>
+      </div>
 
-      <NavItem
-        hrefLink="/contributors"
-        sidebarStatus={sidebarStatus}
-        menuTitle="Contributors"
+      <div
+        onMouseOver={() => setContributorHovered(true)}
+        onMouseLeave={() => setContributorHovered(false)}
       >
-        <Image src="/assets/icons/people.svg" alt="" height={16} width={16} />
-      </NavItem>
+        <NavItem
+          hrefLink="/contributors"
+          sidebarStatus={sidebarStatus}
+          menuTitle="Contributors"
+        >
+          <Image
+            src={
+              contributorHovered
+                ? '/assets/icons/white-people.svg'
+                : '/assets/icons/people.svg'
+            }
+            alt=""
+            height={16}
+            width={16}
+          />
+        </NavItem>
+      </div>
 
-      {/* this menu has child Menu     */}
-      <NavItem
-        hrefLink="/devotionals"
-        sidebarStatus={sidebarStatus}
-        menuTitle="Devotionals"
+      <div
+        onMouseOver={() => setDevotionHovered(true)}
+        onMouseLeave={() => setDevotionHovered(false)}
       >
-        <Image src="/assets/icons/book.svg" alt="" height={16} width={16} />
-      </NavItem>
+        <NavItem
+          hrefLink="/devotionals"
+          sidebarStatus={sidebarStatus}
+          menuTitle="Devotionals"
+        >
+          <Image
+            src={
+              devotionHovered
+                ? '/assets/icons/white-book.svg'
+                : '/assets/icons/book.svg'
+            }
+            alt=""
+            height={16}
+            width={16}
+          />
+        </NavItem>
+      </div>
     </nav>
   );
 };
