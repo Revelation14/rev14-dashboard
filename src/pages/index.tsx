@@ -1,7 +1,11 @@
+import type { SetStateAction } from 'react';
 import { useState } from 'react';
 
+import AddButton from '@/components/AddButton';
 import { Card } from '@/components/Card';
 import { DatePicker } from '@/components/DatePicker';
+import Pagination from '@/components/Pagination';
+import Search from '@/components/Search';
 import { Tab, Tabs } from '@/components/Tabs';
 import Layout from '@/layouts/dashboard/Layout';
 import type { ValueType } from '@/types/common.types';
@@ -13,9 +17,29 @@ const Index = () => {
     setSelectedDate(e.value.toString());
   };
 
+  const handleSearch = (query: string) => {
+    console.log('Search query:', query);
+  };
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 20;
+
+  const handlePageChange = (page: SetStateAction<number>) => {
+    setCurrentPage(page);
+  };
+
   return (
     <Layout>
       <div className="h-screen rounded-2xl border border-gray-200 bg-white p-6">
+        <AddButton
+          icon="/assets/icons/person-add-sharp.svg"
+          text="Add contributors"
+        />
+        <Search onSearch={handleSearch} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
         <div className="pb-9">
           <DatePicker
             name="selectedDate"
