@@ -12,6 +12,7 @@ interface INavItemProps {
   fontweight?: string;
   fontSize?: string;
   children: JSX.Element;
+  active?: boolean;
 }
 
 const NavItem: React.FC<INavItemProps> = ({
@@ -23,15 +24,16 @@ const NavItem: React.FC<INavItemProps> = ({
   fontweight,
   fontSize,
   children,
+  active = false,
 }) => {
   return (
     <Link href={hrefLink} className="hover:border-0">
       <div
-        className={`relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 ${
-          hasHover && 'hover:bg-gold hover:text-white'
-        } focus:bg-gold focus:text-white ${color || 'text-gray-600'} ${
-          fontweight || 'font-light'
-        }`}
+        className={`relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 pr-6  ${
+          active && 'bg-gold text-white'
+        } ${hasHover && 'hover:bg-gold hover:text-white'} ${
+          color || 'text-gray-600'
+        } ${fontweight || 'font-light'}`}
       >
         {children}
         <span
