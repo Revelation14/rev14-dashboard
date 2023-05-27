@@ -28,6 +28,7 @@ interface ITabs {
   onTabChange?: (_event: ITabEvent) => any;
   headerComponent?: React.ReactNode;
   horizontalScroll?: boolean;
+  hasBorder?: boolean;
 }
 
 interface ITabHeading {
@@ -78,6 +79,7 @@ export function Tabs({
   onTabChange,
   headerComponent,
   horizontalScroll = true,
+  hasBorder = true,
 }: ITabs) {
   const [activeTabIndex, setActivetabIndex] = useState(activeIndex);
 
@@ -95,7 +97,11 @@ export function Tabs({
 
   return (
     <div className={`${className}`}>
-      <div className="mb-8 flex flex-wrap items-center justify-between border-b border-gray-200">
+      <div
+        className={`mb-8 flex flex-wrap items-center justify-between ${
+          hasBorder && 'border-b border-gray-200'
+        }`}
+      >
         <TabHeadings
           horizontalScroll={horizontalScroll}
           slideTo={slideTo}

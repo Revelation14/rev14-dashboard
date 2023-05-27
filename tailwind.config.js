@@ -51,6 +51,7 @@ module.exports = {
         gold: '#DF9A57',
         backgroundAccent: '#276EF1',
         secondary: { green: '#3AA76D', orange: '#ED6E33' },
+        purple: '#7356BF',
       },
     },
   },
