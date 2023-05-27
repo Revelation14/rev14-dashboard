@@ -1,4 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @tailwind base;
+
+body {
+  @apply font-body;
+}
 
 a {
   @apply text-blue-700;

@@ -14,6 +14,9 @@ module.exports = {
       '5xl': '3rem',
       '6xl': '4rem',
     },
+    fontFamily: {
+      body: ['Poppins', 'sans-serif'],
+    },
     extend: {
       colors: {
         gray: {
@@ -27,6 +30,7 @@ module.exports = {
           600: '#545454',
           700: '#4a5568',
           800: '#2d3748',
+          850: '#999999',
           900: '#1a202c',
         },
         blue: {
@@ -41,6 +45,8 @@ module.exports = {
           900: '#2a4365',
         },
         gold: '#DF9A57',
+        backgroundAccent: '#276EF1',
+        secondary: { green: '#3AA76D', orange: '#ED6E33' },
       },
     },
   },

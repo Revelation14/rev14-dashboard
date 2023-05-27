@@ -1,0 +1,111 @@
+/* eslint-disable react/no-unused-prop-types */
+import type { ReactElement } from 'react';
+import { useState } from 'react';
+
+interface ITab {
+  label: string;
+  disabled?: boolean;
+  className?: string;
+  children: React.ReactNode;
+}
+
+export const Tab = ({ className = '', children }: ITab) => {
+  return <div className={`${className}`}>{children}</div>;
+};
+
+type TabChildrenType = ReactElement<ITab>[];
+
+interface ITabEvent {
+  activeTabIndex: number;
+  activeTabLabel: string;
+  previousTabIndex: number;
+}
+
+interface ITabs {
+  activeIndex?: number;
+  className?: string;
+  children: TabChildrenType;
+  onTabChange?: (_event: ITabEvent) => any;
+  headerComponent?: React.ReactNode;
+  horizontalScroll?: boolean;
+}
+
+interface ITabHeading {
+  horizontalScroll: boolean;
+  slideTo: (index: number) => void;
+  activeTabIndex: number;
+  children: TabChildrenType;
+}
+
+const TabHeadings = ({
+  horizontalScroll,
+  slideTo,
+  activeTabIndex,
+  children,
+}: ITabHeading) => {
+  return (
+    <div className="overflow-auto">
+      <div
+        className={`flex ${
+          horizontalScroll ? 'flex-nowrap' : 'flex-wrap'
+        } justify-start`}
+      >
+        {children.map((tab, i) => {
+          const tabProps = tab.props;
+          return tabProps.label && tabProps.label.length > 0 ? (
+            <div className="flex-none" key={tab.key}>
+              <button
+                type="button"
+                className={`py-4 pl-3 pr-5 ${
+                  activeTabIndex === i ? 'border-b-2 border-black' : ''
+                } m-0 rounded-none text-lg`}
+                onClick={() => slideTo(i)}
+              >
+                {tabProps.label}
+              </button>
+            </div>
+          ) : null;
+        })}
+      </div>
+    </div>
+  );
+};
+
+export function Tabs({
+  activeIndex = 0,
+  className = '',
+  children,
+  onTabChange,
+  headerComponent,
+  horizontalScroll = true,
+}: ITabs) {
+  const [activeTabIndex, setActivetabIndex] = useState(activeIndex);
+
+  const slideTo = (index: number) => {
+    // @ts-ignore
+    const tabProps: ITab = children[index].props;
+    if (onTabChange)
+      onTabChange({
+        activeTabIndex: index,
+        activeTabLabel: tabProps.label,
+        previousTabIndex: activeTabIndex,
+      });
+    setActivetabIndex(index);
+  };
+
+  return (
+    <div className={`${className}`}>
+      <div className="mb-8 flex flex-wrap items-center justify-between border-b border-gray-200">
+        <TabHeadings
+          horizontalScroll={horizontalScroll}
+          slideTo={slideTo}
+          activeTabIndex={activeTabIndex}
+        >
+          {children}
+        </TabHeadings>
+        {headerComponent && headerComponent}
+      </div>
+      {children[activeTabIndex]}
+    </div>
+  );
+}
