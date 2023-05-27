@@ -1,8 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
 @tailwind base;
 
 body {
-  @apply font-body;
+  @apply font-poppins;
+}
+
+body::-webkit-scrollbar {
+  @apply w-2;
+}
+
+body::-webkit-scrollbar-thumb {
+  @apply bg-gray-850 rounded-md;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-650;
+}
+
+body::-webkit-scrollbar-track {
+  @apply bg-gray-50;
 }
 
 a {

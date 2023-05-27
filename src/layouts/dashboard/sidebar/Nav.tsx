@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 import NavItem from './NavItem';
@@ -7,10 +8,12 @@ import NavItem from './NavItem';
 const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
   sidebarOutsideClick,
 }) => {
+  const router = useRouter();
   const [sidebarStatus, setSidebarStatus] = useState(true);
   const [insightsHovered, setInsightsHovered] = useState(false);
   const [contributorHovered, setContributorHovered] = useState(false);
   const [devotionHovered, setDevotionHovered] = useState(false);
+  const { route } = router;
 
   useEffect(() => {
     if (sidebarOutsideClick) {
@@ -28,10 +31,11 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
           hrefLink="/insights"
           sidebarStatus={sidebarStatus}
           menuTitle="Insights"
+          active={route === '/insights'}
         >
           <Image
             src={
-              insightsHovered
+              insightsHovered || route === '/insights'
                 ? '/assets/icons/white-chart.svg'
                 : '/assets/icons/chart.svg'
             }
@@ -50,10 +54,11 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
           hrefLink="/contributors"
           sidebarStatus={sidebarStatus}
           menuTitle="Contributors"
+          active={route === '/contributors'}
         >
           <Image
             src={
-              contributorHovered
+              contributorHovered || route === '/contributors'
                 ? '/assets/icons/white-people.svg'
                 : '/assets/icons/people.svg'
             }
@@ -72,10 +77,11 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
           hrefLink="/devotionals"
           sidebarStatus={sidebarStatus}
           menuTitle="Devotionals"
+          active={route === '/devotionals'}
         >
           <Image
             src={
-              devotionHovered
+              devotionHovered || route === '/devotionals'
                 ? '/assets/icons/white-book.svg'
                 : '/assets/icons/book.svg'
             }

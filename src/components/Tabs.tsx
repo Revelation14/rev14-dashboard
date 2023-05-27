@@ -44,29 +44,29 @@ const TabHeadings = ({
   children,
 }: ITabHeading) => {
   return (
-    <div className="overflow-auto">
-      <div
-        className={`flex ${
-          horizontalScroll ? 'flex-nowrap' : 'flex-wrap'
-        } justify-start`}
-      >
-        {children.map((tab, i) => {
-          const tabProps = tab.props;
-          return tabProps.label && tabProps.label.length > 0 ? (
-            <div className="flex-none" key={tab.key}>
-              <button
-                type="button"
-                className={`py-4 pl-3 pr-5 ${
-                  activeTabIndex === i ? 'border-b-2 border-black' : ''
-                } m-0 rounded-none text-lg`}
-                onClick={() => slideTo(i)}
-              >
-                {tabProps.label}
-              </button>
-            </div>
-          ) : null;
-        })}
-      </div>
+    <div
+      className={`flex ${
+        horizontalScroll ? 'flex-nowrap' : 'flex-wrap'
+      } justify-start overflow-x-auto`}
+    >
+      {children.map((tab, i) => {
+        const tabProps = tab.props;
+        return tabProps.label && tabProps.label.length > 0 ? (
+          <div className="flex-none" key={tab.key}>
+            <button
+              type="button"
+              className={`pl-3 pr-5 ${
+                activeTabIndex === i
+                  ? 'border-b-2 border-black pb-[0.6rem] pt-4'
+                  : 'py-4'
+              } m-0 rounded-none text-lg`}
+              onClick={() => slideTo(i)}
+            >
+              {tabProps.label}
+            </button>
+          </div>
+        ) : null;
+      })}
     </div>
   );
 };

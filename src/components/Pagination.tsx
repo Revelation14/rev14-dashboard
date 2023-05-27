@@ -30,11 +30,8 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <div className="bottom-5 left-0 flex w-full flex-row items-center justify-center gap-3 font-raleway">
-      <button
-        className="flex items-center px-4 py-3 hover:bg-gray-50"
-        onClick={handlePrevClick}
-      >
+    <div className="bottom-5 left-0 flex w-full flex-row items-center justify-center gap-1 font-raleway lg:gap-3">
+      <button className="flex items-center px-4 py-3" onClick={handlePrevClick}>
         <img
           className="mr-4"
           src="/assets/icons/left-arrow.svg"
@@ -44,9 +41,12 @@ const Pagination: React.FC<PaginationProps> = ({
         />
         Prev
       </button>
-      <div className="ml-1 flex h-full items-center">
+      <div className="relative ml-1 flex h-full items-center rounded-lg border-gray-150 bg-gray-150">
+        <span className="absolute right-4 top-4">
+          <img src="/assets/icons/dropdown.svg" alt="" />
+        </span>
         <select
-          className="h-full w-16 cursor-pointer items-center space-x-3 rounded-lg border-none border-gray-200 bg-gray-200 p-2"
+          className="h-full w-16 cursor-pointer appearance-none items-center space-x-3 bg-transparent p-2 px-4 outline-none"
           value={currentPage}
           onChange={handlePageSelect}
         >
@@ -59,10 +59,7 @@ const Pagination: React.FC<PaginationProps> = ({
       </div>
 
       <span className="text-sm">of {totalPages}</span>
-      <button
-        className="flex items-center px-4 py-3 hover:bg-gray-50"
-        onClick={handleNextClick}
-      >
+      <button className="flex items-center px-4 py-3" onClick={handleNextClick}>
         Next
         <img
           className="ml-4"
