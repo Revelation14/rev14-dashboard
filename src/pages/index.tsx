@@ -1,7 +1,7 @@
 import type { SetStateAction } from 'react';
 import { useState } from 'react';
 
-import AddButton from '@/components/AddButton';
+import Button from '@/components/Button';
 import { Card } from '@/components/Card';
 import { DatePicker } from '@/components/DatePicker';
 import Pagination from '@/components/Pagination';
@@ -29,10 +29,12 @@ const Index = () => {
 
   return (
     <Layout>
-      <div className="h-screen rounded-2xl border border-gray-200 bg-white p-6">
-        <AddButton
+      <div className="h-screen min-h-screen rounded-2xl border border-gray-200 bg-white p-6">
+        <Button
           icon="/assets/icons/person-add-sharp.svg"
           text="Add contributors"
+          backgroundColor="gray-150"
+          color="black"
         />
         <Search onSearch={handleSearch} />
         <Pagination
