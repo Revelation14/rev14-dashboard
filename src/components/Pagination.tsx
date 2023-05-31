@@ -1,37 +1,41 @@
-/* eslint-disable react/button-has-type */
 import React from 'react';
 
+import usePaginationStore from './usePaginationStore';
+
 interface PaginationProps {
-  currentPage: number;
-  totalPages: number;
   onPageChange: (page: number) => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}) => {
+const Pagination: React.FC<PaginationProps> = ({ onPageChange }) => {
+  const { currentPage, totalPages, setCurrentPage } = usePaginationStore();
+
   const handlePrevClick = () => {
     if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
       onPageChange(currentPage - 1);
     }
   };
 
   const handleNextClick = () => {
     if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
       onPageChange(currentPage + 1);
     }
   };
 
-  const handlePageSelect = (e: { target: { value: string } }) => {
+  const handlePageSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedPage = parseInt(e.target.value, 10);
+    setCurrentPage(selectedPage);
     onPageChange(selectedPage);
   };
 
   return (
-    <div className="bottom-5 left-0 flex w-full flex-row items-center justify-center gap-1 font-raleway lg:gap-3">
-      <button className="flex items-center px-4 py-3" onClick={handlePrevClick}>
+    <div className="bottom-5 left-0 flex w-full flex-row items-center justify-center gap-3 font-raleway">
+      <button
+        type="button"
+        className="flex items-center px-4 py-3 hover:bg-gray-50"
+        onClick={handlePrevClick}
+      >
         <img
           className="mr-4"
           src="/assets/icons/left-arrow.svg"
@@ -59,7 +63,11 @@ const Pagination: React.FC<PaginationProps> = ({
       </div>
 
       <span className="text-sm">of {totalPages}</span>
-      <button className="flex items-center px-4 py-3" onClick={handleNextClick}>
+      <button
+        type="button"
+        className="flex items-center px-4 py-3 hover:bg-gray-50"
+        onClick={handleNextClick}
+      >
         Next
         <img
           className="ml-4"

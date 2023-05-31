@@ -1,24 +1,47 @@
-import type { SetStateAction } from 'react';
-import { useState } from 'react';
-
 import Button from '@/components/AddButton';
 import Table from '@/components/customTable';
-import Pagination from '@/components/Pagination';
 import Search from '@/components/Search';
 import { Tab, Tabs } from '@/components/Tabs';
 import Layout from '@/layouts/dashboard/Layout';
 
 const Index = () => {
-  const handleSearch = (query: string) => {
-    console.log('Search query:', query);
-  };
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 20;
-
-  const handlePageChange = (page: SetStateAction<number>) => {
-    setCurrentPage(page);
-  };
   const users = [
+    {
+      image: '/assets/images/contributor.png',
+      name: 'John Doe',
+      role: 'Admin',
+      contributions: 10,
+    },
+    {
+      image: '/assets/images/contributor.png',
+      name: 'Jane Smith',
+      role: 'Editor',
+      contributions: 5,
+    },
+    {
+      image: '/assets/images/contributor.png',
+      name: 'John Doe',
+      role: 'Admin',
+      contributions: 10,
+    },
+    {
+      image: '/assets/images/contributor.png',
+      name: 'Anna Young',
+      role: 'Editor',
+      contributions: 5,
+    },
+    {
+      image: '/assets/images/contributor.png',
+      name: 'Ella Eun',
+      role: 'Admin',
+      contributions: 7,
+    },
+    {
+      image: '/assets/images/contributor.png',
+      name: 'Loraine',
+      role: 'Editor',
+      contributions: 6,
+    },
     {
       image: '/assets/images/contributor.png',
       name: 'John Doe',
@@ -62,7 +85,9 @@ const Index = () => {
                 <Search
                   key="search"
                   className="text-sm font-light"
-                  onSearch={handleSearch}
+                  onSearch={(query) => {
+                    console.log('Search query:', query);
+                  }}
                 />,
               ]}
               data={users.map((user) => [
@@ -86,23 +111,17 @@ const Index = () => {
                 </div>,
                 <div
                   key={`actions-${user.name}`}
-                  className="mt-10 flex items-center justify-end gap-6 sm:gap-1"
+                  className="mt-10 flex items-center justify-end gap-6"
                 >
                   <button
                     type="button"
-                    className="mr-6 h-8 w-14 rounded-2xl bg-gray-300 text-sm font-normal hover:bg-gray-150"
+                    className="h-8 w-14 rounded-2xl bg-gray-300 text-sm font-normal hover:bg-gray-150"
                   >
                     View
                   </button>
                   <img src="/assets/icons/three-dots.svg" alt="" />
                 </div>,
               ])}
-            />
-
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
             />
           </Tab>
           <Tab label="Suspended">
