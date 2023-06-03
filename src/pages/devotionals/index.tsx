@@ -1,5 +1,4 @@
-import type { SetStateAction } from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import Button from '@/components/Button';
 import { Card } from '@/components/Card';
@@ -12,21 +11,19 @@ import type { ValueType } from '@/types/common.types';
 
 const Devotions = () => {
   const [selectedDate, setSelectedDate] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
 
   const handleChange = (e: ValueType) => {
     setSelectedDate(e.value.toString());
-  };
-
-  const handlePageChange = (page: SetStateAction<number>) => {
-    setCurrentPage(page);
   };
 
   const handleSearch = (query: string) => {
     console.log('Search query:', query);
   };
 
-  const totalPages = 20;
+  const handlePageChange = (page: number) => {
+    console.log('Page:', page);
+    // You can add your logic to fetch data for the specified page here
+  };
 
   return (
     <Layout>
@@ -62,8 +59,7 @@ const Devotions = () => {
                     <Card
                       title="Purity of the soul"
                       date="2023-05-14T22:03:30.000Z"
-                      description="Comets are a big source of meteoroids because of the nature of those
-                  long tails. A large amount of dust."
+                      description="Comets are a big source of meteoroids because of the nature of those long tails. A large amount of dust."
                       user={{ firstName: 'Ava', lastName: 'Gregoraci' }}
                       views={20}
                       status="published"
@@ -73,8 +69,7 @@ const Devotions = () => {
                     <Card
                       title="Purity of the soul"
                       date="2023-03-12T00:12:30.000Z"
-                      description="Comets are a big source of meteoroids because of the nature of those
-          long tails. A large amount of dust."
+                      description="Comets are a big source of meteoroids because of the nature of those long tails. A large amount of dust."
                       user={{ firstName: 'Loraine', lastName: 'Waters' }}
                       views={100}
                       status="unpublished"
@@ -83,11 +78,7 @@ const Devotions = () => {
                 </div>
               ))}
             </div>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+            <Pagination onPageChange={handlePageChange} />
           </Tab>
           <Tab label="Waiting for approval">
             <h2 className="text-lg text-green-400">Waiting for approval</h2>

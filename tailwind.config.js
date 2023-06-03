@@ -15,6 +15,15 @@ module.exports = {
       '5xl': '3rem',
       '6xl': '4rem',
     },
+    fontWeight: {
+      light: 300,
+      normal: 400,
+      medium: 500,
+      semibold: 600,
+      bold: 700,
+      extrabold: 800,
+      black: 900,
+    },
     fontFamily: {
       poppins: ['Poppins', 'sans-serif'],
       sans: ['Open Sans', 'sans-serif'],
@@ -51,6 +60,7 @@ module.exports = {
         gold: '#DF9A57',
         backgroundAccent: '#276EF1',
         secondary: { green: '#3AA76D', orange: '#ED6E33' },
+        purple: '#7356BF',
       },
     },
   },
