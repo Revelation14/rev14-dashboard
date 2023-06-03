@@ -1,7 +1,8 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useEffect } from 'react';
 
-import usePaginationStore from '../store/usePaginationStore';
+import usePaginationStore from '@/store/pagination';
+
 import Pagination from './Pagination';
 
 interface TableColumnProps {
