@@ -1,6 +1,6 @@
 import React from 'react';
 
-import usePaginationStore from './usePaginationStore';
+import usePaginationStore from '../store/usePaginationStore';
 
 interface PaginationProps {
   onPageChange: (page: number) => void;

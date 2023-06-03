@@ -1,7 +1,5 @@
 import Button from '@/components/Button';
 import { Card } from '@/components/Card';
-import { DatePicker } from '@/components/DatePicker';
-import Pagination from '@/components/Pagination';
 import Search from '@/components/Search';
 import { Tab, Tabs } from '@/components/Tabs';
 import Layout from '@/layouts/dashboard/Layout';
@@ -16,18 +14,22 @@ const Index = () => {
           backgroundColor="gray-150"
           color="black"
         />
-        <Search onSearch={handleSearch} />
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
+        <Search
+          onSearch={(query) => {
+            console.log('Search query:', query);
+          }}
         />
+        {/* <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            /> */}
         <div className="pb-9">
-          <DatePicker
+          {/* <DatePicker
             name="selectedDate"
             value={selectedDate}
             handleChange={handleChange}
-          />
+          /> */}
         </div>
         <Tabs activeIndex={0}>
           <Tab label="All">

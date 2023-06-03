@@ -1,4 +1,4 @@
-import Button from '@/components/AddButton';
+import Button from '@/components/Button';
 import Table from '@/components/customTable';
 import Search from '@/components/Search';
 import { Tab, Tabs } from '@/components/Tabs';
