@@ -29,7 +29,7 @@ const Search: React.FC<SearchProps> = ({ onSearch, className }) => {
         value={searchQuery}
         onChange={handleChange}
         onKeyPress={handleKeyPress}
-        className="m-2 w-12 border-none bg-transparent focus:outline-none"
+        className="m-2 w-14 border-none bg-transparent focus:outline-none"
         placeholder="Search"
       />
     </div>
