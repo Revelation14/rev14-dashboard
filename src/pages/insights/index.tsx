@@ -75,6 +75,12 @@ const Insights = () => {
     { name: 'Group B', value: 300 },
     { name: 'Group C', value: 300 },
   ];
+  const rate = 2;
+  const isPositiveChange = rate > 0;
+  const rateColor = isPositiveChange ? '#06AA8D' : '#D44333';
+  const arrowImageSource = isPositiveChange
+    ? '/assets/icons/arrow_positive.png'
+    : '/assets/icons/arrow_negative.png';
 
   return (
     <Layout>
@@ -130,7 +136,18 @@ const Insights = () => {
             <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:gap-80">
               <h1 className="text-2xl font-normal">App&apos;s Usage</h1>
               <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">
-                <p className="text-sm font-light text-[#737B8B]">
+                <p className="flex flex-row items-center text-sm font-light text-[#737B8B]">
+                  <span
+                    className="mr-2 flex flex-row items-center"
+                    style={{ color: rateColor }}
+                  >
+                    <img
+                      src={arrowImageSource}
+                      alt=""
+                      className="mr-2 h-3.5 w-3.5"
+                    />
+                    {rate}%
+                  </span>{' '}
                   compared to last week
                 </p>
                 <DatePicker
