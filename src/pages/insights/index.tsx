@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import Button from '@/components/Button';
 import { DatePicker } from '@/components/DatePicker';
 import Layout from '@/layouts/dashboard/Layout';
-import DataCard from '@/pages/insights/DataCard';
-import PieChartComponent from '@/pages/insights/PieChart';
+import DataCard from '@/pages/insights/components/DataCard';
+import PieChartComponent from '@/pages/insights/components/PieChart';
 import type { ValueType } from '@/types/common.types';
 
-import AppUsageChart from './AppUsageChart';
+import AppUsageChart from './components/AppUsageChart';
 
 const Insights = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -105,7 +105,7 @@ const Insights = () => {
             className="text-gold"
           />
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-col md:flex-row">
           <DataCard
             title="Active Users"
             number="1056"
@@ -125,11 +125,11 @@ const Insights = () => {
             data={graphData}
           />
         </div>
-        <div className="m-4 flex w-full flex-row items-start gap-4">
+        <div className="flex w-full flex-col items-start gap-4 md:m-4 md:flex-row">
           <div className="flex w-fit flex-col items-start gap-6 rounded-lg border border-solid border-gray-200 bg-white p-8">
-            <div className="flex flex-row items-start justify-between gap-80">
+            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:gap-80">
               <h1 className="text-2xl font-normal">App&apos;s Usage</h1>
-              <div className="flex flex-row items-center gap-4">
+              <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">
                 <p className="text-sm font-light text-[#737B8B]">
                   compared to last week
                 </p>
@@ -140,7 +140,7 @@ const Insights = () => {
                 />
               </div>
             </div>
-            <div className="w-full">
+            <div className="w-[300px]  md:h-[269px] md:w-[800px]">
               <AppUsageChart data={usageData} />
             </div>
           </div>

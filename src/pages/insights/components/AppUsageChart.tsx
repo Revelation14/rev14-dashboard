@@ -3,6 +3,7 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
+  ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
@@ -14,10 +15,8 @@ interface IAppUsageChartProps {
 
 const AppUsageChart: React.FC<IAppUsageChartProps> = ({ data }) => {
   return (
-    <div className="flex h-full w-full items-center justify-center">
+    <ResponsiveContainer width="95%" height="100%">
       <AreaChart
-        width={800}
-        height={250}
         data={data}
         margin={{
           top: 10,
@@ -54,7 +53,7 @@ const AppUsageChart: React.FC<IAppUsageChartProps> = ({ data }) => {
           </linearGradient>
         </defs>
       </AreaChart>
-    </div>
+    </ResponsiveContainer>
   );
 };
 
