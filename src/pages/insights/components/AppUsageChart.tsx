@@ -15,7 +15,7 @@ interface IAppUsageChartProps {
 
 const AppUsageChart: React.FC<IAppUsageChartProps> = ({ data }) => {
   return (
-    <ResponsiveContainer width="95%" height="100%">
+    <ResponsiveContainer width="100%" height="100%">
       <AreaChart
         data={data}
         margin={{
