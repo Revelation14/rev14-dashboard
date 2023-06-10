@@ -22,7 +22,7 @@ const DataCard: React.FC<IdataCardProps> = ({
     : '/assets/icons/arrow_negative.png';
 
   return (
-    <div className="m-4 flex h-fit flex-row items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-6">
+    <div className="my-4 flex h-fit flex-row items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-6 md:m-4">
       <div className="flex flex-col items-start gap-4">
         <h3 className="text-sm font-light leading-6">{title}</h3>
         <p className="text-2xl font-normal leading-6">{number}</p>
