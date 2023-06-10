@@ -144,7 +144,7 @@ const Insights = () => {
               <AppUsageChart data={usageData} />
             </div>
           </div>
-          <div className="flex w-full flex-col flex-wrap items-start gap-6 rounded-lg border border-solid border-gray-200 bg-white p-8 ">
+          <div className="flex w-full flex-col flex-wrap items-start gap-6 rounded-lg border border-solid border-gray-200 bg-white p-8 md:mx-8 ">
             <h1 className="text-2xl font-normal">Listening</h1>
             <PieChartComponent data={chartData} />
             <div className="order-2 flex w-full flex-row items-start justify-between gap-6 justify-self-stretch">
