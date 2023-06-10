@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Cell, Pie, PieChart } from 'recharts';
 
 interface IPieChartProps {
@@ -5,6 +6,16 @@ interface IPieChartProps {
 }
 const PieChartComponent: React.FC<IPieChartProps> = ({ data }) => {
   const COLORS = ['#3AA76D', '#ED6E33', '#D44333'];
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null; // A hack to fix this error when you refresh the page:  `Hydration failed because the initial UI does not match what was rendered on the server`
+  }
 
   return (
     <PieChart width={200} height={200}>
