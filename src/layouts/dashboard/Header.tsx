@@ -23,7 +23,7 @@ const Header: React.FC<IHeaderProps> = ({
         onClick={() => setMobileNavsidebar(!mobileNavsidebar)}
       >
         {!mobileNavsidebar ? (
-          <div className="p-4">
+          <div className="px-1 py-4">
             <Image src="/assets/icons/menu.svg" alt="" width={30} height={32} />
           </div>
         ) : (
