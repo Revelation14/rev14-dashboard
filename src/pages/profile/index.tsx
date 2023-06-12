@@ -40,7 +40,7 @@ const Profile = () => {
     setProfileInitials(initials);
   };
   const handleExit = () => {
-    window.history.back();
+    window.history.back(); // Navigate to the previous page
   };
 
   return (
