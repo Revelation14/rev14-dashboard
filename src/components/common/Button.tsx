@@ -11,6 +11,7 @@ interface IButton {
   className?: string;
   handleClick?: () => void;
   type?: 'submit' | 'reset' | 'button';
+  width?: string;
 }
 
 const Button: React.FC<IButton> = ({
@@ -21,11 +22,12 @@ const Button: React.FC<IButton> = ({
   color = 'white',
   backgroundColor = 'gold',
   type = 'button',
+  width = 'w-full md:w-48',
 }) => {
   return (
     <button
       type={type}
-      className={`order-1 flex h-10 w-full md:w-48 flex-none grow-0 flex-row items-center justify-center gap-2 rounded-3xl bg-${backgroundColor} px-2.5 py-3 text-${color} ${className}`}
+      className={`order-1 flex h-10 ${width} flex-none grow-0 flex-row items-center justify-center gap-2 rounded-3xl bg-${backgroundColor} px-2.5 py-3 text-${color} ${className}`}
       onClick={handleClick}
     >
       {icon && <img src={icon} alt="Button Icon" />}

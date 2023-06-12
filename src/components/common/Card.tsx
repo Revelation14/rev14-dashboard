@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import moment from 'moment';
 
 import { Badge } from './Badge';
@@ -9,6 +11,7 @@ interface ICard {
   user: { firstName: string; lastName: string };
   views: number;
   status: 'published' | 'unpublished';
+  handleClick?: () => void;
 }
 const Card: React.FC<ICard> = ({
   title,
@@ -17,9 +20,13 @@ const Card: React.FC<ICard> = ({
   user,
   views,
   status,
+  handleClick,
 }) => {
   return (
-    <div className="flex cursor-pointer flex-col items-start gap-4 md:flex-row">
+    <div
+      className="flex cursor-pointer flex-col items-start gap-4 md:flex-row"
+      onClick={handleClick}
+    >
       <div className="pt-5 text-sm font-light text-gray-600">
         {moment(date).format('MMM')} {moment(date).format('DD')}{' '}
         <span className="md:text-xl">{moment(date).format('YYYY')}</span>

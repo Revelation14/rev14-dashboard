@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/no-unused-prop-types */
 import type { ReactElement } from 'react';
 import { useState } from 'react';
@@ -46,14 +47,14 @@ const TabHeadings = ({
 }: ITabHeading) => {
   return (
     <div
-      className={`flex ${
+      className={`flex outline-none ${
         horizontalScroll ? 'flex-nowrap' : 'flex-wrap'
-      } justify-start overflow-x-auto`}
+      } scrollbar justify-start overflow-x-auto`}
     >
       {children.map((tab, i) => {
         const tabProps = tab.props;
         return tabProps.label && tabProps.label.length > 0 ? (
-          <div className="flex-none" key={tab.key}>
+          <div className="flex-none" key={i}>
             <button
               type="button"
               className={`pl-3 pr-5 ${
