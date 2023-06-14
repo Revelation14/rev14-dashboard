@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import Button from '@/components/Button';
-import { DatePicker } from '@/components/DatePicker';
+import Button from '@/components/common/Button';
+import { DatePicker } from '@/components/common/DatePicker';
+import AppUsageChart from '@/components/insights/AppUsageChart';
+import DataCard from '@/components/insights/DataCard';
+import PieChartComponent from '@/components/insights/PieChart';
 import Layout from '@/layouts/dashboard/Layout';
-import DataCard from '@/pages/insights/components/DataCard';
-import PieChartComponent from '@/pages/insights/components/PieChart';
 import type { ValueType } from '@/types/common.types';
-
-import AppUsageChart from './components/AppUsageChart';
 
 const Insights = () => {
   const [selectedDate, setSelectedDate] = useState('');

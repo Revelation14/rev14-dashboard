@@ -7,19 +7,23 @@ body {
   @apply font-poppins;
 }
 
-body::-webkit-scrollbar {
+body::-webkit-scrollbar, .scrollbar::-webkit-scrollbar {
   @apply w-2;
 }
 
-body::-webkit-scrollbar-thumb {
+.scrollbar::-webkit-scrollbar {
+  @apply h-2;
+}
+
+body::-webkit-scrollbar-thumb, .scrollbar::-webkit-scrollbar-thumb {
   @apply bg-gray-850 rounded-md;
 }
 
-body::-webkit-scrollbar-thumb:hover {
+body::-webkit-scrollbar-thumb:hover, .scrollbar::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-650;
 }
 
-body::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track, .scrollbar::-webkit-scrollbar-track {
   @apply bg-gray-50;
 }
 
@@ -41,4 +45,8 @@ a:hover {
 
 .content ul {
   @apply my-6;
+}
+
+.ql-editor {
+  @apply bg-gray-50 min-h-[50vh];
 }
