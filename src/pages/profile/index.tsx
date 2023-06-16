@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useEffect, useState } from 'react';
 
-import Button from '@/components/Button';
+import Button from '@/components/common/Button';
 
 const Profile = () => {
   const [userData, setUserData] = useState({
