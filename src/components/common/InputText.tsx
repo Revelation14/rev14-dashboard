@@ -28,6 +28,7 @@ interface IInputText {
     | 'week';
   defaultValue?: string;
   background?: string;
+  placeholder?: string;
   onChange?: (object: { name: string; value: string }) => void;
 }
 
@@ -37,6 +38,7 @@ const InputText: React.FC<IInputText> = ({
   defaultValue,
   onChange,
   background = 'bg-gray-50',
+  placeholder = '',
 }) => {
   const [value, setValue] = useState('');
 
@@ -58,7 +60,7 @@ const InputText: React.FC<IInputText> = ({
       <div className="text-sm text-gray-600">{label}</div>
       <input
         type={type}
-        placeholder={label}
+        placeholder={placeholder === '' ? label : placeholder}
         className={`w-full rounded-lg ${background} px-4 py-2 text-[#6B6B6B] outline-none`}
         value={value}
         name={label}
