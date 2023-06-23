@@ -63,16 +63,14 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         </div>
         <InputText label="Title" defaultValue={defaultValues?.title} />
         <div className="flex flex-col gap-2">
-          <div className="font-medium text-gray-600">
-            The Devotional goes here
-          </div>
+          <div className="font-medium text-gray-600">Content here</div>
           <DraftEditor
             handleEditorChange={() => {}}
             defaultValue={defaultValues?.devotion}
           />
         </div>
         <InputFile
-          label="The devotional’s Audio goes here"
+          label="Audio goes here"
           title="Upload the devotional’s Audio"
           file={uploadedAudio}
           setFile={setUploadedAudio}

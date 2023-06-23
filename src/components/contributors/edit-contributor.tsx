@@ -41,7 +41,7 @@ const EditContributor: React.FC<IEditContributor> = ({
         </div>
       </div>
       <div className="pb-2 font-medium text-gray-400">Personal details</div>
-      <div className="bg-gray-50 p-6">
+      <div className="rounded-xl bg-gray-50 p-6">
         <div className="flex flex-col gap-6">
           <InputText label="First Name" background="bg-gray-150" />
           <InputText label="Middle Name" background="bg-gray-150" />
@@ -49,7 +49,7 @@ const EditContributor: React.FC<IEditContributor> = ({
         </div>
       </div>
       <div className="pb-2 pt-8 font-medium text-gray-400">Account</div>
-      <div className="bg-gray-50 p-6">
+      <div className="rounded-xl bg-gray-50 p-6">
         <div className="flex flex-col gap-6">
           <InputSelect
             label="Role"

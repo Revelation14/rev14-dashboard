@@ -59,7 +59,7 @@ const TabHeadings = ({
               type="button"
               className={`pl-3 pr-5 ${
                 activeTabIndex === i
-                  ? 'border-b-2 border-black pb-[0.6rem] pt-4'
+                  ? 'border-b-4 border-black pb-[0.8rem] pt-4'
                   : 'py-4'
               } m-0 rounded-none text-lg`}
               onClick={() => slideTo(i)}
@@ -100,7 +100,7 @@ export function Tabs({
     <div className={`${className}`}>
       <div
         className={`mb-8 flex flex-wrap items-center justify-between ${
-          hasBorder && 'border-b border-gray-200'
+          hasBorder && 'mt-0 border-b border-gray-200'
         }`}
       >
         <TabHeadings

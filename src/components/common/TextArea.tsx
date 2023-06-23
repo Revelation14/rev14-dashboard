@@ -19,7 +19,7 @@ const TextArea: React.FC<ITextArea> = ({
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
     if (onChange) {
-      onChange({ name: e.target.name, value: e.target.name });
+      onChange({ name: e.target.name, value: e.target.value });
     }
   };
 

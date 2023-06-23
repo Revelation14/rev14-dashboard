@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+import React, { useState } from 'react';
 
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
@@ -12,6 +13,18 @@ interface IAddContributor {
 const AddContributor: React.FC<IAddContributor> = ({
   setShowAddSplitScreens,
 }) => {
+  const [, setMessage] = useState('');
+  const [characterCount, setCharacterCount] = useState(0);
+
+  const handleMessageChange = (event: { value: any }) => {
+    const inputValue = event.value;
+    const inputLength = inputValue.length;
+    if (inputLength <= 1200) {
+      setMessage(inputValue);
+      setCharacterCount(inputLength);
+    }
+  };
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -27,7 +40,15 @@ const AddContributor: React.FC<IAddContributor> = ({
       </div>
       <div className="flex flex-col gap-6 pt-11">
         <InputText type="email" label="Email" />
-        <TextArea placeholder="Your messsage" label="Message" />
+        <TextArea
+          placeholder="Your messsage"
+          label="Message"
+          onChange={handleMessageChange}
+        />
+
+        <div className="text-sm font-normal text-gray-700">
+          {characterCount}/1200
+        </div>
         <div className="mx-auto pt-9">
           <Button
             text="Add Contributor"
@@ -40,4 +61,5 @@ const AddContributor: React.FC<IAddContributor> = ({
     </>
   );
 };
+
 export default AddContributor;

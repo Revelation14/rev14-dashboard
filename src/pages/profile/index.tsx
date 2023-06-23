@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 
 import Button from '@/components/common/Button';
+import AddProfilePicturePopup from '@/components/profile/AddProfilePicturePopup';
 
 const Profile = () => {
   const [userData, setUserData] = useState({
@@ -54,13 +55,7 @@ const Profile = () => {
       </button>
       <div className="flex flex-col items-center gap-12">
         <div className="h-[80px] w-[80px] rounded-full bg-[#276EF1] text-center text-4xl font-medium text-white">
-          <div className="-right-0 top-0 h-[28px] w-[28px] rounded-full bg-gray-150 p-2">
-            <img
-              src="/assets/icons/profile-edit.svg"
-              alt=""
-              className="h-full w-full"
-            />
-          </div>
+          <AddProfilePicturePopup />
 
           {profileInitials}
         </div>
@@ -76,7 +71,7 @@ const Profile = () => {
               id="firstName"
               type="text"
               value={userData.firstName}
-              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-2 text-sm font-medium text-black"
+              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-5 text-sm font-medium text-black"
             />
             <label htmlFor="middleName" className="text-sm font-medium">
               Middle Name
@@ -85,7 +80,7 @@ const Profile = () => {
               id="middleName"
               type="text"
               value={userData.middleName}
-              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-2 text-sm font-medium text-black"
+              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-5 text-sm font-medium text-black"
             />
             <label htmlFor="lastName" className="text-sm font-medium">
               Last Name
@@ -94,7 +89,7 @@ const Profile = () => {
               id="lastName"
               type="text"
               value={userData.lastName}
-              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-2 text-sm font-medium text-black"
+              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-5 text-sm font-medium text-black"
             />
           </div>
         </div>
@@ -108,7 +103,7 @@ const Profile = () => {
               id="password"
               type="password"
               placeholder="Password.."
-              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-2 text-sm font-medium text-black"
+              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-5 text-sm font-medium text-black"
             />
             <label htmlFor="newPassword" className="text-sm font-medium">
               New Password
@@ -117,7 +112,7 @@ const Profile = () => {
               id="newPassword"
               type="password"
               placeholder="Create a password.."
-              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-2 text-sm font-medium text-black"
+              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-5 text-sm font-medium text-black"
             />
             <label htmlFor="confirmPassword" className="text-sm font-medium">
               Confirm Password
@@ -126,7 +121,7 @@ const Profile = () => {
               id="confirmPassword"
               type="password"
               placeholder="Create a password.."
-              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-2 text-sm font-medium text-black"
+              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-5 text-sm font-medium text-black"
             />
           </div>
         </div>

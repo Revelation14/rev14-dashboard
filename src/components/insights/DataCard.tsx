@@ -22,17 +22,17 @@ const DataCard: React.FC<IdataCardProps> = ({
     : '/assets/icons/arrow_negative.png';
 
   return (
-    <div className="my-4 flex h-fit flex-row items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-6 md:m-4">
+    <div className="my-4 flex h-fit flex-row items-center justify-center gap-3 rounded-lg border border-gray-200 bg-white p-6 md:m-4">
       <div className="flex flex-col items-start gap-4">
         <h3 className="text-sm font-light leading-6">{title}</h3>
         <p className="text-2xl font-normal leading-6">{number}</p>
         <p className="flex flex-row items-center text-sm font-normal leading-6">
-          <img src={arrowImageSource} alt="" className="mr-2 h-3.5 w-3.5" />
+          <img src={arrowImageSource} alt="" className="mr-1 h-4 w-4" />
           <span style={{ color: statusColor }}>{status}% </span>{' '}
           <span className="ml-2 text-black"> since yesterday</span>
         </p>
       </div>
-      <div className="h-24 w-44">
+      <div className="ml-1 h-24 w-44">
         <ResponsiveContainer>
           <LineChart data={data}>
             <Line

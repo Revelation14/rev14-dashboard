@@ -110,7 +110,7 @@ const Insights = () => {
             className="text-gold"
           />
         </div>
-        <div className="flex flex-col md:flex-row">
+        <div className="flex w-full flex-col md:flex-row">
           <DataCard
             title="Active Users"
             number="1056"
@@ -137,7 +137,7 @@ const Insights = () => {
               <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">
                 <p className="flex flex-row items-center text-sm font-light text-[#737B8B]">
                   <span
-                    className="mr-2 flex flex-row items-center"
+                    className="flex flex-row items-center pr-5"
                     style={{ color: rateColor }}
                   >
                     <img

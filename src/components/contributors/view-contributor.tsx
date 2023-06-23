@@ -1,11 +1,14 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import moment from 'moment';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Badge } from '@/components/common/Badge';
 import Pagination from '@/components/common/Pagination';
 import usePaginationStore from '@/store/pagination';
+import type { ValueType } from '@/types/common.types';
+
+import { DatePicker } from '../common/DatePicker';
 
 interface IViewContributor {
   contributor: {
@@ -31,6 +34,11 @@ const ViewContributor: React.FC<IViewContributor> = ({
   setShowViewSplitScreens,
   rowsPerPage = 6,
 }) => {
+  const [selectedDate, setSelectedDate] = useState('');
+
+  const handleChange = (e: ValueType) => {
+    setSelectedDate(e.value.toString());
+  };
   const setCurrentPage = usePaginationStore((state) => state.setCurrentPage);
 
   useEffect(() => {
@@ -50,10 +58,10 @@ const ViewContributor: React.FC<IViewContributor> = ({
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-4">
-              <span className="h-7 w-7 rounded-full bg-backgroundAccent pt-1 text-center text-xs text-white">
+              <span className="h-8 w-8 rounded-full bg-backgroundAccent pt-1 text-center text-lg text-white">
                 {contributor.firstName.charAt(0)}
               </span>
-              <span className="text-sm font-medium text-black">
+              <span className="text-lg font-medium text-black">
                 {contributor.firstName} {contributor.lastName}
               </span>
               <Badge
@@ -66,6 +74,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
               />
             </div>
           </div>
+
           <div className="flex items-center gap-4">
             <div
               className="cursor-pointer rounded-full bg-gray-50 p-3"
@@ -80,6 +89,11 @@ const ViewContributor: React.FC<IViewContributor> = ({
         {/** End of Top */}
       </div>
       <div className="text-center text-xl font-medium">20 Contributions</div>
+      <DatePicker
+        name="selectedDate"
+        value={selectedDate}
+        handleChange={handleChange}
+      />
       <div className="flex min-h-screen flex-col gap-4">
         {devotions.map((devotion) => (
           <div

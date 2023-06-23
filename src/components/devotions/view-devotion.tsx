@@ -47,7 +47,7 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
             <div className="flex items-center gap-4">
               <div>
                 <InputSelect
-                  label=""
+                  label="Action"
                   background="bg-gray-50"
                   options={[
                     { label: 'Publish', value: 'publish' },
