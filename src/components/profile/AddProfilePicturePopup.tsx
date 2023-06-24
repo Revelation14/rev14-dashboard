@@ -90,7 +90,7 @@ const AddProfilePicturePopup = () => {
                   />
                   <button
                     type="button"
-                    className="w-full rounded-xl bg-gray-300 px-4 py-2 text-base text-white"
+                    className="w-full rounded-xl bg-gray-300 px-4 py-2 text-base text-gray-700"
                     onClick={() => {
                       const fileInput = document.getElementById('fileInput');
                       if (fileInput) {
@@ -101,7 +101,11 @@ const AddProfilePicturePopup = () => {
                     Choose File
                   </button>
                 </label>
-                <button type="submit" disabled={!selectedPicture}>
+                <button
+                  type="submit"
+                  disabled={!selectedPicture}
+                  className="w-full rounded-xl bg-gray-300 px-4 py-2 text-base text-gray-700"
+                >
                   Upload
                 </button>
               </form>

@@ -29,10 +29,10 @@ const Header: React.FC<IHeaderProps> = ({
         ) : (
           <div className="rounded-full bg-gray-150 p-4">
             <Image
-              src="/assets/icons/right-arrow.svg"
+              src="/assets/icons/cancel.svg"
               alt=""
-              width={6}
-              height={8}
+              width={16}
+              height={16}
             />
           </div>
         )}
