@@ -6,3 +6,10 @@ export interface ValueType<T = Event> {
   label?: string;
   event?: FormEvent<T>;
 }
+
+export enum IHttpMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
+}

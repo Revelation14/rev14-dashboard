@@ -45,7 +45,7 @@ const InputText: React.FC<IInputText> = ({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
     if (onChange) {
-      onChange({ name: e.target.name, value: e.target.name });
+      onChange({ name: e.target.name, value: e.target.value });
     }
   };
 

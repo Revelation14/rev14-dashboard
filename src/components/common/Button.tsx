@@ -3,6 +3,8 @@
 /* eslint-disable tailwindcss/no-custom-classname */
 import React from 'react';
 
+import Spinner from './Spinner';
+
 interface IButton {
   icon?: string;
   text: string;
@@ -12,6 +14,7 @@ interface IButton {
   handleClick?: () => void;
   type?: 'submit' | 'reset' | 'button';
   width?: string;
+  loading?: boolean;
 }
 
 const Button: React.FC<IButton> = ({
@@ -23,6 +26,7 @@ const Button: React.FC<IButton> = ({
   backgroundColor = 'gold',
   type = 'button',
   width = 'w-full md:w-48',
+  loading = false,
 }) => {
   return (
     <button
@@ -30,8 +34,14 @@ const Button: React.FC<IButton> = ({
       className={`order-1 flex h-10 ${width} flex-none grow-0 flex-row items-center justify-center gap-2 rounded-3xl bg-${backgroundColor} px-2.5 py-3 text-${color} ${className}`}
       onClick={handleClick}
     >
-      {icon && <img src={icon} alt="Button Icon" />}
-      <span>{text}</span>
+      {loading ? (
+        <Spinner className="w-5 h-5" />
+      ) : (
+        <>
+          {icon && <img src={icon} alt="Button Icon" />}
+          <span>{text}</span>
+        </>
+      )}
     </button>
   );
 };
