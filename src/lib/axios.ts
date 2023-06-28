@@ -2,6 +2,8 @@
 
 import axios from 'axios';
 
+import { getFromLocalStorage } from './helper';
+
 const http = axios.create({
   baseURL: 'https://grace.fly.dev/api/v1',
   headers: {
@@ -12,7 +14,7 @@ const http = axios.create({
 
 http.defaults.withCredentials = false;
 http.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = getFromLocalStorage('token');
   if (config.headers) {
     config.headers.Authorization = token ? `${token}` : '';
   }

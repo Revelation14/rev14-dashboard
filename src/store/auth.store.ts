@@ -6,6 +6,7 @@ interface IAuthState {
   user: IUser | null;
   accessToken: string;
   authenticate: (user: IUser, accessToken: string) => void;
+  updateUser: (user: IUser) => void;
   logout: () => void;
 }
 
@@ -17,5 +18,8 @@ export const useAuth = create<IAuthState>((set) => ({
   },
   logout: () => {
     set({ user: null, accessToken: '' });
+  },
+  updateUser: (user) => {
+    set({ user });
   },
 }));

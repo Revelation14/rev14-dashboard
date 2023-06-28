@@ -1,47 +1,71 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import router from 'next/router';
 import { useEffect, useState } from 'react';
 
 import Button from '@/components/common/Button';
 import AddProfilePicturePopup from '@/components/profile/AddProfilePicturePopup';
 
+import ErrorMessage from '../../components/common/ErrorMessage';
+import { getFromLocalStorage, setToLocalStorage } from '../../lib/helper';
+import { updateProfile } from '../../services/auth.service';
+import { useAuth } from '../../store/auth.store';
+import type { IHttpException, IUser } from '../../types/user.types';
+
 const Profile = () => {
   const [userData, setUserData] = useState({
-    firstName: '',
-    middleName: '',
-    lastName: '',
+    name: '',
+    email: '',
   });
+
+  const auth = useAuth();
+
   const [profileInitials, setProfileInitials] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     // Replace this with your actual backend API call
     const fetchUserData = async () => {
-      try {
-        const dummyUserData = {
-          firstName: 'Igwaneza',
-          middleName: 'Knowbee',
-          lastName: 'Bruce',
-        };
-        setUserData(dummyUserData);
+      const user = getFromLocalStorage('user') as IUser;
+      setUserData({
+        name: user.name || '',
+        email: user.email || '',
+      });
 
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        generateProfileInitials(
-          dummyUserData.firstName,
-          dummyUserData.lastName
-        );
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      generateProfileInitials(user.name || '');
     };
 
     fetchUserData();
   }, []);
 
-  const generateProfileInitials = (firstName: string, lastName: string) => {
-    const initials = `${firstName.charAt(0)}${lastName.charAt(0)}`;
+  const generateProfileInitials = (name: string) => {
+    const initials = `${name.split(' ')[0]!.charAt(0)}${name
+      .split(' ')[1]!
+      .charAt(0)}`;
     setProfileInitials(initials);
   };
   const handleExit = () => {
     window.history.back(); // Navigate to the previous page
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      const res = await updateProfile(userData);
+
+      if (res as IUser) {
+        auth.updateUser(res as IUser);
+        setToLocalStorage('user', res as IUser);
+        setLoading(false);
+      } else {
+        setErrorMsg((res as IHttpException).message);
+      }
+    } catch (error) {
+      setErrorMsg((error as IHttpException).message);
+    }
+    setLoading(false);
+    router.push('/');
   };
 
   return (
@@ -60,36 +84,39 @@ const Profile = () => {
           {profileInitials}
         </div>
         <div className="flex flex-col items-start gap-4 self-stretch">
+          {errorMsg && (
+            <ErrorMessage
+              errorMessage={errorMsg}
+              setErrorMessage={setErrorMsg}
+            />
+          )}
           <h1 className="text-base font-medium text-gray-400">
             Personal Details
           </h1>
           <div className="flex flex-col items-start gap-6 rounded-3xl bg-gray-50 p-6">
-            <label htmlFor="firstName" className="text-sm font-medium">
-              First Name
+            <label htmlFor="name" className="text-sm font-medium">
+              Name
             </label>
             <input
-              id="firstName"
+              id="name"
               type="text"
-              value={userData.firstName}
+              value={userData.name}
               className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-5 text-sm font-medium text-black"
+              onChange={(e) =>
+                setUserData({ ...userData, name: e.target.value })
+              }
             />
-            <label htmlFor="middleName" className="text-sm font-medium">
-              Middle Name
+            <label htmlFor="email" className="text-sm font-medium">
+              Email
             </label>
             <input
-              id="middleName"
+              id="email"
               type="text"
-              value={userData.middleName}
+              value={userData.email}
               className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-5 text-sm font-medium text-black"
-            />
-            <label htmlFor="lastName" className="text-sm font-medium">
-              Last Name
-            </label>
-            <input
-              id="lastName"
-              type="text"
-              value={userData.lastName}
-              className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-5 text-sm font-medium text-black"
+              onChange={(e) => {
+                setUserData({ ...userData, email: e.target.value });
+              }}
             />
           </div>
         </div>
@@ -130,6 +157,8 @@ const Profile = () => {
           text="Save"
           className="h-fit w-fit bg-gray-50 p-1 text-sm font-normal text-gray-400"
           color="#FFFFFF"
+          handleClick={handleSubmit}
+          loading={isLoading}
         />
       </div>
     </div>
