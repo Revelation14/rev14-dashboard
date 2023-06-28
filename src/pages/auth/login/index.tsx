@@ -11,6 +11,8 @@ import { signin } from '@/services/auth.service';
 import { useAuth } from '@/store/auth.store';
 import type { IAuth, IHttpException, ILogin } from '@/types/user.types';
 
+import { setToLocalStorage } from '../../../lib/helper';
+
 const Login = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setLoading] = useState(false);
@@ -36,6 +38,8 @@ const Login = () => {
       try {
         const res = await signin(formData);
         if ((res as IAuth).accessToken) {
+          setToLocalStorage('user', (res as IAuth).user);
+          setToLocalStorage('token', (res as IAuth).accessToken);
           auth.authenticate((res as IAuth).user, (res as IAuth).accessToken);
           router.push('/');
         } else {
