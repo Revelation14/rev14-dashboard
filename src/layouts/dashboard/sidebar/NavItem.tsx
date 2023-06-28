@@ -6,13 +6,14 @@ import React from 'react';
 interface INavItemProps {
   sidebarStatus: boolean;
   menuTitle: string;
-  hrefLink: string;
+  hrefLink?: string;
   hasHover?: boolean;
   color?: string;
   fontweight?: string;
   fontSize?: string;
   children: JSX.Element;
   active?: boolean;
+  handleClick?: () => void;
 }
 
 const NavItem: React.FC<INavItemProps> = ({
@@ -25,9 +26,10 @@ const NavItem: React.FC<INavItemProps> = ({
   fontSize,
   children,
   active = false,
+  handleClick,
 }) => {
   return (
-    <Link href={hrefLink} className="hover:border-0">
+    <Link href={hrefLink!} className="hover:border-0">
       <div
         className={`relative flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 pr-6  ${
           active && 'bg-gold text-white'
@@ -37,6 +39,7 @@ const NavItem: React.FC<INavItemProps> = ({
       >
         {children}
         <span
+          onClick={handleClick}
           className={`${
             sidebarStatus ? `ml-2 ${fontSize || 'text-sm'}` : 'sr-only'
           }`}
