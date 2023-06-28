@@ -20,27 +20,32 @@ export interface IAuth {
 }
 
 export interface IUser {
-  id: string;
-  name: string;
-  phoneNumber: string;
-  gender: EGender;
-  token: string | null;
-  email: string;
-  location: string;
-  dob: string;
-  subscriptionId: string | null;
-  role: EUserRole;
-  profilePicture: string;
-  isVerified: boolean;
-  isFirstLogin: boolean;
-  createdAt: string;
-  updatedAt: string;
+  id?: string;
+  name?: string;
+  phoneNumber?: string;
+  gender?: EGender;
+  token?: string | null;
+  email?: string;
+  location?: string;
+  dob?: string;
+  subscriptionId?: string | null;
+  role?: EUserRole;
+  profilePicture?: string;
+  isVerified?: boolean;
+  isFirstLogin?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ILogin {
   phoneNumber?: string;
   email?: string;
   password: string;
+}
+
+export interface IUpdateUserDto {
+  name?: string;
+  email?: string;
 }
 
 export enum EUserRole {

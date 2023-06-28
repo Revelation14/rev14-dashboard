@@ -6,6 +6,7 @@ import type {
   IHttpException,
   IHttpResponse,
   ILogin,
+  IUpdateUserDto,
 } from '@/types/user.types';
 
 export class ActionLogout extends Error {}
@@ -17,6 +18,25 @@ export async function signin(
     const res: AxiosResponse<IHttpResponse<IAuth>> = await http.post(
       '/user/dashboard/login',
       credentials
+    );
+    return res.data.data;
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
+
+export async function updateProfile(
+  updateUserDto: IUpdateUserDto
+): Promise<IAuth | IHttpException | null> {
+  try {
+    const res: AxiosResponse<IHttpResponse<IAuth>> = await http.put(
+      '/user/profile/me',
+      updateUserDto
     );
     return res.data.data;
   } catch (err) {
