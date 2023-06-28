@@ -110,7 +110,7 @@ const Insights = () => {
             className="text-gold"
           />
         </div>
-        <div className="flex flex-col md:flex-row">
+        <div className="flex w-full flex-col md:flex-row">
           <DataCard
             title="Active Users"
             number="1056"
@@ -132,12 +132,12 @@ const Insights = () => {
         </div>
         <div className="flex w-full flex-col items-start justify-between gap-4 md:m-4 md:flex-row">
           <div className="flex w-full flex-col items-start gap-6 rounded-lg border border-solid border-gray-200 bg-white p-8 ">
-            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:gap-80">
+            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:gap-56">
               <h1 className="text-2xl font-normal">App&apos;s Usage</h1>
               <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">
                 <p className="flex flex-row items-center text-sm font-light text-[#737B8B]">
                   <span
-                    className="mr-2 flex flex-row items-center"
+                    className="flex flex-row items-center pr-2"
                     style={{ color: rateColor }}
                   >
                     <img
@@ -160,10 +160,10 @@ const Insights = () => {
               <AppUsageChart data={usageData} />
             </div>
           </div>
-          <div className="flex w-full flex-col flex-wrap items-start gap-6 rounded-lg border border-solid border-gray-200 bg-white p-8 md:mx-8 ">
+          <div className="flex w-full flex-col flex-wrap items-start gap-6 rounded-lg border border-solid border-gray-200 bg-white p-8 md:mx-8">
             <h1 className="text-2xl font-normal">Listening</h1>
             <PieChartComponent data={chartData} />
-            <div className="order-2 flex w-full flex-row items-start justify-between gap-6 justify-self-stretch">
+            <div className="order-2 flex w-full flex-row items-start justify-between gap-2 justify-self-stretch">
               <div className="flex flex-row items-center">
                 <div
                   style={{

@@ -72,7 +72,7 @@ const Card: React.FC<ICard> = ({
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="h-7 w-7 rounded-full bg-backgroundAccent pt-1 text-center text-xs text-white">
+              <span className="rounded-full bg-backgroundAccent px-2 py-1 text-center text-xs leading-4 text-white">
                 {user.firstName.charAt(0)}
               </span>
               <span className="text-sm font-medium text-black">
