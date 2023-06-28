@@ -1,29 +1,69 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useRouter } from 'next/router';
+import type { FormEvent } from 'react';
 import { useState } from 'react';
 
 import Button from '@/components/common/Button';
+import ErrorMessage from '@/components/common/ErrorMessage';
 import { InputText } from '@/components/common/InputText';
+import { signin } from '@/services/auth.service';
+import { useAuth } from '@/store/auth.store';
+import type { IAuth, IHttpException, ILogin } from '@/types/user.types';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isLoading, setLoading] = useState(false);
+
+  const [formData, setFormData] = useState<ILogin>({
     email: '',
     password: '',
   });
   const router = useRouter();
-  const handleSubmit = () => {
-    localStorage.setItem('authorized', JSON.stringify(true));
-    router.push('/');
+  const auth = useAuth();
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.email && !formData.password) {
+      setErrorMsg(`Email and Password is required`);
+    } else if (!formData.email) {
+      setErrorMsg(`Email is required`);
+    } else if (!formData.password) {
+      setErrorMsg(`Password is required`);
+    } else {
+      setLoading(true);
+      try {
+        const res = await signin(formData);
+        if ((res as IAuth).accessToken) {
+          auth.authenticate((res as IAuth).user, (res as IAuth).accessToken);
+          router.push('/');
+        } else {
+          setErrorMsg((res as IHttpException).message);
+        }
+      } catch (error) {
+        setErrorMsg((error as IHttpException).message);
+      }
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex h-screen flex-col justify-center bg-gray-50 font-raleway">
-      <div className="m-auto min-w-[280px] rounded-2xl border border-gray-200 bg-white px-8 py-16 sm:min-w-[420px]">
+      <form
+        className="m-auto min-w-[280px] rounded-2xl border border-gray-200 bg-white px-8 py-16 sm:min-w-[420px]"
+        onSubmit={handleSubmit}
+      >
         <div className="text-center text-2xl font-semibold text-gray-600">
           Login
         </div>
         <div className="flex flex-col gap-6 pt-14">
+          {errorMsg && (
+            <ErrorMessage
+              errorMessage={errorMsg}
+              setErrorMessage={setErrorMsg}
+            />
+          )}
           <InputText
             label="Email"
             type="email"
@@ -49,9 +89,9 @@ const Login = () => {
           </div>
         </div>
         <div className="flex justify-center pt-16">
-          <Button type="submit" handleClick={handleSubmit} text="Login" />
+          <Button type="submit" text="Login" loading={isLoading} />
         </div>
-      </div>
+      </form>
     </div>
   );
 };
