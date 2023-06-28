@@ -3,6 +3,7 @@ import React, { useRef } from 'react';
 
 import OutsideClick from '@/utils/outsideClick';
 
+import { useAuth } from '../../store/auth.store';
 import Logo from './sidebar/Logo';
 import Nav from './sidebar/Nav';
 import NavItem from './sidebar/NavItem';
@@ -14,7 +15,7 @@ interface ISidebarProps {
 const Sidebar: React.FC<ISidebarProps> = ({ mobileNavsidebar }) => {
   const sidebarRef = useRef(null);
   const sidebarOutsideClick = OutsideClick(sidebarRef);
-
+  const auth = useAuth();
   return (
     <aside
       className={`${
@@ -46,10 +47,14 @@ const Sidebar: React.FC<ISidebarProps> = ({ mobileNavsidebar }) => {
             />
           </NavItem>
           <NavItem
-            hrefLink="/logout"
+            hrefLink="/auth/login"
             sidebarStatus
             menuTitle="Logout"
             hasHover={false}
+            handleClick={() => {
+              localStorage.clear();
+              auth.logout();
+            }}
           >
             <Image
               src="/assets/icons/logout.svg"
