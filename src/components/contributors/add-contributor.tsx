@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React from 'react';
 
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
-import { TextArea } from '@/components/common/TextArea';
+import { AddContributorService } from '@/services/contributor.service';
+import { EGender, EUserRole } from '@/types/user.types';
 
 interface IAddContributor {
   setShowAddSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,18 +14,23 @@ interface IAddContributor {
 const AddContributor: React.FC<IAddContributor> = ({
   setShowAddSplitScreens,
 }) => {
-  const [, setMessage] = useState('');
-  const [characterCount, setCharacterCount] = useState(0);
-
-  const handleMessageChange = (event: { value: any }) => {
-    const inputValue = event.value;
-    const inputLength = inputValue.length;
-    if (inputLength <= 1200) {
-      setMessage(inputValue);
-      setCharacterCount(inputLength);
+  const [formData, setFormData] = React.useState<any>({
+    name: '',
+    email: '',
+    phoneNumber: '',
+    gender: EGender.MALE,
+    password: 'Test@123',
+    role: EUserRole.CONTENT_CREATOR,
+  });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await AddContributorService(formData);
+      console.log('Contributor Added');
+    } catch (error) {
+      console.log(error);
     }
   };
-
   return (
     <>
       <div className="flex items-center justify-between">
@@ -39,24 +45,38 @@ const AddContributor: React.FC<IAddContributor> = ({
         </div>
       </div>
       <div className="flex flex-col gap-6 pt-11">
-        <InputText type="email" label="Email" />
-        <TextArea
-          placeholder="Your messsage"
-          label="Message"
-          onChange={handleMessageChange}
-        />
-
-        <div className="text-sm font-normal text-gray-700">
-          {characterCount}/1200
-        </div>
-        <div className="mx-auto pt-9">
-          <Button
-            text="Add Contributor"
-            backgroundColor="gray-50"
-            color="gray-400"
-            className="hover:bg-gray-150"
+        <form onSubmit={handleSubmit}>
+          <InputText
+            type="text"
+            label="Full Names"
+            onChange={({ value }) => setFormData({ ...formData, name: value })}
           />
-        </div>
+          <InputText
+            type="email"
+            label="Email"
+            onChange={({ value }) => setFormData({ ...formData, email: value })}
+          />
+          <InputText
+            type="number"
+            label="Phone Number"
+            onChange={({ value }) =>
+              setFormData({ ...formData, phoneNumber: value })
+            }
+          />
+          <input type="radio" name="gender" value="Male" />
+          Male
+          <input type="radio" name="gender" value="Female" />
+          Female
+          <div className="mx-auto pt-9">
+            <Button
+              text="Add Contributor"
+              type="submit"
+              backgroundColor="gray-50"
+              color="gray-400"
+              className="hover:bg-gray-150"
+            />
+          </div>
+        </form>
       </div>
     </>
   );

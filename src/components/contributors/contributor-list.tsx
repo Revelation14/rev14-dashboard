@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { ActionButton } from '@/components/common/ActionButton';
 import Button from '@/components/common/Button';
@@ -8,6 +8,10 @@ import Table from '@/components/common/customTable';
 import Search from '@/components/common/Search';
 import { Tab, Tabs } from '@/components/common/Tabs';
 import Tooltip from '@/components/common/Tooltip';
+import {
+  GetContributorService,
+  suspendContributorService,
+} from '@/services/contributor.service';
 
 interface IContributorList {
   showAddSplitScreens: boolean;
@@ -22,56 +26,23 @@ const ContributorList: React.FC<IContributorList> = ({
   setShowEditSplitScreens,
   setShowViewSplitScreens,
 }) => {
-  const users = [
-    {
-      image: '/assets/images/contributor.png',
-      name: 'John Doe',
-      role: 'Admin',
-      contributions: 10,
-    },
-    {
-      image: '/assets/images/contributor.png',
-      name: 'Jane Smith',
-      role: 'Editor',
-      contributions: 5,
-    },
-    {
-      image: '/assets/images/contributor.png',
-      name: 'John Doe',
-      role: 'Admin',
-      contributions: 10,
-    },
-    {
-      image: '/assets/images/contributor.png',
-      name: 'Anna Young',
-      role: 'Editor',
-      contributions: 5,
-    },
-    {
-      image: '/assets/images/contributor.png',
-      name: 'Ella Eun',
-      role: 'Admin',
-      contributions: 7,
-    },
-    {
-      image: '/assets/images/contributor.png',
-      name: 'Loraine',
-      role: 'Editor',
-      contributions: 6,
-    },
-    {
-      image: '/assets/images/contributor.png',
-      name: 'John Doe',
-      role: 'Admin',
-      contributions: 10,
-    },
-    {
-      image: '/assets/images/contributor.png',
-      name: 'Jane Smith',
-      role: 'Editor',
-      contributions: 5,
-    },
-  ];
+  const [users, setUsers] = React.useState<any>([]);
+  const fetchData = async () => {
+    try {
+      const response = await GetContributorService();
+      setUsers(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (!users) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Tabs
@@ -111,97 +82,142 @@ const ContributorList: React.FC<IContributorList> = ({
               }}
             />,
           ]}
-          data={users.map((user) => [
-            <div key={`contributor-${user.name}`} className="mt-10">
-              <div className="flex items-center text-lg font-normal">
-                <img
-                  src={user.image}
-                  alt={user.name}
-                  className="mr-2 hidden h-12 w-12 rounded-full md:block"
+          data={users.map(
+            (user: {
+              id: string;
+              name:
+                | string
+                | number
+                | boolean
+                | React.ReactElement<
+                    any,
+                    string | React.JSXElementConstructor<any>
+                  >
+                | React.ReactFragment
+                | React.PromiseLikeOfReactNode
+                | null
+                | undefined;
+              image: string | undefined;
+              role:
+                | string
+                | number
+                | boolean
+                | React.ReactElement<
+                    any,
+                    string | React.JSXElementConstructor<any>
+                  >
+                | React.ReactFragment
+                | React.ReactPortal
+                | React.PromiseLikeOfReactNode
+                | null
+                | undefined;
+              contributions:
+                | string
+                | number
+                | boolean
+                | React.ReactElement<
+                    any,
+                    string | React.JSXElementConstructor<any>
+                  >
+                | React.ReactFragment
+                | React.ReactPortal
+                | React.PromiseLikeOfReactNode
+                | null
+                | undefined;
+            }) => [
+              <div key={`contributor-${user.name}`} className="mt-10">
+                <div className="flex items-center text-lg font-normal">
+                  <img
+                    src={user.image}
+                    alt=""
+                    className="mr-2 hidden h-12 w-12 rounded-full md:block"
+                  />
+                  <span
+                    className={`text-sm md:text-xl ${
+                      showAddSplitScreens ? 'text-ellipsis' : ''
+                    }`}
+                    style={
+                      showAddSplitScreens
+                        ? {
+                            display: '-webkit-box',
+                            WebkitBoxOrient: 'vertical',
+                            WebkitLineClamp: 1,
+                            overflow: 'hidden',
+                          }
+                        : {}
+                    }
+                  >
+                    {user.name}
+                  </span>
+                </div>
+              </div>,
+              <div key={`role-${user.name}`} className="mt-10">
+                <div className="h-fit w-fit rounded-3xl bg-purple px-3 text-xs font-light text-white md:text-base">
+                  {user.role}
+                </div>
+              </div>,
+              <div key={`contributions-${user.name}`} className="mt-10">
+                {user.contributions} contributions
+              </div>,
+              <div
+                key={`actions-${user.name}`}
+                className="mt-10 flex items-center justify-end gap-6"
+              >
+                <ActionButton
+                  label="View"
+                  backgroundColor="bg-gray-300"
+                  hoverBackgroundColor="hover:bg-gray-50"
+                  color="text-black"
+                  handleClick={() => {
+                    setShowAddSplitScreens(false);
+                    setShowEditSplitScreens(false);
+                    setShowViewSplitScreens(true);
+                  }}
                 />
-                <span
-                  className={`text-sm md:text-xl ${
-                    showAddSplitScreens ? 'text-ellipsis' : ''
-                  }`}
-                  style={
-                    showAddSplitScreens
-                      ? {
-                          display: '-webkit-box',
-                          WebkitBoxOrient: 'vertical',
-                          WebkitLineClamp: 1,
-                          overflow: 'hidden',
-                        }
-                      : {}
-                  }
-                >
-                  {user.name}
-                </span>
-              </div>
-            </div>,
-            <div key={`role-${user.name}`} className="mt-10">
-              <div className="h-fit w-fit rounded-3xl bg-purple px-3 text-xs font-light text-white md:text-base">
-                {user.role}
-              </div>
-            </div>,
-            <div key={`contributions-${user.name}`} className="mt-10">
-              {user.contributions} contributions
-            </div>,
-            <div
-              key={`actions-${user.name}`}
-              className="mt-10 flex items-center justify-end gap-6"
-            >
-              <ActionButton
-                label="View"
-                backgroundColor="bg-gray-300"
-                hoverBackgroundColor="hover:bg-gray-50"
-                color="text-black"
-                handleClick={() => {
-                  setShowAddSplitScreens(false);
-                  setShowEditSplitScreens(false);
-                  setShowViewSplitScreens(true);
-                }}
-              />
-              <div>
-                <Tooltip
-                  trigger={<img src="/assets/icons/three-dots.svg" alt="" />}
-                  options={[
-                    {
-                      title: 'Edit',
-                      label: (
-                        <div className="flex items-center gap-5">
-                          <img
-                            src="/assets/icons/edit.svg"
-                            alt=""
-                            className=""
-                          />
-                          <div>Edit</div>
-                        </div>
-                      ),
-                      action: () => {
-                        setShowAddSplitScreens(false);
-                        setShowViewSplitScreens(false);
-                        setShowEditSplitScreens(true);
+                <div>
+                  <Tooltip
+                    trigger={<img src="/assets/icons/three-dots.svg" alt="" />}
+                    options={[
+                      {
+                        title: 'Edit',
+                        label: (
+                          <div className="flex items-center gap-5">
+                            <img
+                              src="/assets/icons/edit.svg"
+                              alt=""
+                              className=""
+                            />
+                            <div>Edit</div>
+                          </div>
+                        ),
+                        action: () => {
+                          setShowAddSplitScreens(false);
+                          setShowViewSplitScreens(false);
+                          setShowEditSplitScreens(true);
+                        },
                       },
-                    },
-                    {
-                      title: 'Remove Access',
-                      label: (
-                        <div className="flex items-center gap-5">
-                          <img
-                            src="/assets/icons/black-close.svg"
-                            alt=""
-                            className="w-3"
-                          />
-                          <div>Remove Access</div>
-                        </div>
-                      ),
-                      action: () => {},
-                    },
-                  ]}
-                />
-              </div>
-            </div>,
-          ])}
+                      {
+                        title: 'Remove Access',
+                        label: (
+                          <div className="flex items-center gap-5">
+                            <img
+                              src="/assets/icons/black-close.svg"
+                              alt=""
+                              className="w-3"
+                            />
+                            <div>Remove Access</div>
+                          </div>
+                        ),
+                        action: () => {
+                          suspendContributorService(user.id);
+                        },
+                      },
+                    ]}
+                  />
+                </div>
+              </div>,
+            ]
+          )}
         />
       </Tab>
       <Tab label="Suspended">
@@ -213,4 +229,5 @@ const ContributorList: React.FC<IContributorList> = ({
     </Tabs>
   );
 };
+
 export default ContributorList;
