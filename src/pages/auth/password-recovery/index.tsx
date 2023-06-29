@@ -4,14 +4,34 @@ import { useState } from 'react';
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
 
+import ErrorMessage from '../../../components/common/ErrorMessage';
+import { requestPasswordRecovery } from '../../../services/auth.service';
+import type { IHttpException } from '../../../types/user.types';
+
 const PasswordRecovery = () => {
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isLoading, setLoading] = useState(false);
+
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: '',
   });
 
-  const handleSubmit = () => {
-    router.push('/auth/confirm-email');
+  const handleSubmit = async () => {
+    setLoading(true);
+    localStorage.setItem('email', formData.email);
+
+    try {
+      const res = await requestPasswordRecovery(formData);
+      if (res.data.success) {
+        router.push('/auth/confirm-email');
+      } else {
+        setErrorMsg((res as IHttpException).message);
+      }
+    } catch (error) {
+      setErrorMsg((error as IHttpException).message);
+    }
+    setLoading(false);
   };
 
   return (
@@ -25,6 +45,12 @@ const PasswordRecovery = () => {
           your account.
         </div>
         <div className="flex flex-col gap-6 pt-8">
+          {errorMsg && (
+            <ErrorMessage
+              errorMessage={errorMsg}
+              setErrorMessage={setErrorMsg}
+            />
+          )}
           <InputText
             label="Email"
             type="email"
@@ -33,7 +59,12 @@ const PasswordRecovery = () => {
           />
         </div>
         <div className="flex justify-center pt-12">
-          <Button type="submit" handleClick={handleSubmit} text="Submit" />
+          <Button
+            type="submit"
+            handleClick={handleSubmit}
+            text="Submit"
+            loading={isLoading}
+          />
         </div>
       </div>
     </div>

@@ -3,10 +3,13 @@ import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import http from '@/lib/axios';
 import type {
   IAuth,
+  ICreatePassword,
   IHttpException,
   IHttpResponse,
   ILogin,
+  IRequestPasswordRecovery,
   IUpdateUserDto,
+  IVerifyOtp,
 } from '@/types/user.types';
 
 export class ActionLogout extends Error {}
@@ -40,6 +43,64 @@ export async function updateProfile(
     );
     return res.data.data;
   } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
+
+export async function requestPasswordRecovery(
+  requestPassword: IRequestPasswordRecovery
+): Promise<any | IHttpException | null> {
+  try {
+    const res: AxiosResponse<IHttpResponse<any>> = await http.post(
+      '/user/reset-password/request',
+      requestPassword
+    );
+    return res;
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
+
+export async function verifyOtp(
+  verifyOtpDto: IVerifyOtp
+): Promise<any | IHttpException | null> {
+  try {
+    const res: AxiosResponse<IHttpResponse<any>> = await http.post(
+      '/user/verify',
+      verifyOtpDto
+    );
+    return res;
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
+
+export async function createPassword(
+  createPasswordDto: ICreatePassword
+): Promise<any | IHttpException | null> {
+  try {
+    const res: AxiosResponse<IHttpResponse<any>> = await http.post(
+      '/user/create-password',
+      createPasswordDto
+    );
+    return res;
+  } catch (err) {
+    console.log(err);
     const error = err as Error | AxiosError;
     if (axios.isAxiosError(error)) {
       const data = error.response?.data as IHttpException;
