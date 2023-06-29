@@ -43,6 +43,18 @@ export interface ILogin {
   password: string;
 }
 
+export interface IRequestPasswordRecovery {
+  email: string;
+}
+
+export interface IVerifyOtp {
+  email: string;
+  code: string;
+}
+export interface ICreatePassword {
+  password: string;
+}
+
 export interface IUpdateUserDto {
   name?: string;
   email?: string;
