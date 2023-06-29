@@ -1,17 +1,47 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Button from '@/components/common/Button';
 import { OtpInput } from '@/components/common/OTPInput';
 
+import ErrorMessage from '../../../components/common/ErrorMessage';
+import { setToLocalStorage } from '../../../lib/helper';
+import { verifyOtp } from '../../../services/auth.service';
+import type { IHttpException } from '../../../types/user.types';
+
 const ConfirmEmail = () => {
   const router = useRouter();
+
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isLoading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
+    code: '',
     email: '',
   });
 
-  const handleSubmit = () => {
-    router.push('/auth/reset-password');
+  useEffect(() => {
+    const email = localStorage.getItem('email');
+    if (email) {
+      setFormData({ ...formData, email });
+    }
+  }, []);
+
+  const handleSubmit = async () => {
+    setLoading(true);
+
+    try {
+      const res = await verifyOtp(formData);
+      if (res.data.success) {
+        setToLocalStorage('token', res.data.data.accessToken);
+        router.push('/auth/reset-password');
+      } else {
+        setErrorMsg((res as IHttpException).message);
+      }
+    } catch (error) {
+      setErrorMsg((error as IHttpException).message);
+    }
+    setLoading(false);
   };
 
   return (
@@ -24,12 +54,23 @@ const ConfirmEmail = () => {
           Enter the code you received on your email.
         </div>
         <div className="flex flex-col gap-6 pt-8">
+          {errorMsg && (
+            <ErrorMessage
+              errorMessage={errorMsg}
+              setErrorMessage={setErrorMsg}
+            />
+          )}
           <OtpInput
-            onChange={({ value }) => setFormData({ ...formData, email: value })}
+            onChange={({ value }) => setFormData({ ...formData, code: value })}
           />
         </div>
         <div className="flex justify-center pt-12">
-          <Button type="submit" handleClick={handleSubmit} text="Confirm" />
+          <Button
+            type="submit"
+            handleClick={handleSubmit}
+            text="Confirm"
+            loading={isLoading}
+          />
         </div>
       </div>
     </div>

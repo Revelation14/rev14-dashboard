@@ -6,14 +6,47 @@ import { useState } from 'react';
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
 
+import ErrorMessage from '../../../components/common/ErrorMessage';
+import { createPassword } from '../../../services/auth.service';
+import type { IHttpException } from '../../../types/user.types';
+
 const Login = () => {
   const router = useRouter();
+
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isLoading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: '',
   });
-  const handleSubmit = () => {
-    router.push(`/`);
+  const handleSubmit = async () => {
+    if (!formData.password && !formData.confirmPassword) {
+      setErrorMsg(`Password and Confirm Password is required`);
+    } else if (!formData.password) {
+      setErrorMsg(`Password is required`);
+    } else if (!formData.confirmPassword) {
+      setErrorMsg(`Confirm Password is required`);
+    } else if (formData.password !== formData.confirmPassword) {
+      setErrorMsg(`Password and Confirm Password must be same`);
+    } else {
+      setLoading(true);
+
+      try {
+        const res = await createPassword({
+          password: formData.password,
+        });
+        if (res.data.success) {
+          localStorage.removeItem('token');
+          router.push('/auth/login');
+        } else {
+          setErrorMsg((res as IHttpException).message);
+        }
+      } catch (error) {
+        setErrorMsg((error as IHttpException).message);
+      }
+      setLoading(false);
+    }
   };
 
   return (
@@ -23,6 +56,12 @@ const Login = () => {
           Set New Password
         </div>
         <div className="flex flex-col gap-6 pt-14">
+          {errorMsg && (
+            <ErrorMessage
+              errorMessage={errorMsg}
+              setErrorMessage={setErrorMsg}
+            />
+          )}
           <InputText
             label="Password"
             type="password"
@@ -45,6 +84,7 @@ const Login = () => {
             type="submit"
             handleClick={handleSubmit}
             text="Reset Password"
+            loading={isLoading}
           />
         </div>
       </div>
