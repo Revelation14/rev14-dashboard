@@ -52,8 +52,8 @@ export async function editContributorService(
   user: IEditUser
 ): Promise<any | IHttpException | null> {
   try {
-    const data = await http.put(`/user/update/contributor/${id}`, user, {});
-    return data;
+    const res = await http.put(`/user/update/contributor/${id}`, user, {});
+    return res.data.data;
   } catch (err) {
     const error = err as Error | AxiosError;
     if (axios.isAxiosError(error)) {

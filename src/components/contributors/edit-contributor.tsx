@@ -5,8 +5,9 @@ import React, { useState } from 'react';
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
 import { editContributorService } from '@/services/contributor.service';
-import { type IEditUser } from '@/types/user.types';
+import type { IEditUser, IHttpException } from '@/types/user.types';
 
+import ErrorMessage from '../common/ErrorMessage';
 import Spinner from '../common/Spinner';
 
 interface IEditContributor {
@@ -25,12 +26,16 @@ const EditContributor: React.FC<IEditContributor> = ({
     contributions: contributor.contributions,
   });
   const [isLoading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     setLoading(true);
     e.preventDefault();
     try {
-      await editContributorService(contributor.id, formData);
+      const res = await editContributorService(contributor.id, formData);
+      if (res.statusCode !== 200 || res.statusCode !== 201) {
+        setErrorMsg((res as IHttpException).message);
+      }
       window.location.reload();
     } catch (error) {
       console.log(error);
@@ -63,6 +68,12 @@ const EditContributor: React.FC<IEditContributor> = ({
       <form onSubmit={handleSubmit}>
         <div className="rounded-xl bg-gray-50 p-6">
           <div className="flex flex-col gap-6">
+            {errorMsg && (
+              <ErrorMessage
+                errorMessage={errorMsg}
+                setErrorMessage={setErrorMsg}
+              />
+            )}
             <InputText
               label="Name"
               background="bg-gray-150"
