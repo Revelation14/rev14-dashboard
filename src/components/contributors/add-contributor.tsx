@@ -1,11 +1,14 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
+import React, { useState } from 'react';
 
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
 import { addContributorService } from '@/services/contributor.service';
+import type { IHttpException } from '@/types/user.types';
 import { EGender, EUserRole } from '@/types/user.types';
+
+import ErrorMessage from '../common/ErrorMessage';
 
 interface IAddContributor {
   setShowAddSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,21 +22,22 @@ const AddContributor: React.FC<IAddContributor> = ({
     email: '',
     phoneNumber: '',
     gender: EGender.MALE,
-    password: 'Test@123',
+    password: 'Password@123',
     role: EUserRole.CONTENT_CREATOR,
   });
+  const [errorMsg, setErrorMsg] = useState('');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const data = await addContributorService(formData);
-      console.log(data.statusCode);
-      if (data.statusCode === 400) {
-        alert('Contributor already exists');
+      const res = await addContributorService(formData);
+      if (res.statusCode === 400) {
+        setErrorMsg('Contributor already exists');
       } else {
-        alert('Contributor added successfully');
+        setErrorMsg((res as IHttpException).message);
       }
     } catch (error) {
-      alert('Error adding contributor');
+      setErrorMsg('Error adding contributor');
     }
   };
   return (
@@ -51,6 +55,12 @@ const AddContributor: React.FC<IAddContributor> = ({
       </div>
       <div className="flex flex-col gap-6 pt-11">
         <form onSubmit={handleSubmit}>
+          {errorMsg && (
+            <ErrorMessage
+              errorMessage={errorMsg}
+              setErrorMessage={setErrorMsg}
+            />
+          )}
           <InputText
             type="text"
             label="Full Names"
@@ -68,10 +78,30 @@ const AddContributor: React.FC<IAddContributor> = ({
               setFormData({ ...formData, phoneNumber: value })
             }
           />
-          <input type="radio" name="gender" value="Male" />
-          Male
-          <input type="radio" name="gender" value="Female" />
-          Female
+
+          <div className="flex flex-row gap-6 pt-11">
+            <span>Male</span>
+            <input
+              type="radio"
+              value="male"
+              id="male"
+              checked={formData.gender === 'male'}
+              onChange={(e) =>
+                setFormData({ ...formData, gender: e.target.value })
+              }
+            />
+            <span>Female</span>
+
+            <input
+              type="radio"
+              value="female"
+              id="female"
+              checked={formData.gender === 'female'}
+              onChange={(e) =>
+                setFormData({ ...formData, gender: e.target.value })
+              }
+            />
+          </div>
           <div className="mx-auto pt-9">
             <Button
               text="Add Contributor"

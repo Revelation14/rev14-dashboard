@@ -7,8 +7,8 @@ export async function addContributorService(
   credentials: any
 ): Promise<any | IHttpException | null> {
   try {
-    const data = await http.post('/user/create/contributor', credentials, {});
-    return data;
+    const res = await http.post('/user/create/contributor', credentials, {});
+    return res.data.data;
   } catch (err) {
     const error = err as Error | AxiosError;
     if (axios.isAxiosError(error)) {
