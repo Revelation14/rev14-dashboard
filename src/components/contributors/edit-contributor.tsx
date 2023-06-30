@@ -1,11 +1,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
+import React, { useState } from 'react';
 
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
 import { editContributorService } from '@/services/contributor.service';
 import { type IEditUser } from '@/types/user.types';
+
+import Spinner from '../common/Spinner';
 
 interface IEditContributor {
   contributor: IEditUser;
@@ -16,20 +18,24 @@ const EditContributor: React.FC<IEditContributor> = ({
   contributor,
   setShowEditSplitScreens,
 }) => {
-  const [formData, setFormData] = React.useState<any>({
+  const [formData, setFormData] = useState<any>({
     name: contributor.name,
     email: contributor.email,
     role: contributor.role,
     contributions: contributor.contributions,
   });
+  const [isLoading, setLoading] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
     try {
       await editContributorService(contributor.id, formData);
-      console.log('Contributor Added');
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }
+    setLoading(false);
   };
   return (
     <>
@@ -87,14 +93,18 @@ const EditContributor: React.FC<IEditContributor> = ({
           </div>
         </div>
         <div className="mx-auto px-24 pt-9 lg:px-56">
-          <Button
-            text="Save"
-            type="submit"
-            backgroundColor="gray-50"
-            color="gray-400"
-            className="hover:bg-gray-150"
-            width="w-full"
-          />
+          {isLoading ? (
+            <Spinner className="h-5 w-5" />
+          ) : (
+            <Button
+              text="Save"
+              type="submit"
+              backgroundColor="gray-50"
+              color="gray-400"
+              className="hover:bg-gray-150"
+              width="w-full"
+            />
+          )}
         </div>
       </form>
     </>
