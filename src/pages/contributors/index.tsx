@@ -1,6 +1,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-console */
-import { useState } from 'react';
+import router from 'next/router';
+import { useEffect, useState } from 'react';
 
 import SplitScreens from '@/components/common/SplitScreens';
 import AddContributor from '@/components/contributors/add-contributor';
@@ -9,10 +10,29 @@ import EditContributor from '@/components/contributors/edit-contributor';
 import ViewContributor from '@/components/contributors/view-contributor';
 import Layout from '@/layouts/dashboard/Layout';
 
+import { getFromLocalStorage } from '../../lib/helper';
+import { useAuth } from '../../store/auth.store';
+
 const Index = () => {
   const [showAddSplitScreens, setShowAddSplitScreens] = useState(false);
   const [showEditSplitScreen, setShowEditSplitScreens] = useState(false);
   const [showViewSplitScreens, setShowViewSplitScreens] = useState(false);
+
+  const [isClient, setIsClient] = useState(false);
+
+  const auth = useAuth();
+  const user = getFromLocalStorage('user');
+
+  useEffect(() => {
+    setIsClient(true);
+    if (!auth.user && !user) {
+      router.push('/auth/login');
+    }
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <Layout>

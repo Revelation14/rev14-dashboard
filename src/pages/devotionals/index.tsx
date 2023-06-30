@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
-import React, { useState } from 'react';
+import router from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 import SplitScreens from '@/components/common/SplitScreens';
 import AddDevotion from '@/components/devotions/add-devotion';
@@ -7,10 +8,29 @@ import DevotionList from '@/components/devotions/devotion-list';
 import ViewDevotion from '@/components/devotions/view-devotion';
 import Layout from '@/layouts/dashboard/Layout';
 
+import { getFromLocalStorage } from '../../lib/helper';
+import { useAuth } from '../../store/auth.store';
+
 const Devotions = () => {
   const [showAddSplitScreens, setShowAddSplitScreens] = useState(false);
   const [showEditSplitScreen, setShowEditSplitScreens] = useState(false);
   const [showViewSplitScreens, setShowViewSplitScreens] = useState(false);
+
+  const [isClient, setIsClient] = useState(false);
+
+  const auth = useAuth();
+  const user = getFromLocalStorage('user');
+
+  useEffect(() => {
+    setIsClient(true);
+    if (!auth.user && !user) {
+      router.push('/auth/login');
+    }
+  }, []);
+
+  if (!isClient) {
+    return null;
+  }
 
   return (
     <Layout>
