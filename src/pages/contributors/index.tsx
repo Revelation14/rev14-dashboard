@@ -9,6 +9,7 @@ import ContributorList from '@/components/contributors/contributor-list';
 import EditContributor from '@/components/contributors/edit-contributor';
 import ViewContributor from '@/components/contributors/view-contributor';
 import Layout from '@/layouts/dashboard/Layout';
+import { editUser } from '@/store/oneUser';
 
 import { getFromLocalStorage } from '../../lib/helper';
 import { useAuth } from '../../store/auth.store';
@@ -17,6 +18,7 @@ const Index = () => {
   const [showAddSplitScreens, setShowAddSplitScreens] = useState(false);
   const [showEditSplitScreen, setShowEditSplitScreens] = useState(false);
   const [showViewSplitScreens, setShowViewSplitScreens] = useState(false);
+  const User = editUser();
 
   const [isClient, setIsClient] = useState(false);
 
@@ -108,11 +110,7 @@ const Index = () => {
           secondScreen={
             <EditContributor
               setShowEditSplitScreens={setShowEditSplitScreens}
-              contributor={{
-                firstName: 'Ava',
-                lastName: 'Gregoraci',
-                type: 'Submitter',
-              }}
+              contributor={User.user}
             />
           }
         />

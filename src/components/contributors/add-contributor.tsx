@@ -4,7 +4,12 @@ import React, { useState } from 'react';
 
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
-import { TextArea } from '@/components/common/TextArea';
+import { addContributorService } from '@/services/contributor.service';
+import type { IHttpException } from '@/types/user.types';
+import { EGender, EUserRole } from '@/types/user.types';
+
+import ErrorMessage from '../common/ErrorMessage';
+import Spinner from '../common/Spinner';
 
 interface IAddContributor {
   setShowAddSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,18 +18,40 @@ interface IAddContributor {
 const AddContributor: React.FC<IAddContributor> = ({
   setShowAddSplitScreens,
 }) => {
-  const [, setMessage] = useState('');
-  const [characterCount, setCharacterCount] = useState(0);
+  const [formData, setFormData] = React.useState<any>({
+    name: '',
+    email: '',
+    phoneNumber: '',
+    gender: EGender.MALE,
+    password: 'Password@123',
+    role: EUserRole.CONTENT_CREATOR,
+  });
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
-  const handleMessageChange = (event: { value: any }) => {
-    const inputValue = event.value;
-    const inputLength = inputValue.length;
-    if (inputLength <= 1200) {
-      setMessage(inputValue);
-      setCharacterCount(inputLength);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const res = await addContributorService(formData);
+      if (res.statusCode === 400) {
+        setErrorMsg('Contributor already exists');
+      } else {
+        setErrorMsg((res as IHttpException).message);
+      }
+    } catch (error) {
+      setErrorMsg('Error adding contributor');
     }
+    setFormData({
+      name: '',
+      email: '',
+      phoneNumber: '',
+      gender: '',
+      password: 'Password@123',
+      role: EUserRole.CONTENT_CREATOR,
+    });
+    setLoading(false);
   };
-
   return (
     <>
       <div className="flex items-center justify-between">
@@ -39,24 +66,68 @@ const AddContributor: React.FC<IAddContributor> = ({
         </div>
       </div>
       <div className="flex flex-col gap-6 pt-11">
-        <InputText type="email" label="Email" />
-        <TextArea
-          placeholder="Your messsage"
-          label="Message"
-          onChange={handleMessageChange}
-        />
-
-        <div className="text-sm font-normal text-gray-700">
-          {characterCount}/1200
-        </div>
-        <div className="mx-auto pt-9">
-          <Button
-            text="Add Contributor"
-            backgroundColor="gray-50"
-            color="gray-400"
-            className="hover:bg-gray-150"
+        <form onSubmit={handleSubmit}>
+          {errorMsg && (
+            <ErrorMessage
+              errorMessage={errorMsg}
+              setErrorMessage={setErrorMsg}
+            />
+          )}
+          <InputText
+            type="text"
+            label="Full Names"
+            onChange={({ value }) => setFormData({ ...formData, name: value })}
           />
-        </div>
+          <InputText
+            type="email"
+            label="Email"
+            onChange={({ value }) => setFormData({ ...formData, email: value })}
+          />
+          <InputText
+            type="number"
+            label="Phone Number"
+            onChange={({ value }) =>
+              setFormData({ ...formData, phoneNumber: value })
+            }
+          />
+
+          <div className="flex flex-row gap-6 pt-11">
+            <span>Male</span>
+            <input
+              type="radio"
+              value="male"
+              id="male"
+              checked={formData.gender === 'male'}
+              onChange={(e) =>
+                setFormData({ ...formData, gender: e.target.value })
+              }
+            />
+            <span>Female</span>
+
+            <input
+              type="radio"
+              value="female"
+              id="female"
+              checked={formData.gender === 'female'}
+              onChange={(e) =>
+                setFormData({ ...formData, gender: e.target.value })
+              }
+            />
+          </div>
+          <div className="mx-auto pt-9">
+            {isLoading ? (
+              <Spinner className="h-5 w-5" />
+            ) : (
+              <Button
+                text="Add Contributor"
+                type="submit"
+                backgroundColor="gray-50"
+                color="gray-400"
+                className="hover:bg-gray-150"
+              />
+            )}
+          </div>
+        </form>
       </div>
     </>
   );
