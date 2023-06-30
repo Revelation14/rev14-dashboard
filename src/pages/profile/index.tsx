@@ -17,16 +17,19 @@ const Profile = () => {
     email: '',
   });
 
-  const auth = useAuth();
-
   const [profileInitials, setProfileInitials] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  const [isClient, setIsClient] = useState(false);
+
+  const auth = useAuth();
+  const user = getFromLocalStorage('user') as IUser;
+
   useEffect(() => {
-    // Replace this with your actual backend API call
+    setIsClient(true);
+
     const fetchUserData = async () => {
-      const user = getFromLocalStorage('user') as IUser;
       setUserData({
         name: user.name || '',
         email: user.email || '',
@@ -36,8 +39,17 @@ const Profile = () => {
       generateProfileInitials(user.name || '');
     };
 
+    if (!auth.user && !user) {
+      router.push('/auth/login');
+      return;
+    }
+
     fetchUserData();
   }, []);
+
+  if (!isClient) {
+    return null;
+  }
 
   const generateProfileInitials = (name: string) => {
     const initials = `${name.split(' ')[0]!.charAt(0)}${name
