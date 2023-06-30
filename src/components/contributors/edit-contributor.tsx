@@ -3,15 +3,12 @@
 import React from 'react';
 
 import Button from '@/components/common/Button';
-import { InputSelect } from '@/components/common/InputSelect';
 import { InputText } from '@/components/common/InputText';
+import { editContributorService } from '@/services/contributor.service';
+import { type IEditUser } from '@/types/user.types';
 
 interface IEditContributor {
-  contributor: {
-    firstName: string;
-    lastName: string;
-    type: 'Submitter' | 'Reviewer';
-  };
+  contributor: IEditUser;
   setShowEditSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -19,9 +16,25 @@ const EditContributor: React.FC<IEditContributor> = ({
   contributor,
   setShowEditSplitScreens,
 }) => {
+  const [formData, setFormData] = React.useState<any>({
+    name: contributor.name,
+    email: contributor.email,
+    role: contributor.role,
+    contributions: contributor.contributions,
+  });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await editContributorService(contributor.id, formData);
+      console.log('Contributor Added');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       {/* top */}
+
       <div className="flex items-center justify-between">
         <div className="text-lg font-medium">Edit Contributor</div>
         <div className="flex items-center gap-4">
@@ -36,40 +49,54 @@ const EditContributor: React.FC<IEditContributor> = ({
       {/* end of top */}
       <div className="flex flex-col items-center justify-center pt-11">
         <div className="mb-8 h-20 w-20 rounded-full bg-backgroundAccent pt-3 text-center text-4xl text-white">
-          {contributor.firstName.charAt(0)}
-          {contributor.lastName.charAt(0)}
+          {contributor.name?.charAt(0)}
+          {contributor.name?.charAt(1)}
         </div>
       </div>
       <div className="pb-2 font-medium text-gray-400">Personal details</div>
-      <div className="rounded-xl bg-gray-50 p-6">
-        <div className="flex flex-col gap-6">
-          <InputText label="First Name" background="bg-gray-150" />
-          <InputText label="Middle Name" background="bg-gray-150" />
-          <InputText label="Last Name" background="bg-gray-150" />
+      <form onSubmit={handleSubmit}>
+        <div className="rounded-xl bg-gray-50 p-6">
+          <div className="flex flex-col gap-6">
+            <InputText
+              label="Name"
+              background="bg-gray-150"
+              onChange={({ value }) =>
+                setFormData({ ...formData, name: value })
+              }
+              defaultValue={contributor.name || ''}
+            />
+            <InputText
+              label="email"
+              background="bg-gray-150"
+              onChange={({ value }) =>
+                setFormData({ ...formData, email: value })
+              }
+              defaultValue={contributor.email || ''}
+            />
+            <InputText
+              label="Phone Number"
+              background="bg-gray-150"
+              defaultValue={contributor.phoneNumber || ''}
+            />
+          </div>
         </div>
-      </div>
-      <div className="pb-2 pt-8 font-medium text-gray-400">Account</div>
-      <div className="rounded-xl bg-gray-50 p-6">
-        <div className="flex flex-col gap-6">
-          <InputSelect
-            label="Role"
-            background="bg-gray-150"
-            options={[
-              { label: 'Submitter', value: 'Submitter' },
-              { label: 'Reviewer', value: 'Reviewer' },
-            ]}
+        <div className="pb-2 pt-8 font-medium text-gray-400">Role</div>
+        <div className="rounded-xl bg-gray-50 p-6">
+          <div className="flex flex-col gap-6">
+            <p className="bg-gray-150">{contributor.role}</p>
+          </div>
+        </div>
+        <div className="mx-auto px-24 pt-9 lg:px-56">
+          <Button
+            text="Save"
+            type="submit"
+            backgroundColor="gray-50"
+            color="gray-400"
+            className="hover:bg-gray-150"
+            width="w-full"
           />
         </div>
-      </div>
-      <div className="mx-auto px-24 pt-9 lg:px-56">
-        <Button
-          text="Save"
-          backgroundColor="gray-50"
-          color="gray-400"
-          className="hover:bg-gray-150"
-          width="w-full"
-        />
-      </div>
+      </form>
     </>
   );
 };

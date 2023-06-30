@@ -25,10 +25,15 @@ const AddContributor: React.FC<IAddContributor> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await AddContributorService(formData);
-      console.log('Contributor Added');
+      const data = await AddContributorService(formData);
+      console.log(data.statusCode);
+      if (data.statusCode === 400) {
+        alert('Contributor already exists');
+      } else {
+        alert('Contributor added successfully');
+      }
     } catch (error) {
-      console.log(error);
+      alert('Error adding contributor');
     }
   };
   return (

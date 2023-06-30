@@ -60,3 +60,13 @@ export enum EGender {
   FEMALE = 'female',
   MALE = 'male',
 }
+
+export interface IEditUser {
+  id?: string;
+  name: string | null | undefined;
+  phoneNumber?: string | null | undefined;
+  email: string | null | undefined;
+  role: string | null | undefined;
+  image?: string | null | undefined;
+  contributions: string | null | undefined;
+}
