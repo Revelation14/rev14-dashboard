@@ -6,8 +6,8 @@ import { ActionButton } from './ActionButton';
 import Table from './customTable';
 import Search from './Search';
 
-interface IAllTable {
-  users: any;
+export interface IContributorTable {
+  users?: any;
   showAddSplitScreens: boolean;
   setShowAddSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
   setShowViewSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,7 +15,7 @@ interface IAllTable {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TableComponent: React.FC<IAllTable> = ({
+const TableComponent: React.FC<IContributorTable> = ({
   users,
   showAddSplitScreens,
   setShowAddSplitScreens,

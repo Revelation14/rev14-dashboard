@@ -7,16 +7,10 @@ import { Tab, Tabs } from '@/components/common/Tabs';
 import { getContributorService } from '@/services/contributor.service';
 
 import Spinner from '../common/Spinner';
+import type { IContributorTable } from '../common/table';
 import TableComponent from '../common/table';
 
-interface IContributorList {
-  showAddSplitScreens: boolean;
-  setShowAddSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowViewSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowEditSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const ContributorList: React.FC<IContributorList> = ({
+const ContributorList: React.FC<IContributorTable> = ({
   showAddSplitScreens,
   setShowAddSplitScreens,
   setShowEditSplitScreens,

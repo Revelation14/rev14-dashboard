@@ -18,6 +18,7 @@ const Index = () => {
   const [showAddSplitScreens, setShowAddSplitScreens] = useState(false);
   const [showEditSplitScreen, setShowEditSplitScreens] = useState(false);
   const [showViewSplitScreens, setShowViewSplitScreens] = useState(false);
+  const [loading, setLoading] = useState(false);
   const User = editUser();
 
   const [isClient, setIsClient] = useState(false);
@@ -27,7 +28,7 @@ const Index = () => {
 
   useEffect(() => {
     setIsClient(true);
-    if (!auth.user && !user) {
+    if (!auth.user && !user && !loading) {
       router.push('/auth/login');
     }
   }, []);
@@ -43,6 +44,7 @@ const Index = () => {
           firstIsLarger
           firstScreen={
             <ContributorList
+              setLoading={setLoading}
               showAddSplitScreens={showAddSplitScreens}
               setShowAddSplitScreens={setShowAddSplitScreens}
               setShowViewSplitScreens={setShowViewSplitScreens}
@@ -58,6 +60,7 @@ const Index = () => {
           secondIsLarger
           firstScreen={
             <ContributorList
+              setLoading={setLoading}
               showAddSplitScreens={showViewSplitScreens}
               setShowAddSplitScreens={setShowAddSplitScreens}
               setShowViewSplitScreens={setShowViewSplitScreens}
@@ -101,6 +104,7 @@ const Index = () => {
           secondIsLarger
           firstScreen={
             <ContributorList
+              setLoading={setLoading}
               showAddSplitScreens={showEditSplitScreen}
               setShowAddSplitScreens={setShowAddSplitScreens}
               setShowViewSplitScreens={setShowViewSplitScreens}
@@ -117,6 +121,7 @@ const Index = () => {
       ) : (
         <div className="min-h-screen rounded-2xl border border-gray-200 bg-white p-6">
           <ContributorList
+            setLoading={setLoading}
             showAddSplitScreens={showAddSplitScreens}
             setShowAddSplitScreens={setShowAddSplitScreens}
             setShowViewSplitScreens={setShowViewSplitScreens}
