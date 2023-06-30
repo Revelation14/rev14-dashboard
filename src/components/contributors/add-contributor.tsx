@@ -4,7 +4,7 @@ import React from 'react';
 
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
-import { AddContributorService } from '@/services/contributor.service';
+import { addContributorService } from '@/services/contributor.service';
 import { EGender, EUserRole } from '@/types/user.types';
 
 interface IAddContributor {
@@ -25,7 +25,7 @@ const AddContributor: React.FC<IAddContributor> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const data = await AddContributorService(formData);
+      const data = await addContributorService(formData);
       console.log(data.statusCode);
       if (data.statusCode === 400) {
         alert('Contributor already exists');
