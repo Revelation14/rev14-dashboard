@@ -17,7 +17,7 @@ const Index = () => {
     }
   }, []);
 
-  return <Insights />;
+  return <div>{user ? <Insights /> : null}</div>;
 };
 
 export default Index;
