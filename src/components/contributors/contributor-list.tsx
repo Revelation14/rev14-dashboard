@@ -37,10 +37,16 @@ const ContributorList: React.FC<IContributorList> = ({
     try {
       setLoading(true);
       const response = await getContributorService();
-      setUsers(response.data.data);
-      console.log(response.data.data);
+      const { data } = response.data;
+      // order data by updatedAt
+      data.sort((a: any, b: any) => {
+        return (
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
+      });
+      setUsers(data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.log(error);
     }
     setLoading(false);
   };

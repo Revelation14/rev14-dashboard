@@ -9,6 +9,7 @@ import type { IHttpException } from '@/types/user.types';
 import { EGender, EUserRole } from '@/types/user.types';
 
 import ErrorMessage from '../common/ErrorMessage';
+import Spinner from '../common/Spinner';
 
 interface IAddContributor {
   setShowAddSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,10 +27,12 @@ const AddContributor: React.FC<IAddContributor> = ({
     role: EUserRole.CONTENT_CREATOR,
   });
   const [errorMsg, setErrorMsg] = useState('');
+  const [isLoading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const res = await addContributorService(formData);
       if (res.statusCode === 400) {
         setErrorMsg('Contributor already exists');
@@ -39,6 +42,15 @@ const AddContributor: React.FC<IAddContributor> = ({
     } catch (error) {
       setErrorMsg('Error adding contributor');
     }
+    setFormData({
+      name: '',
+      email: '',
+      phoneNumber: '',
+      gender: '',
+      password: 'Password@123',
+      role: EUserRole.CONTENT_CREATOR,
+    });
+    setLoading(false);
   };
   return (
     <>
@@ -103,13 +115,17 @@ const AddContributor: React.FC<IAddContributor> = ({
             />
           </div>
           <div className="mx-auto pt-9">
-            <Button
-              text="Add Contributor"
-              type="submit"
-              backgroundColor="gray-50"
-              color="gray-400"
-              className="hover:bg-gray-150"
-            />
+            {isLoading ? (
+              <Spinner className="h-5 w-5" />
+            ) : (
+              <Button
+                text="Add Contributor"
+                type="submit"
+                backgroundColor="gray-50"
+                color="gray-400"
+                className="hover:bg-gray-150"
+              />
+            )}
           </div>
         </form>
       </div>
