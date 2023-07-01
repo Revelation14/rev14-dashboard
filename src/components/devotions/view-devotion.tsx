@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import moment from 'moment';
@@ -5,20 +6,19 @@ import React from 'react';
 
 import DraftEditor from '@/components/common/Editor';
 import { InputSelect } from '@/components/common/InputSelect';
+import { EDevotionStatus, type IDevotion } from '@/types/devotion.types';
+
+import { Badge } from '../common/Badge';
 
 interface IViewDevotion {
-  user: { firstName: string; lastName: string };
-  devotion: { title: string; content: string };
-  createdAt: string;
+  devotion?: IDevotion;
+  numberOfViews: number;
   setShowViewSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
   setShowEditSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
-  numberOfViews: number;
 }
 
 const ViewDevotion: React.FC<IViewDevotion> = ({
-  user,
   devotion,
-  createdAt,
   numberOfViews,
   setShowViewSplitScreens,
   setShowEditSplitScreens,
@@ -31,16 +31,20 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-4">
               <span className="h-7 w-7 rounded-full bg-backgroundAccent pt-1 text-center text-xs text-white">
-                {user.firstName.charAt(0)}
+                {devotion?.user?.name?.split('')[0]?.charAt(0) ?? '-'}
               </span>
               <span className="text-sm font-medium text-black">
-                {user.firstName} {user.lastName}
+                {devotion?.user?.name ?? '-'}
               </span>
             </div>
-            <div className="text-sm text-gray-600">
-              Submitted On: {moment(createdAt).format('MMM')}{' '}
-              {moment(createdAt).format('DD')}
-            </div>
+            {devotion?.createdAt ? (
+              <div className="text-sm text-gray-600">
+                Submitted On: {moment(devotion?.createdAt).format('MMM')}{' '}
+                {moment(devotion?.createdAt).format('DD')}
+              </div>
+            ) : (
+              <div className="text-sm text-gray-600">Submitted On: -</div>
+            )}
             <div className="text-sm text-gray-600">{numberOfViews} Views</div>
           </div>
           <div className="flex w-full items-center justify-center">
@@ -84,28 +88,22 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <span className="h-7 w-7 rounded-full bg-backgroundAccent pt-1 text-center text-xs text-white">
-                {user.firstName.charAt(0)}
+                {devotion?.user?.name?.split('')[0]?.charAt(0) ?? '-'}
               </span>
               <span className="text-sm font-medium text-black">
-                {user.firstName} {user.lastName}
+                {devotion?.user?.name ?? '-'}
               </span>
             </div>
-            <div className="text-xs text-gray-600">
-              Submitted On: {moment(createdAt).format('MMM')}{' '}
-              {moment(createdAt).format('DD')}
-            </div>
+            {devotion?.createdAt ? (
+              <div className="text-xs text-gray-600">
+                Submitted On: {moment(devotion?.createdAt).format('MMM')}{' '}
+                {moment(devotion?.createdAt).format('DD')}
+              </div>
+            ) : (
+              <div className="text-xs text-gray-600">Submitted On: -</div>
+            )}
             <div className="text-xs text-gray-600">{numberOfViews} Views</div>
             <div className="flex items-center gap-4">
-              <div>
-                <InputSelect
-                  label=""
-                  background="bg-gray-50"
-                  options={[
-                    { label: 'Publish', value: 'publish' },
-                    { label: 'Reject', value: 'reject' },
-                  ]}
-                />
-              </div>
               <div
                 className="cursor-pointer rounded-full bg-gray-50 p-3"
                 onClick={() => {
@@ -133,14 +131,43 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
         </div>
         {/** End of Top */}
       </div>
-      <div className="text-xl font-semibold">{devotion.title}</div>
-      <img src="/assets/images/ViewImage.png" alt="" />
+      <div className="flex items-center justify-between">
+        <div className="text-xl font-semibold">{devotion?.title ?? '-'}</div>
+        <Badge
+          title={
+            devotion?.status === EDevotionStatus.PUBLISHED
+              ? 'Published'
+              : 'Unapproved'
+          }
+          backgroundColor={
+            devotion?.status === EDevotionStatus.PUBLISHED
+              ? 'bg-secondary-green'
+              : 'bg-secondary-orange'
+          }
+        />
+      </div>
+      <img
+        src={
+          devotion?.coverImage
+            ? devotion?.coverImage
+            : '/assets/images/ViewImage.png'
+        }
+        alt=""
+      />
       <div className="scrollbar min-h-screen overflow-auto">
         <DraftEditor
           viewOnly
-          defaultValue={devotion.content}
+          defaultValue={devotion?.content ?? ''}
           handleEditorChange={() => {}}
         />
+      </div>
+      <div>
+        <audio controls>
+          {devotion?.attachments?.map((audio) => (
+            <source src={audio} type="audio/mpeg" key={audio} />
+          ))}
+          Your browser does not support the audio element.
+        </audio>
       </div>
     </div>
   );

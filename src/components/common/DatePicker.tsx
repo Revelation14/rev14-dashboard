@@ -15,6 +15,11 @@ const DatePicker: React.FC<IDatePicker> = ({ name, value, handleChange }) => {
       handleChange({ name, value: e.target.value, event: e });
   };
 
+  const onReset = (e: any) => {
+    setValue('');
+    handleChange({ name, value: '', event: e });
+  };
+
   useEffect(() => {
     if (handleChange && innerValue !== value) handleChange({ name, value });
   }, [name, value]);
@@ -27,6 +32,7 @@ const DatePicker: React.FC<IDatePicker> = ({ name, value, handleChange }) => {
         id="datepicker"
         value={innerValue}
         onChange={onChange}
+        onReset={onReset}
         className="rounded-full bg-gray-150 px-3 py-2 outline-none"
       />
     </div>
