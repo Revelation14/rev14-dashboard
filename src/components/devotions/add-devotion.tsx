@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -85,11 +86,14 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   const handleSubmit = async () => {
     setLoading(true);
 
-    let newAttachments: string[] = newDevotion.attachments;
+    let newAttachments = newDevotion.attachments;
     let coverPhoto = newDevotion.coverImage;
 
     if (uploadedAudio) {
-      newAttachments = await uploadMultipleFiles(uploadedAudio, 'audio');
+      newAttachments = [
+        ...newAttachments,
+        ...(await uploadMultipleFiles(uploadedAudio, 'audio')),
+      ];
     } else if (uploadedImage) {
       coverPhoto = await uploadSingleFile(uploadedImage);
     }
@@ -115,7 +119,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         {
           ...newDevotion,
           coverImage: coverPhoto,
-          attachments: [...newAttachments, ...defaultValues.attachments],
+          attachments: [...newAttachments],
           createdBy: defaultValues?.createdBy ?? (user as IUser)?.id ?? '',
         },
         defaultValues.id
@@ -151,6 +155,13 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           setLoading(false);
         });
     }
+  };
+
+  const removeAudio = (audio: string) => {
+    const newAttachments = newDevotion.attachments.filter(
+      (attachment) => attachment !== audio
+    );
+    setNewDevotion({ ...newDevotion, attachments: newAttachments });
   };
 
   return (
@@ -213,6 +224,33 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           </div>
         )}
         <div className={defaultValues ? '' : 'pt-11'}>
+          {newDevotion.coverImage && (
+            <div className="flex items-center gap-2 pb-5">
+              <span className="text-sm font-semibold">
+                Previous cover image {'>'}
+              </span>
+              <div className="relative">
+                <img
+                  src={newDevotion.coverImage}
+                  alt="previous cover pic"
+                  width={120}
+                  height={120}
+                />
+                <div
+                  className="absolute right-1 top-1 cursor-pointer rounded-full bg-white p-1 hover:bg-gray-200"
+                  onClick={() => {
+                    setNewDevotion({ ...newDevotion, coverImage: '' });
+                  }}
+                >
+                  <img
+                    src="/assets/icons/black-close.svg"
+                    alt="close"
+                    className="w-2"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
           <InputFile
             label="The devotional’s image goes here"
             title="Upload the devotional’s Image"
@@ -237,6 +275,34 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             defaultValue={defaultValues?.content}
           />
         </div>
+        {newDevotion.attachments.length !== 0 && (
+          <div className="flex items-center gap-2 pb-5">
+            <span className="text-sm font-semibold">
+              Previous cover audio(s) {'>'}
+            </span>
+            <div className="flex flex-wrap gap-3">
+              {newDevotion.attachments.map((audio, i) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <div className="relative" key={i}>
+                  <audio controls className="w-36">
+                    <source src={audio} type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                  </audio>
+                  <div
+                    className="absolute right-1 top-1 cursor-pointer rounded-full bg-white p-1 hover:bg-gray-200"
+                    onClick={() => removeAudio(audio)}
+                  >
+                    <img
+                      src="/assets/icons/black-close.svg"
+                      alt="close"
+                      className="w-2"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         <InputFile
           label="Audio goes here"
           title="Upload the devotional’s Audio"
