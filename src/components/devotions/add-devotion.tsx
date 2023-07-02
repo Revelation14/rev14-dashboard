@@ -83,21 +83,34 @@ const AddDevotion: React.FC<IAddDevotion> = ({
 
   const devotionStore = useDevotion();
   const handleSubmit = async () => {
-    if (!newDevotion.title && !newDevotion.content) {
-      setErrorMsg('Title and content are required');
-    } else if (!newDevotion.title) {
-      setErrorMsg('Title is required');
-    } else if (!newDevotion.content) {
-      setErrorMsg('Content is required');
-    } else if (defaultValues) {
-      setLoading(true);
-      let newAttachments: string[] = newDevotion.attachments;
-      let coverPhoto = newDevotion.coverImage;
-      if (uploadedAudio) {
-        newAttachments = await uploadMultipleFiles(uploadedAudio, 'audio');
-      } else if (uploadedImage) {
-        coverPhoto = await uploadSingleFile(uploadedImage, 'image');
-      }
+    setLoading(true);
+
+    let newAttachments: string[] = newDevotion.attachments;
+    let coverPhoto = newDevotion.coverImage;
+
+    if (uploadedAudio) {
+      newAttachments = await uploadMultipleFiles(uploadedAudio, 'audio');
+    } else if (uploadedImage) {
+      coverPhoto = await uploadSingleFile(uploadedImage, 'image');
+    }
+
+    const handleSuccess = () => {
+      toast.success('Devotion updated successfully!');
+      getDevotions()
+        .then((data) => {
+          setDevotions(data as IDevotion[]);
+        })
+        .catch((err) => {
+          toast.error((err as IHttpException).message);
+        });
+      setShowAddSplitScreens(false);
+    };
+
+    const handleError = (err: IHttpException) => {
+      toast.error(err.message);
+    };
+
+    if (defaultValues) {
       updateDevotion(
         {
           ...newDevotion,
@@ -108,32 +121,15 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         defaultValues.id
       )
         .then(() => {
-          toast.success('Devotion updated successfully!');
-          getDevotions()
-            .then((data) => {
-              setDevotions(data as IDevotion[]);
-              setLoading(false);
-            })
-            .catch((err) => {
-              toast.error((err as IHttpException).message);
-              setLoading(false);
-            });
-          setShowAddSplitScreens(false);
-          setLoading(false);
+          handleSuccess();
         })
         .catch((err) => {
-          setErrorMsg((err as IHttpException).message);
+          handleError(err as IHttpException);
+        })
+        .finally(() => {
           setLoading(false);
         });
     } else {
-      setLoading(true);
-      let newAttachments: string[] = newDevotion.attachments;
-      let coverPhoto = newDevotion.coverImage;
-      if (uploadedAudio) {
-        newAttachments = await uploadMultipleFiles(uploadedAudio, 'audio');
-      } else if (uploadedImage) {
-        coverPhoto = await uploadSingleFile(uploadedImage, 'image');
-      }
       addDevotion({
         ...newDevotion,
         coverImage: coverPhoto,
@@ -142,29 +138,18 @@ const AddDevotion: React.FC<IAddDevotion> = ({
       })
         .then((res) => {
           if ((res as IDevotion)?.id) {
-            toast.success('Devotion added successfully!');
-            getDevotions()
-              .then((data) => {
-                setDevotions(data as IDevotion[]);
-                setLoading(false);
-              })
-              .catch((err) => {
-                toast.error((err as IHttpException).message);
-                setLoading(false);
-              });
+            handleSuccess();
             devotionStore.setDevotion(res as IDevotion);
-            setShowAddSplitScreens(false);
-            setLoading(false);
           } else {
-            toast.error((res as IHttpException).message);
-            setLoading(false);
+            handleError(res as IHttpException);
           }
         })
         .catch((err) => {
-          toast.error((err as IHttpException).message);
+          handleError(err as IHttpException);
+        })
+        .finally(() => {
           setLoading(false);
         });
-      setLoading(false);
     }
   };
 
