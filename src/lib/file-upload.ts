@@ -4,13 +4,13 @@ import { toast } from 'react-hot-toast';
 export const presetName = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME ?? '';
 export const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ?? '';
 
-export const uploadMultipleImages = async (
+export const uploadMultipleFiles = async (
   audios: File[],
   fileType: 'audio' | 'image'
 ) => {
   // Create an empty array to store the URLs
   const urls: string[] = [];
-  // Use Promise.all to upload all the images at once
+  // Use Promise.all to upload all the files at once
   const promises = audios.map(async (audio) => {
     return new Promise((resolve, reject) => {
       const formData = new FormData();
@@ -20,11 +20,12 @@ export const uploadMultipleImages = async (
       const config = {
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
         use_filename: true,
+        resource_type: 'auto',
       };
       axios
         .post(
           fileType === 'audio'
-            ? `https://api.cloudinary.com/v1_1/${cloudName}/audio/upload`
+            ? `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`
             : `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
           formData,
           config
@@ -52,7 +53,7 @@ export const uploadMultipleImages = async (
   return urls;
 };
 
-export const uploadSingleImage = (
+export const uploadSingleFile = (
   file: File,
   fileType: 'audio' | 'image'
 ): Promise<string> => {
@@ -64,11 +65,12 @@ export const uploadSingleImage = (
     const config = {
       headers: { 'X-Requested-With': 'XMLHttpRequest' },
       use_filename: true,
+      resource_type: 'auto',
     };
     axios
       .post(
         fileType === 'audio'
-          ? `https://api.cloudinary.com/v1_1/${cloudName}/audio/upload`
+          ? `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`
           : `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
         formData,
         config

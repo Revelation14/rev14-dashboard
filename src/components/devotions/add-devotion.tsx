@@ -9,7 +9,7 @@ import { ActionButton } from '@/components/common/ActionButton';
 import DraftEditor from '@/components/common/Editor';
 import { InputFile } from '@/components/common/InputFile';
 import { InputText } from '@/components/common/InputText';
-import { uploadMultipleImages, uploadSingleImage } from '@/lib/file-upload';
+import { uploadMultipleFiles, uploadSingleFile } from '@/lib/file-upload';
 import { getFromLocalStorage } from '@/lib/helper';
 import {
   addDevotion,
@@ -94,9 +94,9 @@ const AddDevotion: React.FC<IAddDevotion> = ({
       let newAttachments: string[] = newDevotion.attachments;
       let coverPhoto = newDevotion.coverImage;
       if (uploadedAudio) {
-        newAttachments = await uploadMultipleImages(uploadedAudio, 'audio');
+        newAttachments = await uploadMultipleFiles(uploadedAudio, 'audio');
       } else if (uploadedImage) {
-        coverPhoto = await uploadSingleImage(uploadedImage, 'image');
+        coverPhoto = await uploadSingleFile(uploadedImage, 'image');
       }
       updateDevotion(
         {
@@ -130,9 +130,9 @@ const AddDevotion: React.FC<IAddDevotion> = ({
       let newAttachments: string[] = newDevotion.attachments;
       let coverPhoto = newDevotion.coverImage;
       if (uploadedAudio) {
-        newAttachments = await uploadMultipleImages(uploadedAudio, 'image');
+        newAttachments = await uploadMultipleFiles(uploadedAudio, 'audio');
       } else if (uploadedImage) {
-        coverPhoto = await uploadSingleImage(uploadedImage, 'image');
+        coverPhoto = await uploadSingleFile(uploadedImage, 'image');
       }
       addDevotion({
         ...newDevotion,
@@ -164,6 +164,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           toast.error((err as IHttpException).message);
           setLoading(false);
         });
+      setLoading(false);
     }
   };
 

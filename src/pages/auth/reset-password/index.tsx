@@ -8,7 +8,7 @@ import { InputText } from '@/components/common/InputText';
 
 import ErrorMessage from '../../../components/common/ErrorMessage';
 import { createPassword } from '../../../services/auth.service';
-import type { IHttpException } from '../../../types/user.types';
+import type { IHttpException } from '../../../types/common.types';
 
 const Login = () => {
   const router = useRouter();

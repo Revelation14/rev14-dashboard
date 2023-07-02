@@ -44,6 +44,7 @@ const TableComponent: React.FC<IContributorTable> = ({
           onSearch={(query) => {
             console.log('Search query:', query);
           }}
+          onClearSearch={() => {}}
         />,
       ]}
       data={users.map(

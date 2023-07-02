@@ -7,7 +7,7 @@ import { OtpInput } from '@/components/common/OTPInput';
 import ErrorMessage from '../../../components/common/ErrorMessage';
 import { setToLocalStorage } from '../../../lib/helper';
 import { verifyOtp } from '../../../services/auth.service';
-import type { IHttpException } from '../../../types/user.types';
+import type { IHttpException } from '../../../types/common.types';
 
 const ConfirmEmail = () => {
   const router = useRouter();

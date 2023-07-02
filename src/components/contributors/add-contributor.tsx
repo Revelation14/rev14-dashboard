@@ -5,9 +5,9 @@ import React, { useState } from 'react';
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
 import { addContributorService } from '@/services/contributor.service';
-import type { IHttpException } from '@/types/user.types';
 import { EGender, EUserRole } from '@/types/user.types';
 
+import type { IHttpException } from '../../types/common.types';
 import ErrorMessage from '../common/ErrorMessage';
 import Spinner from '../common/Spinner';
 

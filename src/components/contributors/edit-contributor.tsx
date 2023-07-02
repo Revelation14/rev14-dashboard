@@ -5,8 +5,9 @@ import React, { useState } from 'react';
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
 import { editContributorService } from '@/services/contributor.service';
-import type { IEditUser, IHttpException } from '@/types/user.types';
+import type { IEditUser } from '@/types/user.types';
 
+import type { IHttpException } from '../../types/common.types';
 import ErrorMessage from '../common/ErrorMessage';
 import Spinner from '../common/Spinner';
 

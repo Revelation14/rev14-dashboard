@@ -1,7 +1,9 @@
 import axios, { type AxiosError } from 'axios';
 
 import http from '@/lib/axios';
-import type { IEditUser, IHttpException } from '@/types/user.types';
+import type { IEditUser } from '@/types/user.types';
+
+import type { IHttpException } from '../types/common.types';
 
 export async function addContributorService(
   credentials: any
