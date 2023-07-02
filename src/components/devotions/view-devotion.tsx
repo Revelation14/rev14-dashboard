@@ -152,7 +152,7 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
         src={
           devotion?.coverImage
             ? devotion?.coverImage
-            : '/assets/images/ViewImage.png'
+            : 'https://placehold.co/600x400?text=Grace'
         }
         alt=""
       />

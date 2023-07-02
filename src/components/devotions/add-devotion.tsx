@@ -83,6 +83,23 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   }, [defaultValues]);
 
   const devotionStore = useDevotion();
+
+  const handleSuccess = () => {
+    toast.success('Devotion updated successfully!');
+    getDevotions()
+      .then((data) => {
+        setDevotions(data as IDevotion[]);
+      })
+      .catch((err) => {
+        toast.error((err as IHttpException).message);
+      });
+    setShowAddSplitScreens(false);
+  };
+
+  const handleError = (err: IHttpException) => {
+    toast.error(err.message);
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
 
@@ -98,41 +115,36 @@ const AddDevotion: React.FC<IAddDevotion> = ({
       coverPhoto = await uploadSingleFile(uploadedImage);
     }
 
-    const handleSuccess = () => {
-      toast.success('Devotion updated successfully!');
-      getDevotions()
-        .then((data) => {
-          setDevotions(data as IDevotion[]);
-        })
-        .catch((err) => {
-          toast.error((err as IHttpException).message);
-        });
-      setShowAddSplitScreens(false);
-    };
-
-    const handleError = (err: IHttpException) => {
-      toast.error(err.message);
-    };
-
     if (defaultValues) {
-      updateDevotion(
-        {
-          ...newDevotion,
-          coverImage: coverPhoto,
-          attachments: [...newAttachments],
-          createdBy: defaultValues?.createdBy ?? (user as IUser)?.id ?? '',
-        },
-        defaultValues.id
-      )
-        .then(() => {
-          handleSuccess();
-        })
-        .catch((err) => {
-          handleError(err as IHttpException);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      if (
+        newDevotion.status === EDevotionStatus.PUBLISHED &&
+        coverPhoto === '' &&
+        newAttachments.length === 0
+      ) {
+        toast.error(
+          `A devotion can't be published if it doesn't have a cover image or an audio!`
+        );
+        setLoading(false);
+      } else {
+        updateDevotion(
+          {
+            ...newDevotion,
+            coverImage: coverPhoto,
+            attachments: [...newAttachments],
+            createdBy: defaultValues?.createdBy ?? (user as IUser)?.id ?? '',
+          },
+          defaultValues.id
+        )
+          .then(() => {
+            handleSuccess();
+          })
+          .catch((err) => {
+            handleError(err as IHttpException);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
     } else {
       addDevotion({
         ...newDevotion,
@@ -201,25 +213,17 @@ const AddDevotion: React.FC<IAddDevotion> = ({
               label="Status"
               background="bg-gray-50"
               options={[
-                { label: 'Publish', value: 'publish' },
-                { label: 'Reject', value: 'reject' },
+                { label: 'Draft', value: EDevotionStatus.DRAFT },
+                { label: 'Published', value: EDevotionStatus.PUBLISHED },
+                { label: 'Rejected', value: EDevotionStatus.DELETED },
               ]}
-              defaultValue={
-                defaultValues?.status === EDevotionStatus.DELETED
-                  ? 'reject'
-                  : defaultValues?.status === EDevotionStatus.PUBLISHED
-                  ? 'publish'
-                  : undefined
-              }
-              onChange={(value) =>
+              defaultValue={newDevotion?.status}
+              onChange={(value) => {
                 setNewDevotion({
                   ...newDevotion,
-                  status:
-                    value === 'reject'
-                      ? EDevotionStatus.DELETED
-                      : EDevotionStatus.PUBLISHED,
-                })
-              }
+                  status: value as EDevotionStatus,
+                });
+              }}
             />
           </div>
         )}

@@ -33,7 +33,7 @@ const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
               src={
                 devotion.coverImage
                   ? devotion.coverImage
-                  : '/assets/images/Image.png'
+                  : 'https://placehold.co/600x400?text=Grace'
               }
               alt=""
               className="h-full w-full rounded-xl object-cover object-center"
