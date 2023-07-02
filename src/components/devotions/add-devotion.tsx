@@ -91,7 +91,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     if (uploadedAudio) {
       newAttachments = await uploadMultipleFiles(uploadedAudio, 'audio');
     } else if (uploadedImage) {
-      coverPhoto = await uploadSingleFile(uploadedImage, 'image');
+      coverPhoto = await uploadSingleFile(uploadedImage);
     }
 
     const handleSuccess = () => {
@@ -115,7 +115,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         {
           ...newDevotion,
           coverImage: coverPhoto,
-          attachments: newAttachments,
+          attachments: [...newAttachments, ...defaultValues.attachments],
           createdBy: defaultValues?.createdBy ?? (user as IUser)?.id ?? '',
         },
         defaultValues.id

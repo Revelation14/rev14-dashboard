@@ -53,27 +53,16 @@ export const uploadMultipleFiles = async (
   return urls;
 };
 
-export const uploadSingleFile = (
-  file: File,
-  fileType: 'audio' | 'image'
-): Promise<string> => {
+export const uploadSingleFile = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', presetName);
     formData.append('cloud_name', cloudName);
-    const config = {
-      headers: { 'X-Requested-With': 'XMLHttpRequest' },
-      use_filename: true,
-      resource_type: 'auto',
-    };
     axios
       .post(
-        fileType === 'audio'
-          ? `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`
-          : `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        formData,
-        config
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        formData
       )
       .then((res) => {
         resolve(res.data.secure_url);

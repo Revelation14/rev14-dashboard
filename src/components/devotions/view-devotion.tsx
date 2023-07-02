@@ -161,13 +161,14 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
           handleEditorChange={() => {}}
         />
       </div>
-      <div>
-        <audio controls>
-          {devotion?.attachments?.map((audio) => (
-            <source src={audio} type="audio/mpeg" key={audio} />
+      <div className="flex flex-col gap-2">
+        {devotion?.attachments.length !== 0 &&
+          devotion?.attachments?.map((audio) => (
+            <audio controls key={audio}>
+              <source src={audio} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
           ))}
-          Your browser does not support the audio element.
-        </audio>
       </div>
     </div>
   );

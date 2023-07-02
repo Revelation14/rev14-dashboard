@@ -18,7 +18,7 @@ const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
       onClick={handleClick}
     >
       {devotion?.createdAt && (
-        <div className="pt-5 text-sm font-light text-gray-600">
+        <div className="pt-5 text-sm font-light text-gray-600 md:col-span-2 lg:col-span-1">
           {moment(devotion.createdAt).format('MMM')}{' '}
           {moment(devotion.createdAt).format('DD')}{' '}
           <span className="md:text-xl">
@@ -26,7 +26,7 @@ const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
           </span>
         </div>
       )}
-      <div className="col-span-7 flex flex-col gap-6 rounded-2xl border-2 border-gray-150  p-2 pr-4 hover:shadow-lg md:flex-row">
+      <div className="col-span-7 flex flex-col gap-6 rounded-2xl border-2 border-gray-150 p-2 pr-4  hover:shadow-lg md:col-span-6 lg:col-span-7 lg:flex-row">
         <div className="">
           <div className="relative h-full w-full lg:h-40 lg:w-40">
             <img
