@@ -154,7 +154,7 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
         }
         alt=""
       />
-      <div className="scrollbar min-h-screen overflow-auto">
+      <div className="scrollbar overflow-auto">
         <DraftEditor
           viewOnly
           defaultValue={devotion?.content ?? ''}

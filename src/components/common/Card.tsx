@@ -14,7 +14,7 @@ interface ICard {
 const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
   return (
     <div
-      className="flex cursor-pointer flex-col items-start gap-4 md:flex-row"
+      className="grid cursor-pointer grid-cols-8 items-start gap-4 md:flex-row"
       onClick={handleClick}
     >
       {devotion?.createdAt && (
@@ -26,7 +26,7 @@ const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
           </span>
         </div>
       )}
-      <div className="flex flex-col gap-6 rounded-2xl border-2 border-gray-150  p-2 pr-4 hover:shadow-lg md:flex-row">
+      <div className="col-span-7 flex flex-col gap-6 rounded-2xl border-2 border-gray-150  p-2 pr-4 hover:shadow-lg md:flex-row">
         <div className="">
           <div className="relative h-full w-full lg:h-40 lg:w-40">
             <img
@@ -56,7 +56,11 @@ const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
         </div>
         <div className="flex flex-col justify-between gap-2">
           <div className="flex items-center justify-between">
-            <div className="text-xl font-semibold">{devotion?.title}</div>
+            <div className="text-xl font-semibold">
+              {devotion?.title.length > 10
+                ? `${devotion.title.slice(0, 10)}...`
+                : devotion.title}
+            </div>
             <div className="text-sm font-light text-gray-600">
               {moment(devotion?.createdAt).format('HH:MM:a')}
             </div>
