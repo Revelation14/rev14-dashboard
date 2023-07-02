@@ -26,7 +26,7 @@ const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
           </span>
         </div>
       )}
-      <div className="col-span-7 flex flex-col gap-6 rounded-2xl border-2 border-gray-150 p-2 pr-4  hover:shadow-lg md:col-span-6 lg:col-span-7 lg:flex-row">
+      <div className="col-span-7 flex flex-col gap-6 rounded-2xl border-2 border-gray-150 p-2 pr-4 hover:shadow-lg md:col-span-6 lg:col-span-7 lg:flex-row">
         <div className="">
           <div className="relative h-full w-full lg:h-40 lg:w-40">
             <img
@@ -54,9 +54,9 @@ const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col justify-between gap-2">
+        <div className="flex w-[100%] flex-col justify-between gap-2">
           <div className="flex items-center justify-between">
-            <div className="text-xl font-semibold">
+            <div className="justify-start text-xl font-semibold">
               {devotion?.title.length > 10
                 ? `${devotion.title.slice(0, 10)}...`
                 : devotion.title}
