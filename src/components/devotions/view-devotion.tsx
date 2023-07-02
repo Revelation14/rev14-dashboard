@@ -12,6 +12,7 @@ import { Badge } from '../common/Badge';
 
 interface IViewDevotion {
   devotion?: IDevotion;
+  attachments: string[];
   numberOfViews: number;
   setShowViewSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
   setShowEditSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,6 +23,7 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
   numberOfViews,
   setShowViewSplitScreens,
   setShowEditSplitScreens,
+  attachments,
 }) => {
   return (
     <div className="flex flex-col gap-8">
@@ -162,9 +164,10 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
         />
       </div>
       <div className="flex flex-col gap-2">
-        {devotion?.attachments.length !== 0 &&
-          devotion?.attachments?.map((audio) => (
-            <audio controls key={audio}>
+        {attachments.length !== 0 &&
+          attachments?.map((audio, i) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <audio controls key={i}>
               <source src={audio} type="audio/mpeg" />
               Your browser does not support the audio element.
             </audio>

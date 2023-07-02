@@ -125,6 +125,7 @@ const Devotions = () => {
                 setShowViewSplitScreens={setShowViewSplitScreens}
                 setShowEditSplitScreens={setShowEditSplitScreens}
                 devotion={selectedDevotion}
+                attachments={selectedDevotion?.attachments ?? []}
                 numberOfViews={20}
               />
             }
