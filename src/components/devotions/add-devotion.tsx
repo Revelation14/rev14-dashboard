@@ -26,7 +26,6 @@ import {
 } from '@/types/devotion.types';
 import type { IUser } from '@/types/user.types';
 
-import ConfirmPopup from '../common/ConfirmPopup';
 import ErrorMessage from '../common/ErrorMessage';
 import { InputSelect } from '../common/InputSelect';
 
@@ -46,7 +45,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const user = getFromLocalStorage('user');
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [newDevotion, setNewDevotion] = useState<INewDevotion>({
     attachments: [],
     coverImage: '',
@@ -130,9 +128,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           }
         );
         setLoading(false);
-      } else if (newDevotion.status === EDevotionStatus.DELETED) {
-        setLoading(false);
-        setShowDeleteConfirmation(true);
       } else {
         updateDevotion(
           {
@@ -184,40 +179,11 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     setNewDevotion({ ...newDevotion, attachments: newAttachments });
   };
 
-  const handleDelete = () => {
-    setLoading(true);
-    updateDevotion(
-      {
-        ...newDevotion,
-        status: EDevotionStatus.DELETED,
-      },
-      defaultValues?.id ?? ''
-    )
-      .then(() => {
-        handleSuccess('Devotion deleted successfully!');
-      })
-      .catch((err) => {
-        handleError(err as IHttpException);
-      })
-      .finally(() => {
-        setLoading(false);
-        setShowDeleteConfirmation(false);
-      });
-  };
-
   return (
     <>
       <div className="flex items-center justify-between font-raleway">
         <div>{defaultValues ? 'Edit Devotion' : 'Add Devotional'}</div>
-        {showDeleteConfirmation && (
-          <ConfirmPopup
-            title="Confirm deletion"
-            message="Are you sure you want to delete this devotion?"
-            onCancel={() => setShowDeleteConfirmation(false)}
-            onConfirm={handleDelete}
-            loading={loading}
-          />
-        )}
+
         <div className="flex items-center gap-4">
           <ActionButton
             backgroundColor="bg-gray-50"
@@ -225,7 +191,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             color="text-gray-400"
             label="Save"
             handleClick={handleSubmit}
-            loading={!showDeleteConfirmation && loading}
+            loading={loading}
           />
           <div
             className="cursor-pointer rounded-full bg-gray-50 p-3"

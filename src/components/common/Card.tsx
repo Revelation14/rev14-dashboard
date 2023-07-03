@@ -45,6 +45,8 @@ const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
                 title={
                   devotion?.status === EDevotionStatus.DRAFT
                     ? 'Unapproved'
+                    : devotion?.status === EDevotionStatus.DELETED
+                    ? 'Rejected'
                     : toTitleCase(devotion.status)
                 }
                 backgroundColor={
