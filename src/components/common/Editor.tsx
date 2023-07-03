@@ -9,7 +9,7 @@ const QuillNoSSRWrapper = dynamic(import('react-quill'), {
 
 interface IDraftEditor {
   viewOnly?: boolean;
-  handleEditorChange: () => void;
+  handleEditorChange: (value: string) => void;
   defaultValue?: string;
 }
 
@@ -24,7 +24,6 @@ const modules = {
       { indent: '-1' },
       { indent: '+1' },
     ],
-    ['link', 'image', 'video'],
     ['clean'],
   ],
   clipboard: {
@@ -50,9 +49,6 @@ const formats = [
   'list',
   'bullet',
   'indent',
-  'link',
-  'image',
-  'video',
 ];
 
 const DraftEditor: React.FC<IDraftEditor> = ({
@@ -64,7 +60,7 @@ const DraftEditor: React.FC<IDraftEditor> = ({
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
-    handleEditorChange();
+    handleEditorChange(newValue);
   };
 
   useEffect(() => {

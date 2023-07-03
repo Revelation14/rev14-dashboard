@@ -6,7 +6,7 @@ import { InputText } from '@/components/common/InputText';
 
 import ErrorMessage from '../../../components/common/ErrorMessage';
 import { requestPasswordRecovery } from '../../../services/auth.service';
-import type { IHttpException } from '../../../types/user.types';
+import type { IHttpException } from '../../../types/common.types';
 
 const PasswordRecovery = () => {
   const [errorMsg, setErrorMsg] = useState('');

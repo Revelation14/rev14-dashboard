@@ -9,7 +9,8 @@ import ErrorMessage from '@/components/common/ErrorMessage';
 import { InputText } from '@/components/common/InputText';
 import { signin } from '@/services/auth.service';
 import { useAuth } from '@/store/auth.store';
-import type { IAuth, IHttpException, ILogin } from '@/types/user.types';
+import type { IHttpException } from '@/types/common.types';
+import type { IAuth, ILogin } from '@/types/user.types';
 
 import { setToLocalStorage } from '../../../lib/helper';
 

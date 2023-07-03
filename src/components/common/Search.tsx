@@ -1,11 +1,16 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface SearchProps {
   onSearch: (query: string) => void;
+  onClearSearch: () => void;
   className?: string;
 }
 
-const Search: React.FC<SearchProps> = ({ onSearch, className }) => {
+const Search: React.FC<SearchProps> = ({
+  onSearch,
+  className,
+  onClearSearch,
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -18,6 +23,12 @@ const Search: React.FC<SearchProps> = ({ onSearch, className }) => {
       onSearch(searchQuery);
     }
   };
+
+  useEffect(() => {
+    if (searchQuery === '') {
+      onClearSearch();
+    }
+  }, [searchQuery]);
 
   return (
     <div className={`flex flex-row items-center justify-end px-2 ${className}`}>

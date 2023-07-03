@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react';
 
 import Button from '@/components/common/Button';
 import AddProfilePicturePopup from '@/components/profile/AddProfilePicturePopup';
+import type { IHttpException } from '@/types/common.types';
 
 import ErrorMessage from '../../components/common/ErrorMessage';
 import { getFromLocalStorage, setToLocalStorage } from '../../lib/helper';
 import { updateProfile } from '../../services/auth.service';
 import { useAuth } from '../../store/auth.store';
-import type { IHttpException, IUser } from '../../types/user.types';
+import type { IUser } from '../../types/user.types';
 
 const Profile = () => {
   const [userData, setUserData] = useState({

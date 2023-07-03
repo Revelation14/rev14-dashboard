@@ -1,11 +1,10 @@
 import axios, { type AxiosError, type AxiosResponse } from 'axios';
 
 import http from '@/lib/axios';
+import type { IHttpException, IHttpResponse } from '@/types/common.types';
 import type {
   IAuth,
   ICreatePassword,
-  IHttpException,
-  IHttpResponse,
   ILogin,
   IRequestPasswordRecovery,
   IUpdateUserDto,

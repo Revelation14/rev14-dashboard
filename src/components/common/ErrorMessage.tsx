@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import type { Dispatch, SetStateAction } from 'react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function ErrorMessage({
   errorMessage,
@@ -10,6 +10,12 @@ export default function ErrorMessage({
   errorMessage: string;
   setErrorMessage: Dispatch<SetStateAction<string>>;
 }) {
+  useEffect(() => {
+    setTimeout(() => {
+      setErrorMessage('');
+    }, 2000);
+  }, []);
+
   return (
     <div className="flex items-center justify-between rounded-md bg-red-100 p-2 text-red-500">
       <div>{errorMessage}</div>

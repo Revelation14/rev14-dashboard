@@ -13,3 +13,18 @@ export enum IHttpMethod {
   PUT = 'PUT',
   DELETE = 'DELETE',
 }
+export interface IHttpException {
+  message: string;
+  statusCode: string;
+}
+
+export interface IHttpResponse<T> {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: T;
+  path: string;
+  method: IHttpMethod;
+}
+
+export interface IUploaded {}

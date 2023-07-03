@@ -10,3 +10,8 @@ export function getFromLocalStorage(key: string): string | null {
 export function setToLocalStorage(key: string, value: any): void {
   window.localStorage.setItem(key, JSON.stringify(value));
 }
+export function toTitleCase(str: string) {
+  return str.toLowerCase().replace(/(?:^|\s)\w/g, (match: string) => {
+    return match.toUpperCase();
+  });
+}

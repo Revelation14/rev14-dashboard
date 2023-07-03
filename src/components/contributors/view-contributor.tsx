@@ -42,7 +42,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
   const setCurrentPage = usePaginationStore((state) => state.setCurrentPage);
 
   useEffect(() => {
-    const totalPages = Math.ceil(devotions.length / rowsPerPage);
+    const totalPages = Math.ceil((devotions?.length ?? 0) / rowsPerPage);
     setCurrentPage(1); // Reset the current page when the data changes
     usePaginationStore.setState({ totalPages });
   }, [devotions, rowsPerPage, setCurrentPage]);
@@ -95,7 +95,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
         handleChange={handleChange}
       />
       <div className="flex min-h-screen flex-col gap-4">
-        {devotions.map((devotion) => (
+        {devotions?.map((devotion) => (
           <div
             className="flex cursor-pointer flex-col items-start gap-4 md:flex-row"
             key={devotion.title}

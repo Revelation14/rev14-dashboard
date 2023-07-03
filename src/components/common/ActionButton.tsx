@@ -1,3 +1,5 @@
+import Spinner from './Spinner';
+
 interface IActionButton {
   label: string;
   backgroundColor: string;
@@ -5,6 +7,7 @@ interface IActionButton {
   color: string;
   width?: string;
   handleClick?: () => void;
+  loading?: boolean;
 }
 
 const ActionButton: React.FC<IActionButton> = ({
@@ -14,13 +17,14 @@ const ActionButton: React.FC<IActionButton> = ({
   color,
   width = 'w-14',
   handleClick,
+  loading = false,
 }) => (
   <button
     type="button"
-    className={`h-8 rounded-2xl text-sm font-normal ${width} ${color} ${backgroundColor} ${hoverBackgroundColor}`}
+    className={`flex h-8 items-center justify-center rounded-2xl text-sm font-normal ${width} ${color} ${backgroundColor} ${hoverBackgroundColor}`}
     onClick={handleClick}
   >
-    {label}
+    {loading ? <Spinner className="h-5 w-5" /> : label}
   </button>
 );
 

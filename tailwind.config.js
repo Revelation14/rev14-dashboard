@@ -28,6 +28,7 @@ module.exports = {
       poppins: ['Poppins', 'sans-serif'],
       sans: ['Open Sans', 'sans-serif'],
       raleway: ['Raleway', 'sans-serif'],
+      dmSans: ['DM Sans', 'sans-serif'],
     },
     extend: {
       colors: {
