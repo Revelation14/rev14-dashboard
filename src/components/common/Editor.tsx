@@ -24,7 +24,6 @@ const modules = {
       { indent: '-1' },
       { indent: '+1' },
     ],
-    ['link', 'image', 'video'],
     ['clean'],
   ],
   clipboard: {
@@ -50,9 +49,6 @@ const formats = [
   'list',
   'bullet',
   'indent',
-  'link',
-  'image',
-  'video',
 ];
 
 const DraftEditor: React.FC<IDraftEditor> = ({

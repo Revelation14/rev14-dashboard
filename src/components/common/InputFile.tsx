@@ -97,7 +97,9 @@ const InputFile: React.FC<IInputFile> = ({
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="font-medium text-gray-600">{label}</div>
+      <div className="font-raleway text-sm font-medium text-gray-600">
+        {label}
+      </div>
       <div className="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed border-borderOpaque bg-gray-50 px-16 py-7">
         <div className="text-sm">{title}</div>
         <div className="">

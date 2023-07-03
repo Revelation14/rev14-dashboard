@@ -37,11 +37,7 @@ export const uploadMultipleFiles = async (
         })
         .catch((e) => {
           toast.error(
-            'Failed to upload files, please try again or check your internet',
-            {
-              position: 'top-right',
-              duration: 4000,
-            }
+            'Failed to upload files, please try again or check your internet'
           );
           reject(e);
         });
@@ -69,11 +65,7 @@ export const uploadSingleFile = (file: File): Promise<string> => {
       })
       .catch((e) => {
         toast.error(
-          'Failed to upload files, please try again or check your internet',
-          {
-            position: 'top-right',
-            duration: 4000,
-          }
+          'Failed to upload files, please try again or check your internet'
         );
         reject(e);
       });

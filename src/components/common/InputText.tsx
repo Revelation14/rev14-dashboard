@@ -57,7 +57,7 @@ const InputText: React.FC<IInputText> = ({
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="text-sm text-gray-600">{label}</div>
+      <div className="font-raleway text-sm text-gray-600">{label}</div>
       <input
         type={type}
         placeholder={placeholder === '' ? label : placeholder}

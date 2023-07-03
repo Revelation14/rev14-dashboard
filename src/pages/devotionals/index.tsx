@@ -146,7 +146,12 @@ const Devotions = () => {
           </div>
         )}
       </Layout>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          duration: 1500,
+        }}
+        position="top-center"
+      />
     </>
   );
 };

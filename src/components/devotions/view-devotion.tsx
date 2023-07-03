@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -6,6 +7,7 @@ import React from 'react';
 
 import DraftEditor from '@/components/common/Editor';
 import { InputSelect } from '@/components/common/InputSelect';
+import { toTitleCase } from '@/lib/helper';
 import { EDevotionStatus, type IDevotion } from '@/types/devotion.types';
 
 import { Badge } from '../common/Badge';
@@ -26,8 +28,8 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
   attachments,
 }) => {
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex w-full flex-col justify-between md:flex-row md:items-center">
+    <div className="flex flex-col gap-8 font-dmSans">
+      <div className="flex w-full flex-col justify-between font-raleway md:flex-row md:items-center">
         {/** Top */}
         <div className="flex flex-col gap-3 md:hidden">
           <div className="flex w-full items-center justify-between gap-2">
@@ -137,14 +139,16 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
         <div className="text-xl font-semibold">{devotion?.title ?? '-'}</div>
         <Badge
           title={
-            devotion?.status === EDevotionStatus.PUBLISHED
-              ? 'Published'
-              : 'Unapproved'
+            devotion?.status === EDevotionStatus.DRAFT
+              ? 'Unapproved'
+              : toTitleCase(devotion?.status ?? '')
           }
           backgroundColor={
             devotion?.status === EDevotionStatus.PUBLISHED
               ? 'bg-secondary-green'
-              : 'bg-secondary-orange'
+              : devotion?.status === EDevotionStatus.DRAFT
+              ? 'bg-secondary-orange'
+              : 'bg-red-600'
           }
         />
       </div>
