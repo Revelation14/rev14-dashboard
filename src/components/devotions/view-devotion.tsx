@@ -3,32 +3,80 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import moment from 'moment';
-import React from 'react';
+import type { Dispatch, FC, SetStateAction } from 'react';
+import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 import DraftEditor from '@/components/common/Editor';
-import { InputSelect } from '@/components/common/InputSelect';
 import { toTitleCase } from '@/lib/helper';
+import { deleteDevotion, getDevotions } from '@/services/devotion.service';
+import type { IHttpException } from '@/types/common.types';
 import { EDevotionStatus, type IDevotion } from '@/types/devotion.types';
 
 import { Badge } from '../common/Badge';
+import ConfirmPopup from '../common/ConfirmPopup';
 
 interface IViewDevotion {
   devotion?: IDevotion;
   attachments: string[];
   numberOfViews: number;
-  setShowViewSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowEditSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
+  setDevotions: Dispatch<SetStateAction<IDevotion[]>>;
+  setShowViewSplitScreens: Dispatch<SetStateAction<boolean>>;
+  setShowEditSplitScreens: Dispatch<SetStateAction<boolean>>;
 }
 
-const ViewDevotion: React.FC<IViewDevotion> = ({
+const ViewDevotion: FC<IViewDevotion> = ({
   devotion,
   numberOfViews,
   setShowViewSplitScreens,
   setShowEditSplitScreens,
   attachments,
+  setDevotions,
 }) => {
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const handleSuccess = (message = 'Devotion deleted successfully!') => {
+    toast.success(message);
+    getDevotions()
+      .then((data) => {
+        setDevotions(data as IDevotion[]);
+      })
+      .catch((err) => {
+        toast.error((err as IHttpException).message);
+      });
+    setShowViewSplitScreens(false);
+  };
+
+  const handleError = (err: IHttpException) => {
+    toast.error(err.message);
+  };
+
+  const handleDelete = () => {
+    setLoading(true);
+    deleteDevotion(devotion?.id ?? '')
+      .then(() => {
+        handleSuccess();
+      })
+      .catch((err) => {
+        handleError(err as IHttpException);
+      })
+      .finally(() => {
+        setLoading(false);
+        setShowDeleteConfirmation(false);
+      });
+  };
+
   return (
     <div className="flex flex-col gap-8 font-dmSans">
+      {showDeleteConfirmation && (
+        <ConfirmPopup
+          title="Confirm deletion"
+          message="Are you sure you want to delete this devotion?"
+          onCancel={() => setShowDeleteConfirmation(false)}
+          onConfirm={handleDelete}
+          loading={loading}
+        />
+      )}
       <div className="flex w-full flex-col justify-between font-raleway md:flex-row md:items-center">
         {/** Top */}
         <div className="flex flex-col gap-3 md:hidden">
@@ -53,15 +101,13 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
           </div>
           <div className="flex w-full items-center justify-center">
             <div className="flex items-center gap-4">
-              <div>
-                <InputSelect
-                  label="Action"
-                  background="bg-gray-50"
-                  options={[
-                    { label: 'Publish', value: 'publish' },
-                    { label: 'Reject', value: 'reject' },
-                  ]}
-                />
+              <div
+                className="cursor-pointer rounded-full bg-gray-50 p-3"
+                onClick={() => {
+                  setShowDeleteConfirmation(true);
+                }}
+              >
+                <img src="/assets/icons/delete.svg" alt="" className="" />
               </div>
               <div
                 className="cursor-pointer rounded-full bg-gray-50 p-3"
@@ -116,6 +162,14 @@ const ViewDevotion: React.FC<IViewDevotion> = ({
                 }}
               >
                 <img src="/assets/icons/edit.svg" alt="" className="" />
+              </div>
+              <div
+                className="cursor-pointer rounded-full bg-gray-50 p-3"
+                onClick={() => {
+                  setShowDeleteConfirmation(true);
+                }}
+              >
+                <img src="/assets/icons/delete.svg" alt="" className="" />
               </div>
               <div
                 className="cursor-pointer rounded-full bg-gray-50 p-3"

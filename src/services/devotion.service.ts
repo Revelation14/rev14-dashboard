@@ -69,3 +69,18 @@ export async function getDevotions(): Promise<
   }
   return null;
 }
+
+export async function deleteDevotion(
+  id: string
+): Promise<IHttpException | null> {
+  try {
+    return await http.delete(`/post/delete/${id}`);
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}

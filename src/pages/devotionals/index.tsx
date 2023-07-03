@@ -127,6 +127,7 @@ const Devotions = () => {
                 devotion={selectedDevotion}
                 attachments={selectedDevotion?.attachments ?? []}
                 numberOfViews={20}
+                setDevotions={setDevotions}
               />
             }
           />
