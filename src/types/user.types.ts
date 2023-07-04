@@ -39,6 +39,11 @@ export interface ICreatePassword {
   password: string;
 }
 
+export interface IUpdatePassword {
+  oldPassword: string;
+  password: string;
+}
+
 export interface IUpdateUserDto {
   name?: string;
   email?: string;

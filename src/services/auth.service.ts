@@ -7,6 +7,7 @@ import type {
   ICreatePassword,
   ILogin,
   IRequestPasswordRecovery,
+  IUpdatePassword,
   IUpdateUserDto,
   IVerifyOtp,
 } from '@/types/user.types';
@@ -96,6 +97,27 @@ export async function createPassword(
     const res: AxiosResponse<IHttpResponse<any>> = await http.post(
       '/user/create-password',
       createPasswordDto
+    );
+    return res;
+  } catch (err) {
+    console.log(err);
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
+
+export async function updatePassword(
+  userId: any,
+  updatePasswordDto: IUpdatePassword
+): Promise<any | IHttpException | null> {
+  try {
+    const res: AxiosResponse<IHttpResponse<any>> = await http.patch(
+      `/user/update/password/${userId}`,
+      updatePasswordDto
     );
     return res;
   } catch (err) {
