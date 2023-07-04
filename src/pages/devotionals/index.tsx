@@ -43,7 +43,7 @@ const Devotions = () => {
   const [isClient, setIsClient] = useState(false);
 
   const auth = useAuth();
-  const user = getFromLocalStorage('user');
+  const user = JSON.parse(getFromLocalStorage('user'));
 
   useEffect(() => {
     setIsClient(true);
@@ -66,8 +66,8 @@ const Devotions = () => {
                 showAddSplitScreens={showAddSplitScreens}
                 setShowAddSplitScreens={setShowAddSplitScreens}
                 setShowViewSplitScreens={setShowViewSplitScreens}
-                devotions={devotions}
-                allDevotions={allDevotions}
+                devotions={devotions ?? []}
+                allDevotions={allDevotions ?? []}
                 setDevotions={setDevotions}
                 setSelectedDevotion={setSelectedDevotion}
                 error={error}
@@ -88,8 +88,8 @@ const Devotions = () => {
                 showAddSplitScreens={showEditSplitScreen}
                 setShowAddSplitScreens={setShowAddSplitScreens}
                 setShowViewSplitScreens={setShowViewSplitScreens}
-                devotions={devotions}
-                allDevotions={allDevotions}
+                devotions={devotions ?? []}
+                allDevotions={allDevotions ?? []}
                 setSelectedDevotion={setSelectedDevotion}
                 error={error}
                 loading={isLoading}
@@ -113,8 +113,8 @@ const Devotions = () => {
                 setShowAddSplitScreens={setShowAddSplitScreens}
                 setShowViewSplitScreens={setShowViewSplitScreens}
                 setSelectedDevotion={setSelectedDevotion}
-                devotions={devotions}
-                allDevotions={allDevotions}
+                devotions={devotions ?? []}
+                allDevotions={allDevotions ?? []}
                 setDevotions={setDevotions}
                 error={error}
                 loading={isLoading}
@@ -137,8 +137,8 @@ const Devotions = () => {
               showAddSplitScreens={showAddSplitScreens}
               setShowAddSplitScreens={setShowAddSplitScreens}
               setShowViewSplitScreens={setShowViewSplitScreens}
-              devotions={devotions}
-              allDevotions={allDevotions}
+              devotions={devotions ?? []}
+              allDevotions={allDevotions ?? []}
               setDevotions={setDevotions}
               setSelectedDevotion={setSelectedDevotion}
               error={error}

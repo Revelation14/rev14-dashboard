@@ -13,6 +13,7 @@ import { editUser } from '@/store/oneUser';
 
 import { getFromLocalStorage } from '../../lib/helper';
 import { useAuth } from '../../store/auth.store';
+import { EUserRole } from '../../types/user.types';
 
 const Index = () => {
   const [showAddSplitScreens, setShowAddSplitScreens] = useState(false);
@@ -24,11 +25,14 @@ const Index = () => {
   const [isClient, setIsClient] = useState(false);
 
   const auth = useAuth();
-  const user = getFromLocalStorage('user');
+  const user = JSON.parse(getFromLocalStorage('user'));
 
   useEffect(() => {
     setIsClient(true);
     if (!auth.user && !user && !loading) {
+      router.push('/auth/login');
+    } else if (user && user.role !== EUserRole.SYSTEM_ADMIN) {
+      localStorage.clear();
       router.push('/auth/login');
     }
   }, []);
