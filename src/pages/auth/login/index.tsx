@@ -10,7 +10,7 @@ import { InputText } from '@/components/common/InputText';
 import { signin } from '@/services/auth.service';
 import { useAuth } from '@/store/auth.store';
 import type { IHttpException } from '@/types/common.types';
-import type { IAuth, ILogin } from '@/types/user.types';
+import { EUserRole, type IAuth, type ILogin } from '@/types/user.types';
 
 import { setToLocalStorage } from '../../../lib/helper';
 
@@ -37,12 +37,20 @@ const Login = () => {
     } else {
       setLoading(true);
       try {
-        const res = await signin(formData);
+        const res: any = await signin(formData);
         if ((res as IAuth).accessToken) {
+          const userRole = (res as IAuth).user.role;
           setToLocalStorage('user', (res as IAuth).user);
           setToLocalStorage('token', (res as IAuth).accessToken);
           auth.authenticate((res as IAuth).user, (res as IAuth).accessToken);
-          router.push('/');
+          if (userRole === EUserRole.SYSTEM_ADMIN) {
+            router.push('/');
+          } else if (userRole === EUserRole.CONTENT_CREATOR) {
+            router.push('/devotionals');
+          } else {
+            setErrorMsg(`You don't have permission to access this platform`);
+            router.push('/auth/login');
+          }
         } else {
           setErrorMsg((res as IHttpException).message);
         }

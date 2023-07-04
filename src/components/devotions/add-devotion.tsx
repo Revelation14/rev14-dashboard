@@ -44,7 +44,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   const [uploadedAudio, setUploadedAudio] = useState<File[]>();
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
-  const user = getFromLocalStorage('user');
+  const user = JSON.parse(getFromLocalStorage('user'));
   const [newDevotion, setNewDevotion] = useState<INewDevotion>({
     attachments: [],
     coverImage: '',
