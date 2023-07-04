@@ -70,6 +70,25 @@ export async function getDevotions(): Promise<
   return null;
 }
 
+export async function getDevotionsByContributor(
+  contributorId: string
+): Promise<IDevotion[] | IHttpException | null> {
+  try {
+    const res: AxiosResponse<IHttpResponse<IDevotion[]>> = await http.get(
+      `/post/all/${contributorId}`
+    );
+
+    return res.data.data;
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+  }
+  return null;
+}
+
 export async function deleteDevotion(
   id: string
 ): Promise<IHttpException | null> {

@@ -104,17 +104,19 @@ const DevotionList: FC<IDevotionList> = ({
         >
           <Tab label="All">
             <Devotions
-              devotions={devotions.sort((a, b) => {
-                const updatedAtA = moment(a.updatedAt);
-                const updatedAtB = moment(b.updatedAt);
-                if (updatedAtA.isAfter(updatedAtB)) {
-                  return -1; // a should come before b
-                }
-                if (updatedAtA.isBefore(updatedAtB)) {
-                  return 1; // b should come before a
-                }
-                return 0; // both timestamps are equal
-              })}
+              devotions={
+                devotions.sort((a, b) => {
+                  const updatedAtA = moment(a.updatedAt);
+                  const updatedAtB = moment(b.updatedAt);
+                  if (updatedAtA.isAfter(updatedAtB)) {
+                    return -1; // a should come before b
+                  }
+                  if (updatedAtA.isBefore(updatedAtB)) {
+                    return 1; // b should come before a
+                  }
+                  return 0; // both timestamps are equal
+                }) ?? []
+              }
               setShowViewSplitScreens={setShowViewSplitScreens}
               setSelectedDevotion={setSelectedDevotion}
               showAddSplitScreens={showAddSplitScreens}
@@ -122,19 +124,21 @@ const DevotionList: FC<IDevotionList> = ({
           </Tab>
           <Tab label="Waiting for approval">
             <Devotions
-              devotions={devotions
-                ?.filter((dev) => dev.status === EDevotionStatus.DRAFT)
-                .sort((a, b) => {
-                  const updatedAtA = moment(a.updatedAt);
-                  const updatedAtB = moment(b.updatedAt);
-                  if (updatedAtA.isAfter(updatedAtB)) {
-                    return -1; // a should come before b
-                  }
-                  if (updatedAtA.isBefore(updatedAtB)) {
-                    return 1; // b should come before a
-                  }
-                  return 0; // both timestamps are equal
-                })}
+              devotions={
+                devotions
+                  ?.filter((dev) => dev.status === EDevotionStatus.DRAFT)
+                  .sort((a, b) => {
+                    const updatedAtA = moment(a.updatedAt);
+                    const updatedAtB = moment(b.updatedAt);
+                    if (updatedAtA.isAfter(updatedAtB)) {
+                      return -1; // a should come before b
+                    }
+                    if (updatedAtA.isBefore(updatedAtB)) {
+                      return 1; // b should come before a
+                    }
+                    return 0; // both timestamps are equal
+                  }) ?? []
+              }
               setShowViewSplitScreens={setShowViewSplitScreens}
               setSelectedDevotion={setSelectedDevotion}
               showAddSplitScreens={showAddSplitScreens}
@@ -142,19 +146,21 @@ const DevotionList: FC<IDevotionList> = ({
           </Tab>
           <Tab label="Published">
             <Devotions
-              devotions={devotions
-                ?.filter((dev) => dev.status === EDevotionStatus.PUBLISHED)
-                .sort((a, b) => {
-                  const updatedAtA = moment(a.updatedAt);
-                  const updatedAtB = moment(b.updatedAt);
-                  if (updatedAtA.isAfter(updatedAtB)) {
-                    return -1; // a should come before b
-                  }
-                  if (updatedAtA.isBefore(updatedAtB)) {
-                    return 1; // b should come before a
-                  }
-                  return 0; // both timestamps are equal
-                })}
+              devotions={
+                devotions
+                  ?.filter((dev) => dev.status === EDevotionStatus.PUBLISHED)
+                  .sort((a, b) => {
+                    const updatedAtA = moment(a.updatedAt);
+                    const updatedAtB = moment(b.updatedAt);
+                    if (updatedAtA.isAfter(updatedAtB)) {
+                      return -1; // a should come before b
+                    }
+                    if (updatedAtA.isBefore(updatedAtB)) {
+                      return 1; // b should come before a
+                    }
+                    return 0; // both timestamps are equal
+                  }) ?? []
+              }
               setShowViewSplitScreens={setShowViewSplitScreens}
               setSelectedDevotion={setSelectedDevotion}
               showAddSplitScreens={showAddSplitScreens}

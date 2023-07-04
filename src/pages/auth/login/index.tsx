@@ -10,7 +10,12 @@ import { InputText } from '@/components/common/InputText';
 import { signin } from '@/services/auth.service';
 import { useAuth } from '@/store/auth.store';
 import type { IHttpException } from '@/types/common.types';
-import { EUserRole, type IAuth, type ILogin } from '@/types/user.types';
+import {
+  EStatus,
+  EUserRole,
+  type IAuth,
+  type ILogin,
+} from '@/types/user.types';
 
 import { setToLocalStorage } from '../../../lib/helper';
 
@@ -43,7 +48,12 @@ const Login = () => {
           setToLocalStorage('user', (res as IAuth).user);
           setToLocalStorage('token', (res as IAuth).accessToken);
           auth.authenticate((res as IAuth).user, (res as IAuth).accessToken);
-          if (userRole === EUserRole.SYSTEM_ADMIN) {
+          if ((res as IAuth).user.status === EStatus.SUSPENDED) {
+            setErrorMsg(
+              `You have been suspended from using this platform. Please contact the admin for support!`
+            );
+            router.push('/auth/login');
+          } else if (userRole === EUserRole.SYSTEM_ADMIN) {
             router.push('/');
           } else if (userRole === EUserRole.CONTENT_CREATOR) {
             router.push('/devotionals');
