@@ -25,7 +25,7 @@ const Profile = () => {
   const [isClient, setIsClient] = useState(false);
 
   const auth = useAuth();
-  const user = getFromLocalStorage('user') as IUser;
+  const user = JSON.parse(getFromLocalStorage('user')) as IUser;
 
   useEffect(() => {
     setIsClient(true);

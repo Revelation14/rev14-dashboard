@@ -15,7 +15,7 @@ const Layout: React.FC<ILayoutProps> = ({ children }) => {
   const [mobileNavsidebar, setMobileNavsidebar] = useState(false);
   const router = useRouter();
   const auth = useAuth();
-  const user = getFromLocalStorage('user');
+  const user = JSON.parse(getFromLocalStorage('user'));
 
   useEffect(() => {
     if (!auth.user && !user) {

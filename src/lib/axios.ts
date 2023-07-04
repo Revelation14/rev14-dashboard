@@ -14,7 +14,7 @@ const http = axios.create({
 
 http.defaults.withCredentials = false;
 http.interceptors.request.use((config) => {
-  const token = getFromLocalStorage('token');
+  const token = JSON.parse(getFromLocalStorage('token'));
   if (config.headers) {
     config.headers.Authorization = token ? `${token}` : '';
   }
