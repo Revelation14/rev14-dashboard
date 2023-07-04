@@ -3,6 +3,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
+import { getFromLocalStorage } from '../../../lib/helper';
+import { EUserRole, type IUser } from '../../../types/user.types';
 import NavItem from './NavItem';
 
 const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
@@ -14,6 +16,7 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
   const [contributorHovered, setContributorHovered] = useState(false);
   const [devotionHovered, setDevotionHovered] = useState(false);
   const { route } = router;
+  const user: IUser = JSON.parse(getFromLocalStorage('user'));
 
   useEffect(() => {
     if (sidebarOutsideClick) {
@@ -27,46 +30,50 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
         onMouseOver={() => setInsightsHovered(true)}
         onMouseLeave={() => setInsightsHovered(false)}
       >
-        <NavItem
-          hrefLink="/insights"
-          sidebarStatus={sidebarStatus}
-          menuTitle="Insights"
-          active={route === '/insights'}
-        >
-          <Image
-            src={
-              insightsHovered || route === '/insights'
-                ? '/assets/icons/white-chart.svg'
-                : '/assets/icons/chart.svg'
-            }
-            alt=""
-            height={16}
-            width={16}
-          />
-        </NavItem>
+        {user && user.role === EUserRole.SYSTEM_ADMIN ? (
+          <NavItem
+            hrefLink="/insights"
+            sidebarStatus={sidebarStatus}
+            menuTitle="Insights"
+            active={route === '/insights'}
+          >
+            <Image
+              src={
+                insightsHovered || route === '/insights'
+                  ? '/assets/icons/white-chart.svg'
+                  : '/assets/icons/chart.svg'
+              }
+              alt=""
+              height={16}
+              width={16}
+            />
+          </NavItem>
+        ) : null}
       </div>
 
       <div
         onMouseOver={() => setContributorHovered(true)}
         onMouseLeave={() => setContributorHovered(false)}
       >
-        <NavItem
-          hrefLink="/contributors"
-          sidebarStatus={sidebarStatus}
-          menuTitle="Contributors"
-          active={route === '/contributors'}
-        >
-          <Image
-            src={
-              contributorHovered || route === '/contributors'
-                ? '/assets/icons/white-people.svg'
-                : '/assets/icons/people.svg'
-            }
-            alt=""
-            height={16}
-            width={16}
-          />
-        </NavItem>
+        {user && user.role === EUserRole.SYSTEM_ADMIN ? (
+          <NavItem
+            hrefLink="/contributors"
+            sidebarStatus={sidebarStatus}
+            menuTitle="Contributors"
+            active={route === '/contributors'}
+          >
+            <Image
+              src={
+                contributorHovered || route === '/contributors'
+                  ? '/assets/icons/white-people.svg'
+                  : '/assets/icons/people.svg'
+              }
+              alt=""
+              height={16}
+              width={16}
+            />
+          </NavItem>
+        ) : null}
       </div>
 
       <div

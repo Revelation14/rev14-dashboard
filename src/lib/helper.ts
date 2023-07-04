@@ -1,8 +1,8 @@
-export function getFromLocalStorage(key: string): string | null {
+export function getFromLocalStorage(key: string): any {
   if (typeof window !== 'undefined') {
     return window.localStorage.getItem(key) === undefined
       ? null
-      : JSON.parse(window.localStorage.getItem(key) as string);
+      : window.localStorage.getItem(key);
   }
   return null;
 }
