@@ -27,6 +27,13 @@ const Profile = () => {
   const auth = useAuth();
   const user = JSON.parse(getFromLocalStorage('user')) as IUser;
 
+  const generateProfileInitials = (name: string) => {
+    const initials = `${name.split(' ')[0]!.charAt(0)}${name
+      .split(' ')[1]!
+      .charAt(0)}`;
+    setProfileInitials(initials);
+  };
+
   useEffect(() => {
     setIsClient(true);
 
@@ -52,12 +59,6 @@ const Profile = () => {
     return null;
   }
 
-  const generateProfileInitials = (name: string) => {
-    const initials = `${name.split(' ')[0]!.charAt(0)}${name
-      .split(' ')[1]!
-      .charAt(0)}`;
-    setProfileInitials(initials);
-  };
   const handleExit = () => {
     window.history.back(); // Navigate to the previous page
   };
@@ -91,10 +92,11 @@ const Profile = () => {
         <img src="/assets/icons/cancel.svg" alt="" />
       </button>
       <div className="flex flex-col items-center gap-12">
-        <div className="h-[80px] w-[80px] rounded-full bg-[#276EF1] text-center text-4xl font-medium text-white">
+        <div className="h-[80px] w-[80px] rounded-full bg-[#276EF1] ">
           <AddProfilePicturePopup />
-
-          {profileInitials}
+          <p className="top-0 text-center align-top text-4xl font-medium text-white">
+            {profileInitials}
+          </p>
         </div>
         <div className="flex flex-col items-start gap-4 self-stretch">
           {errorMsg && (

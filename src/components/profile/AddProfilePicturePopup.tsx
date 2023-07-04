@@ -51,7 +51,7 @@ const AddProfilePicturePopup = () => {
   return (
     <>
       <div
-        className="-right-0 top-0 h-[28px] w-[28px] cursor-pointer rounded-full bg-gray-150 p-2"
+        className="-right-0 top-0 m-0 h-[28px] w-[28px] cursor-pointer rounded-full bg-gray-150 p-2"
         onClick={handleTogglePopup}
       >
         <img
