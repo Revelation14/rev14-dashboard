@@ -31,9 +31,9 @@ const AddProfilePicturePopup = () => {
     };
   }, []);
 
-  const handleTogglePopup = () => {
-    setShowPopup(!showPopup);
-  };
+  // const handleTogglePopup = () => {
+  //   setShowPopup(!showPopup);
+  // };
 
   const handlePictureSelection = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -50,7 +50,7 @@ const AddProfilePicturePopup = () => {
 
   return (
     <>
-      <div
+      {/* <div
         className="absolute -right-0 top-0 m-0 h-[28px] w-[28px] cursor-pointer rounded-full bg-gray-150 p-2"
         onClick={handleTogglePopup}
       >
@@ -59,7 +59,7 @@ const AddProfilePicturePopup = () => {
           alt=""
           className="h-full w-full"
         />
-      </div>
+      </div> */}
 
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50">

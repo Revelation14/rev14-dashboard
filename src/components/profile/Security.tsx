@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import router from 'next/router';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
@@ -49,9 +50,10 @@ const Security = () => {
 
       const res = await updatePassword(user.id, updatePasswordDto);
 
-      if ((res as IUser)?.id) {
+      if (res?.data?.message === 'Password changed successfully') {
         localStorage.clear();
         auth.logout();
+        router.push('/auth/login');
       } else {
         toast.error((res as IHttpException).message);
         setPasswordLoading(false);
