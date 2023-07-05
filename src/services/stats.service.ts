@@ -23,3 +23,20 @@ export async function fetchStatsService(): Promise<
     return null;
   }
 }
+
+export async function fetchUsersService(): Promise<
+  any | IHttpException | null
+> {
+  try {
+    const res = await http.get('/user/all/users', {});
+
+    return res.data;
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
