@@ -35,3 +35,27 @@ export interface ActiveUser {
   joinedAt: Date;
   createdAt?: Date;
 }
+
+export interface IUserResponse {
+  data: IUser[];
+}
+
+export interface IUser {
+  id: string;
+  name: string;
+  phoneNumber: string;
+  gender: string;
+  token?: string;
+  email: string;
+  location: string;
+  dob?: string;
+  subscriptionId?: string;
+  role: string;
+  status: string;
+  profilePicture?: string;
+  isVerified: boolean;
+  isFirstLogin: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  userSubscription?: string;
+}
