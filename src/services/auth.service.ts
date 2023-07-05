@@ -100,7 +100,6 @@ export async function createPassword(
     );
     return res;
   } catch (err) {
-    console.log(err);
     const error = err as Error | AxiosError;
     if (axios.isAxiosError(error)) {
       const data = error.response?.data as IHttpException;
@@ -121,7 +120,6 @@ export async function updatePassword(
     );
     return res;
   } catch (err) {
-    console.log(err);
     const error = err as Error | AxiosError;
     if (axios.isAxiosError(error)) {
       const data = error.response?.data as IHttpException;

@@ -51,7 +51,7 @@ const AddProfilePicturePopup = () => {
   return (
     <>
       <div
-        className="-right-0 top-0 m-0 h-[28px] w-[28px] cursor-pointer rounded-full bg-gray-150 p-2"
+        className="absolute -right-0 top-0 m-0 h-[28px] w-[28px] cursor-pointer rounded-full bg-gray-150 p-2"
         onClick={handleTogglePopup}
       >
         <img
@@ -62,7 +62,7 @@ const AddProfilePicturePopup = () => {
       </div>
 
       {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
           <div className="w-1/3 rounded-md bg-white p-6" ref={popupRef}>
             <h2 className="mb-4 text-xl">Add Profile Picture</h2>
             <div className="mt-4 flex flex-col items-center justify-center">
