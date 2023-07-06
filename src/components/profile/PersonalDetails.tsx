@@ -11,7 +11,6 @@ import type { IUpdateUserDto, IUser } from '@/types/user.types';
 import { EUserRole } from '@/types/user.types';
 
 import Button from '../common/Button';
-import AddProfilePicturePopup from './AddProfilePicturePopup';
 
 const PersonalDetails = () => {
   const [profileInitials, setProfileInitials] = useState('');
@@ -79,7 +78,7 @@ const PersonalDetails = () => {
   return (
     <div className="flex flex-col items-center gap-12">
       <div className="relative flex h-[80px] w-[80px] items-center justify-center rounded-full bg-backgroundAccent text-4xl font-medium text-white">
-        <AddProfilePicturePopup />
+        {/* <AddProfilePicturePopup /> */}
         {/* {user?.profilePicture ? (
           <img src={user?.profilePicture} alt={profileInitials} />
         ) : (

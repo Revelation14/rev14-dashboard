@@ -1,9 +1,11 @@
 import Image from 'next/image';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import OutsideClick from '@/utils/outsideClick';
 
+import { getFromLocalStorage } from '../../lib/helper';
 import { useAuth } from '../../store/auth.store';
+import type { IUser } from '../../types/user.types';
 import Logo from './sidebar/Logo';
 import Nav from './sidebar/Nav';
 import NavItem from './sidebar/NavItem';
@@ -14,8 +16,25 @@ interface ISidebarProps {
 
 const Sidebar: React.FC<ISidebarProps> = ({ mobileNavsidebar }) => {
   const sidebarRef = useRef(null);
+  const [profileInitials, setProfileInitials] = useState('');
+
   const sidebarOutsideClick = OutsideClick(sidebarRef);
   const auth = useAuth();
+
+  const user = JSON.parse(getFromLocalStorage('user')) as IUser;
+  const generateProfileInitials = (name: string) => {
+    const initials = `${name.split(' ')[0]!.charAt(0)}${
+      name.split(' ')[1]?.charAt(0) ?? ''
+    }`;
+    setProfileInitials(initials);
+  };
+
+  useEffect(() => {
+    if (user) {
+      generateProfileInitials(user.name || '');
+    }
+  }, []);
+
   return (
     <aside
       className={`${
@@ -39,12 +58,15 @@ const Sidebar: React.FC<ISidebarProps> = ({ mobileNavsidebar }) => {
             fontweight="font-medium"
             fontSize="text-base"
           >
-            <Image
+            {/* <Image
               src="/assets/images/Photo.png"
               alt=""
               height={44}
               width={44}
-            />
+            /> */}
+            <div className="relative flex h-[44px] w-[44px] items-center justify-center rounded-full bg-backgroundAccent text-2xl font-medium text-white">
+              <div>{profileInitials}</div>
+            </div>
           </NavItem>
           <NavItem
             hrefLink="/auth/login"
