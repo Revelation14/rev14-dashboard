@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 
 import usePaginationStore from '@/store/pagination';
 
+import NoDataAvailable from './NoDataAvailable';
 import Pagination from './Pagination';
 
 interface TableColumnProps {
@@ -62,13 +63,17 @@ const Table: React.FC<TableProps> = ({
           </tr>
         </thead>
         <tbody>
-          {paginatedData.map((item, index) => (
-            <tr key={index}>
-              {columns.map((_, columnIndex) => (
-                <td key={columnIndex}>{item[columnIndex]}</td>
-              ))}
-            </tr>
-          ))}
+          {paginatedData.length === 0 ? (
+            <NoDataAvailable />
+          ) : (
+            paginatedData.map((item, index) => (
+              <tr key={index}>
+                {columns.map((_, columnIndex) => (
+                  <td key={columnIndex}>{item[columnIndex]}</td>
+                ))}
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
       <Pagination onPageChange={handlePageChange} />

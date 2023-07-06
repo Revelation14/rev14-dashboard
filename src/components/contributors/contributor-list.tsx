@@ -43,6 +43,7 @@ const ContributorList: React.FC<IContributorList> = ({
   setLoading,
 }) => {
   const [users, setUsers] = React.useState<IUser[]>([]);
+  const [allUsers, setAllUsers] = useState<IUser[]>([]);
   const [showSuspendConfirmation, setShowSuspendConfirmation] = useState(false);
   const fetchData = async () => {
     try {
@@ -56,6 +57,7 @@ const ContributorList: React.FC<IContributorList> = ({
         );
       });
       setUsers(contributors as IUser[]);
+      setAllUsers(contributors as IUser[]);
     } catch (error) {
       toast.error((error as IHttpException)?.message);
     }
@@ -65,25 +67,6 @@ const ContributorList: React.FC<IContributorList> = ({
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   if (users?.length !== 0) {
-  //     setLoading(true);
-  //     users?.forEach((user) => {
-  //       if (user?.id) {
-  //         getDevotionsByContributor(user.id)
-  //           .then((data) => {
-  //             setUserDevotions({ user, devotions: data as IDevotion[] });
-  //             setLoading(false);
-  //           })
-  //           .catch((err) => {
-  //             toast.error(err);
-  //             setLoading(false);
-  //           });
-  //       }
-  //     });
-  //   }
-  // }, [users]);
-
   const handleSuspend = async () => {
     setLoading(true);
     if (selectedContributor?.id) {
@@ -91,6 +74,7 @@ const ContributorList: React.FC<IContributorList> = ({
         selectedContributor.id
       );
       setUsers([...users, suspendedUser as IUser]);
+      setAllUsers([...users, suspendedUser as IUser]);
       setLoading(false);
     }
   };
@@ -131,11 +115,11 @@ const ContributorList: React.FC<IContributorList> = ({
             <div className="flex h-screen w-full items-center justify-center">
               <Spinner className="h-5 w-5" />
             </div>
-          ) : users?.length === 0 ? (
-            <NoDataAvailable />
           ) : (
             <TableComponent
               users={users.sort((a, b) => a.status.localeCompare(b.status))}
+              setUsers={setUsers}
+              allUsers={allUsers}
               showAddSplitScreens={showAddSplitScreens}
               setShowAddSplitScreens={setShowAddSplitScreens}
               setShowEditSplitScreens={setShowEditSplitScreens}
@@ -152,6 +136,8 @@ const ContributorList: React.FC<IContributorList> = ({
           ) : (
             <TableComponent
               users={users.filter((user) => user.status === EStatus.SUSPENDED)}
+              setUsers={setUsers}
+              allUsers={allUsers}
               showAddSplitScreens={showAddSplitScreens}
               setShowAddSplitScreens={setShowAddSplitScreens}
               setShowEditSplitScreens={setShowEditSplitScreens}

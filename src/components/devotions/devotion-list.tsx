@@ -55,8 +55,17 @@ const DevotionList: FC<IDevotionList> = ({
 
   const handleSearch = (query: string) => {
     setDevotions(
-      allDevotions?.filter((devotion) =>
-        devotion.title.toLowerCase().includes(query.toLowerCase())
+      allDevotions?.filter(
+        (devotion) =>
+          devotion.title.toLowerCase().includes(query.toLowerCase()) ||
+          devotion.content.toLowerCase().includes(query.toLowerCase()) ||
+          (devotion.status === EDevotionStatus.DRAFT
+            ? 'unapproved'
+            : devotion.status
+          )
+            .toLowerCase()
+            .includes(query.toLowerCase()) ||
+          devotion.user.name?.toLowerCase().includes(query.toLowerCase())
       )
     );
   };
