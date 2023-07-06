@@ -20,6 +20,7 @@ export interface IUser {
   isFirstLogin?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  contributions: number;
 }
 
 export interface ILogin {

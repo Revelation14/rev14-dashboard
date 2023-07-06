@@ -1,4 +1,6 @@
+import FileSaver from 'file-saver';
 import { useEffect, useState } from 'react';
+import * as XLSX from 'xlsx';
 
 import Button from '@/components/common/Button';
 import { DatePicker } from '@/components/common/DatePicker';
@@ -9,12 +11,16 @@ import type { ValueType } from '@/types/common.types';
 
 import ErrorMessage from '../../components/common/ErrorMessage';
 import Spinner from '../../components/common/Spinner';
-import { fetchStatsService } from '../../services/stats.service';
-import type { Data } from '../../types/stats.types';
+import {
+  fetchStatsService,
+  fetchUsersService,
+} from '../../services/stats.service';
+import type { Data, IUserResponse } from '../../types/stats.types';
 
 const Insights = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [stats, setStats] = useState<Data>({} as Data);
+  const [users, setUsers] = useState<IUserResponse>({} as IUserResponse);
   const [isLoading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -46,6 +52,17 @@ const Insights = () => {
         setErrorMsg(err as string);
         setLoading(false);
       });
+
+    fetchUsersService()
+      .then((data) => {
+        setUsers(data as IUserResponse);
+
+        setLoading(false);
+      })
+      .catch((err) => {
+        setErrorMsg(err as string);
+        setLoading(false);
+      });
   }, []);
 
   const usageData = [
@@ -56,6 +73,33 @@ const Insights = () => {
     { name: '25', uv: 500 },
     { name: '30', uv: 350 },
   ];
+
+  const headers = [
+    { label: 'Names', key: 'name' },
+    { label: 'Phone number', key: 'phoneNumber' },
+    { label: 'Email', key: 'email' },
+    { label: 'Gender', key: 'gender' },
+    { label: 'Location', key: 'location' },
+  ];
+
+  const fileType =
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  const fileExtension = '.xlsx';
+
+  const exportToXLS = (myData: any, fileName: string) => {
+    const ws = XLSX.utils.json_to_sheet(headers, {
+      header: ['name', 'phoneNumber', 'email', 'gender', 'location'],
+      skipHeader: true,
+    });
+    XLSX.utils.sheet_add_json(ws, myData, {
+      header: ['name', 'phoneNumber', 'email', 'gender', 'location'],
+      skipHeader: false,
+    });
+    const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
+    const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
+  };
 
   // const chartData = [
   //   { name: 'Group A', value: 400 },
@@ -96,6 +140,20 @@ const Insights = () => {
             backgroundColor="white"
             color="gold"
             className="text-gold"
+            handleClick={() => {
+              exportToXLS(
+                users.data.map((user) => {
+                  return {
+                    name: user.name,
+                    phoneNumber: user.phoneNumber,
+                    email: user.email,
+                    gender: user.gender,
+                    location: user.location,
+                  };
+                }),
+                'Users_Infomation_xlsx'
+              );
+            }}
           />
         </div>
         {stats.users ? (

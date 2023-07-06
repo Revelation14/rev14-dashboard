@@ -19,19 +19,19 @@ import ConfirmPopup from '../common/ConfirmPopup';
 interface IViewDevotion {
   devotion?: IDevotion;
   attachments: string[];
-  numberOfViews: number;
   setDevotions: Dispatch<SetStateAction<IDevotion[]>>;
+  setAllDevotions: Dispatch<SetStateAction<IDevotion[]>>;
   setShowViewSplitScreens: Dispatch<SetStateAction<boolean>>;
   setShowEditSplitScreens: Dispatch<SetStateAction<boolean>>;
 }
 
 const ViewDevotion: FC<IViewDevotion> = ({
   devotion,
-  numberOfViews,
   setShowViewSplitScreens,
   setShowEditSplitScreens,
   attachments,
   setDevotions,
+  setAllDevotions,
 }) => {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,6 +40,7 @@ const ViewDevotion: FC<IViewDevotion> = ({
     getDevotions()
       .then((data) => {
         setDevotions(data as IDevotion[]);
+        setAllDevotions(data as IDevotion[]);
       })
       .catch((err) => {
         toast.error((err as IHttpException).message);
@@ -97,7 +98,6 @@ const ViewDevotion: FC<IViewDevotion> = ({
             ) : (
               <div className="text-sm text-gray-600">Submitted On: -</div>
             )}
-            <div className="text-sm text-gray-600">{numberOfViews} Views</div>
           </div>
           <div className="flex w-full items-center justify-center">
             <div className="flex items-center gap-4">
@@ -152,7 +152,6 @@ const ViewDevotion: FC<IViewDevotion> = ({
             ) : (
               <div className="text-xs text-gray-600">Submitted On: -</div>
             )}
-            <div className="text-xs text-gray-600">{numberOfViews} Views</div>
             <div className="flex items-center gap-4">
               <div
                 className="cursor-pointer rounded-full bg-gray-50 p-3"

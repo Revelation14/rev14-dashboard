@@ -67,61 +67,59 @@ const AddContributor: React.FC<IAddContributor> = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-6 pt-11">
-        <form onSubmit={handleSubmit}>
-          <InputText
-            type="text"
-            label="Full Names"
-            onChange={({ value }) => setFormData({ ...formData, name: value })}
-          />
-          <InputText
-            type="email"
-            label="Email"
-            onChange={({ value }) => setFormData({ ...formData, email: value })}
-          />
-          <InputText
-            type="number"
-            label="Phone Number"
-            onChange={({ value }) =>
-              setFormData({ ...formData, phoneNumber: value })
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6 pt-11">
+        <InputText
+          type="text"
+          label="Full Names"
+          onChange={({ value }) => setFormData({ ...formData, name: value })}
+        />
+        <InputText
+          type="email"
+          label="Email"
+          onChange={({ value }) => setFormData({ ...formData, email: value })}
+        />
+        <InputText
+          type="number"
+          label="Phone Number"
+          onChange={({ value }) =>
+            setFormData({ ...formData, phoneNumber: value })
+          }
+        />
+
+        <div className="flex flex-row gap-6">
+          <span>Male</span>
+          <input
+            type="radio"
+            value="male"
+            id="male"
+            checked={formData.gender === 'male'}
+            onChange={(e) =>
+              setFormData({ ...formData, gender: e.target.value })
             }
           />
+          <span>Female</span>
 
-          <div className="flex flex-row gap-6 pt-11">
-            <span>Male</span>
-            <input
-              type="radio"
-              value="male"
-              id="male"
-              checked={formData.gender === 'male'}
-              onChange={(e) =>
-                setFormData({ ...formData, gender: e.target.value })
-              }
-            />
-            <span>Female</span>
-
-            <input
-              type="radio"
-              value="female"
-              id="female"
-              checked={formData.gender === 'female'}
-              onChange={(e) =>
-                setFormData({ ...formData, gender: e.target.value })
-              }
-            />
-          </div>
-          <div className="mx-auto pt-9">
-            <Button
-              text="Add Contributor"
-              type="submit"
-              backgroundColor="gray-50"
-              color="gray-400"
-              className="hover:bg-gray-150"
-              loading={isLoading}
-            />
-          </div>
-        </form>
-      </div>
+          <input
+            type="radio"
+            value="female"
+            id="female"
+            checked={formData.gender === 'female'}
+            onChange={(e) =>
+              setFormData({ ...formData, gender: e.target.value })
+            }
+          />
+        </div>
+        <div className="mx-auto pt-9">
+          <Button
+            text="Add Contributor"
+            type="submit"
+            backgroundColor="gray-50"
+            color="gray-400"
+            className="hover:bg-gray-150"
+            loading={isLoading}
+          />
+        </div>
+      </form>
     </>
   );
 };
