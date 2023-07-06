@@ -1,18 +1,17 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 import Button from '@/components/common/Button';
 import { InputText } from '@/components/common/InputText';
 import { editContributorService } from '@/services/contributor.service';
-import type { IEditUser } from '@/types/user.types';
+import type { IUser } from '@/types/user.types';
 
 import type { IHttpException } from '../../types/common.types';
-import ErrorMessage from '../common/ErrorMessage';
-import Spinner from '../common/Spinner';
 
 interface IEditContributor {
-  contributor: IEditUser;
+  contributor: IUser;
   setShowEditSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -24,25 +23,31 @@ const EditContributor: React.FC<IEditContributor> = ({
     name: contributor.name,
     email: contributor.email,
     role: contributor.role,
-    contributions: contributor.contributions,
+    gender: contributor.gender,
   });
   const [isLoading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     setLoading(true);
     e.preventDefault();
     try {
-      const res = await editContributorService(contributor.id, formData);
-      if (res.statusCode !== 200 || res.statusCode !== 201) {
-        setErrorMsg((res as IHttpException).message);
+      const res = await editContributorService(
+        contributor.id as string,
+        formData
+      );
+
+      if ((res as IUser)?.id) {
+        toast.success('Contributor updated successfully');
+        setShowEditSplitScreens(false);
+      } else {
+        toast.error((res as IHttpException).message);
       }
-      window.location.reload();
     } catch (error) {
-      console.log(error);
+      toast.error('Error updating contributor');
     }
     setLoading(false);
   };
+
   return (
     <>
       {/* top */}
@@ -69,12 +74,6 @@ const EditContributor: React.FC<IEditContributor> = ({
       <form onSubmit={handleSubmit}>
         <div className="rounded-xl bg-gray-50 p-6">
           <div className="flex flex-col gap-6">
-            {errorMsg && (
-              <ErrorMessage
-                errorMessage={errorMsg}
-                setErrorMessage={setErrorMsg}
-              />
-            )}
             <InputText
               label="Name"
               background="bg-gray-150"
@@ -96,27 +95,49 @@ const EditContributor: React.FC<IEditContributor> = ({
               background="bg-gray-150"
               defaultValue={contributor.phoneNumber || ''}
             />
+            <div className="flex flex-row gap-6 pt-11">
+              <span>Male</span>
+              <input
+                type="radio"
+                value="male"
+                id="male"
+                checked={formData.gender === 'male'}
+                onChange={(e) =>
+                  setFormData({ ...formData, gender: e.target.value })
+                }
+              />
+              <span>Female</span>
+
+              <input
+                type="radio"
+                value="female"
+                id="female"
+                checked={formData.gender === 'female'}
+                onChange={(e) =>
+                  setFormData({ ...formData, gender: e.target.value })
+                }
+              />
+            </div>
           </div>
         </div>
         <div className="pb-2 pt-8 font-medium text-gray-400">Role</div>
         <div className="rounded-xl bg-gray-50 p-6">
           <div className="flex flex-col gap-6">
-            <p className="bg-gray-150">{contributor.role}</p>
+            <p className="bg-gray-150">
+              {contributor.role?.replaceAll('_', ' ')}
+            </p>
           </div>
         </div>
         <div className="mx-auto px-24 pt-9 lg:px-56">
-          {isLoading ? (
-            <Spinner className="h-5 w-5" />
-          ) : (
-            <Button
-              text="Save"
-              type="submit"
-              backgroundColor="gray-50"
-              color="gray-400"
-              className="hover:bg-gray-150"
-              width="w-full"
-            />
-          )}
+          <Button
+            text="Save"
+            type="submit"
+            backgroundColor="gray-50"
+            color="gray-400"
+            className="hover:bg-gray-150"
+            width="w-full"
+            loading={isLoading}
+          />
         </div>
       </form>
     </>

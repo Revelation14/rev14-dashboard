@@ -24,7 +24,7 @@ import {
   type IDevotion,
   type INewDevotion,
 } from '@/types/devotion.types';
-import type { IUser } from '@/types/user.types';
+import { EUserRole, type IUser } from '@/types/user.types';
 
 import ErrorMessage from '../common/ErrorMessage';
 import { InputSelect } from '../common/InputSelect';
@@ -32,12 +32,14 @@ import { InputSelect } from '../common/InputSelect';
 interface IAddDevotion {
   setShowAddSplitScreens: Dispatch<SetStateAction<boolean>>;
   setDevotions: Dispatch<SetStateAction<IDevotion[]>>;
+  setAllDevotions: Dispatch<SetStateAction<IDevotion[]>>;
   defaultValues?: IDevotion;
 }
 
 const AddDevotion: React.FC<IAddDevotion> = ({
   setShowAddSplitScreens,
   setDevotions,
+  setAllDevotions,
   defaultValues,
 }) => {
   const [uploadedImage, setUploadedImage] = useState<File>();
@@ -89,6 +91,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     getDevotions()
       .then((data) => {
         setDevotions(data as IDevotion[]);
+        setAllDevotions(data as IDevotion[]);
       })
       .catch((err) => {
         toast.error((err as IHttpException).message);
@@ -210,7 +213,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             />
           </div>
         )}
-        {defaultValues && (
+        {defaultValues && user.role === EUserRole.SYSTEM_ADMIN && (
           <div className="flex flex-col gap-2 pt-11">
             <InputSelect
               roundedStyle="rounded-md"
@@ -231,7 +234,11 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             />
           </div>
         )}
-        <div className={defaultValues ? '' : 'pt-11'}>
+        <div
+          className={
+            defaultValues && user.role === EUserRole.SYSTEM_ADMIN ? '' : 'pt-11'
+          }
+        >
           {newDevotion.coverImage && (
             <div className="flex items-center gap-2 pb-5">
               <span className="text-sm font-semibold">

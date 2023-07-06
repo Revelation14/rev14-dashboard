@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
 import type { Dispatch, FC, SetStateAction } from 'react';
-import React from 'react';
+import React, { useEffect } from 'react';
 
+import usePaginationStore from '@/store/pagination';
 import type { IDevotion } from '@/types/devotion.types';
 
 import NoDataAvailable from '../common/NoDataAvailable';
@@ -21,12 +22,25 @@ const Devotions: FC<IDevotions> = ({
   setSelectedDevotion,
   setShowViewSplitScreens,
 }) => {
+  const rowsPerPage = 6;
+  const setCurrentPage = usePaginationStore((state) => state.setCurrentPage);
+
+  useEffect(() => {
+    const totalPages = Math.ceil(devotions.length / rowsPerPage);
+    setCurrentPage(1); // Reset the current page when the data changes
+    usePaginationStore.setState({ totalPages });
+  }, [devotions, rowsPerPage, setCurrentPage]);
+
   const handlePageChange = (page: number) => {
-    console.log('Page:', page);
-    // You can add your logic to fetch data for the specified page here
+    setCurrentPage(page);
   };
 
-  return devotions?.length === 0 ? (
+  const currentPage = usePaginationStore((state) => state.currentPage);
+  const start = (currentPage - 1) * rowsPerPage;
+  const end = start + rowsPerPage;
+  const paginatedData = devotions.slice(start, end);
+
+  return paginatedData.length === 0 ? (
     <NoDataAvailable />
   ) : (
     <>
@@ -35,7 +49,7 @@ const Devotions: FC<IDevotions> = ({
           showAddSplitScreens ? '' : 'md:grid-cols-2'
         }`}
       >
-        {devotions?.map((devotion) => (
+        {paginatedData.map((devotion) => (
           <SingleDevotion
             key={devotion.id}
             devotion={devotion}

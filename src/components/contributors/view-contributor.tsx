@@ -1,43 +1,53 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import moment from 'moment';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
 import { Badge } from '@/components/common/Badge';
 import Pagination from '@/components/common/Pagination';
+import { setToLocalStorage, toTitleCase } from '@/lib/helper';
+import { getDevotionsByContributor } from '@/services/devotion.service';
 import usePaginationStore from '@/store/pagination';
 import type { ValueType } from '@/types/common.types';
+import type { IDevotion } from '@/types/devotion.types';
+import { type IUser } from '@/types/user.types';
 
 import { DatePicker } from '../common/DatePicker';
+import NoDataAvailable from '../common/NoDataAvailable';
+import Spinner from '../common/Spinner';
+import SingleDevotion from '../devotions/single-devotion';
 
 interface IViewContributor {
-  contributor: {
-    firstName: string;
-    lastName: string;
-    type: 'Submitter' | 'Reviewer';
-  };
-  devotions: Array<{
-    title: string;
-    date: string;
-    description: string;
-    user: { firstName: string; lastName: string };
-    views: number;
-    status: 'published' | 'unpublished';
-  }>;
+  contributor: IUser;
   setShowViewSplitScreens: React.Dispatch<React.SetStateAction<boolean>>;
   rowsPerPage: number;
 }
 
 const ViewContributor: React.FC<IViewContributor> = ({
   contributor,
-  devotions,
   setShowViewSplitScreens,
   rowsPerPage = 6,
 }) => {
   const [selectedDate, setSelectedDate] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [devotions, setDevotions] = useState<IDevotion[]>([]);
+  const [allDevotions, setAllDevotions] = useState<IDevotion[]>([]);
+  const router = useRouter();
 
   const handleChange = (e: ValueType) => {
     setSelectedDate(e.value.toString());
+    if (e.value.toString() === '') {
+      setDevotions(allDevotions);
+    } else {
+      setDevotions(
+        allDevotions?.filter((devotion) =>
+          moment(devotion.updatedAt).isSame(e.value.toString(), 'day')
+        )
+      );
+    }
   };
   const setCurrentPage = usePaginationStore((state) => state.setCurrentPage);
 
@@ -51,6 +61,27 @@ const ViewContributor: React.FC<IViewContributor> = ({
     setCurrentPage(page);
   };
 
+  useEffect(() => {
+    if (contributor?.id) {
+      setLoading(true);
+      getDevotionsByContributor(contributor.id)
+        .then((data) => {
+          setDevotions(data as IDevotion[]);
+          setAllDevotions(data as IDevotion[]);
+          setLoading(false);
+        })
+        .catch((err) => {
+          toast.error(err);
+          setLoading(false);
+        });
+    }
+  }, [contributor?.id]);
+
+  const goToDevotion = (devotion: IDevotion) => {
+    setToLocalStorage('selectedDevotion', devotion);
+    router.push('/devotionals');
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col justify-between md:flex-row md:items-center">
@@ -59,18 +90,17 @@ const ViewContributor: React.FC<IViewContributor> = ({
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-4">
               <span className="h-8 w-8 rounded-full bg-backgroundAccent pt-1 text-center text-lg text-white">
-                {contributor.firstName.charAt(0)}
+                {contributor.name?.split(' ')[0]?.charAt(0) ?? ''}
+                {contributor.name?.split(' ')[1]?.charAt(0) ?? ''}
               </span>
               <span className="text-lg font-medium text-black">
-                {contributor.firstName} {contributor.lastName}
+                {contributor.name}
               </span>
               <Badge
-                title={
-                  contributor.type === 'Submitter' ? 'Submitter' : 'Reviewer'
-                }
-                backgroundColor={
-                  contributor.type === 'Submitter' ? 'bg-purple' : 'bg-blue-600'
-                }
+                title={toTitleCase(
+                  contributor.role?.replaceAll('_', ' ') ?? ''
+                )}
+                backgroundColor="bg-purple"
               />
             </div>
           </div>
@@ -88,78 +118,33 @@ const ViewContributor: React.FC<IViewContributor> = ({
         </div>
         {/** End of Top */}
       </div>
-      <div className="text-center text-xl font-medium">20 Contributions</div>
+      <div className="text-center text-xl font-medium">
+        {devotions.length === 1
+          ? '1 Contribution'
+          : `${devotions.length} Contributions`}
+      </div>
       <DatePicker
         name="selectedDate"
         value={selectedDate}
         handleChange={handleChange}
       />
       <div className="flex min-h-screen flex-col gap-4">
-        {devotions?.map((devotion) => (
-          <div
-            className="flex cursor-pointer flex-col items-start gap-4 md:flex-row"
-            key={devotion.title}
-          >
-            <div className="pt-5 text-sm font-light text-gray-600">
-              {moment(devotion.date).format('MMM')}{' '}
-              {moment(devotion.date).format('DD')}{' '}
-              <span className="md:text-xl">
-                {moment(devotion.date).format('YYYY')}
-              </span>
-            </div>
-            <div className="flex flex-col gap-6 rounded-2xl border-2 border-gray-150  p-2 pr-4 hover:shadow-lg md:flex-row">
-              <div className="w-full">
-                <div className="relative h-full w-full lg:h-40 lg:w-40">
-                  <img
-                    src="/assets/images/Image.png"
-                    alt=""
-                    className="h-full w-full rounded-xl object-cover object-center"
-                  />
-                  <div className="absolute bottom-2 left-2" />
-                </div>
-              </div>
-              <div className="flex flex-col justify-between gap-2">
-                <div className="flex items-center justify-between">
-                  <div className="text-xl font-semibold">{devotion.title}</div>
-                  <div className="text-sm font-light text-gray-600">
-                    {moment(devotion.date).format('HH:MM:a')}
-                  </div>
-                </div>
-                <div className="max-h-10 overflow-hidden text-sm text-gray-850">
-                  <span
-                    className="text-ellipsis"
-                    style={{
-                      display: '-webkit-box',
-                      WebkitBoxOrient: 'vertical',
-                      WebkitLineClamp: 2,
-                    }}
-                  >
-                    {devotion.description}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      title={
-                        devotion.status === 'published'
-                          ? 'Published'
-                          : 'Unapproved'
-                      }
-                      backgroundColor={
-                        devotion.status === 'published'
-                          ? 'bg-secondary-green'
-                          : 'bg-secondary-orange'
-                      }
-                    />
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    {devotion.views} Views
-                  </div>
-                </div>
-              </div>
-            </div>
+        {loading ? (
+          <div className="my-4 flex items-center justify-center">
+            <Spinner className="h-12 w-12" />
           </div>
-        ))}
+        ) : devotions.length === 0 ? (
+          <NoDataAvailable />
+        ) : (
+          devotions.map((devotion) => (
+            <SingleDevotion
+              key={devotion.id}
+              devotion={devotion}
+              setShowViewSplitScreens={setShowViewSplitScreens}
+              onClick={() => goToDevotion(devotion)}
+            />
+          ))
+        )}
       </div>
       <Pagination onPageChange={handlePageChange} />
     </div>

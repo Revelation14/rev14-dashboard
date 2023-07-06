@@ -7,21 +7,27 @@ import { Card } from '../common/Card';
 
 interface ISingleDevotion {
   devotion: IDevotion;
-  setSelectedDevotion: Dispatch<SetStateAction<IDevotion | undefined>>;
+  setSelectedDevotion?: Dispatch<SetStateAction<IDevotion | undefined>>;
   setShowViewSplitScreens: Dispatch<SetStateAction<boolean>>;
+  onClick?: () => void;
 }
 
 const SingleDevotion: FC<ISingleDevotion> = ({
   setShowViewSplitScreens,
   setSelectedDevotion,
   devotion,
+  onClick,
 }) => {
   return (
     <Card
       devotion={devotion}
-      views={20}
       handleClick={() => {
-        setSelectedDevotion(devotion);
+        if (setSelectedDevotion) {
+          setSelectedDevotion(devotion);
+        }
+        if (onClick) {
+          onClick();
+        }
         setShowViewSplitScreens(true);
       }}
     />

@@ -1,9 +1,10 @@
-import axios, { type AxiosError } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
+import axios from 'axios';
 
 import http from '@/lib/axios';
-import type { IEditUser } from '@/types/user.types';
+import { EStatus, type IEditUser, type IUser } from '@/types/user.types';
 
-import type { IHttpException } from '../types/common.types';
+import type { IHttpException, IHttpResponse } from '../types/common.types';
 
 export async function addContributorService(
   credentials: any
@@ -22,12 +23,14 @@ export async function addContributorService(
 }
 
 export async function getContributorService(): Promise<
-  any | IHttpException | null
+  IUser[] | IHttpException | null
 > {
   try {
-    const data = await http.get('/user/all/contributors', {});
-
-    return data;
+    const data: AxiosResponse<IHttpResponse<IUser[]>> = await http.get(
+      '/user/all/contributors',
+      {}
+    );
+    return data.data.data;
   } catch (err) {
     const error = err as Error | AxiosError;
     if (axios.isAxiosError(error)) {
@@ -38,21 +41,29 @@ export async function getContributorService(): Promise<
   }
 }
 
-export async function suspendContributorService(id: any): Promise<void> {
+export async function suspendContributorService(
+  id: string
+): Promise<IHttpException | IUser | null> {
   try {
     const status = {
-      status: 'SUSPENDED',
+      status: EStatus.SUSPENDED,
     };
-    await http.put(`/user/update/contributor/${id}`, status, {});
+    const res = await http.put(`/user/update/contributor/${id}`, status, {});
+    return res.data.data;
   } catch (err) {
-    console.log(err);
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
   }
+  return null;
 }
 
 export async function editContributorService(
-  id: any,
+  id: string,
   user: IEditUser
-): Promise<any | IHttpException | null> {
+): Promise<IUser | IHttpException | null> {
   try {
     const res = await http.put(`/user/update/contributor/${id}`, user, {});
     return res.data.data;

@@ -14,11 +14,13 @@ export interface IUser {
   dob?: string;
   subscriptionId?: string | null;
   role?: EUserRole;
+  status: EStatus;
   profilePicture?: string;
   isVerified?: boolean;
   isFirstLogin?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  contributions: number;
 }
 
 export interface ILogin {
@@ -39,6 +41,11 @@ export interface ICreatePassword {
   password: string;
 }
 
+export interface IUpdatePassword {
+  oldPassword: string;
+  password: string;
+}
+
 export interface IUpdateUserDto {
   name?: string;
   email?: string;
@@ -52,6 +59,11 @@ export enum EUserRole {
   STANDARD_USER = 'STANDARD_USER',
 }
 
+export enum EStatus {
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+}
+
 export enum EGender {
   FEMALE = 'female',
   MALE = 'male',
@@ -60,6 +72,7 @@ export enum EGender {
 export interface IEditUser {
   id?: string;
   name: string | null | undefined;
+  gender: EGender;
   phoneNumber?: string | null | undefined;
   email: string | null | undefined;
   role: string | null | undefined;
