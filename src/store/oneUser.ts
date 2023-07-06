@@ -17,6 +17,7 @@ export const editUser = create<EditUser>((set) => ({
     profilePicture: '',
     gender: EGender.MALE,
     status: EStatus.ACTIVE,
+    contributions: 0,
   },
   updateUser: (user) => {
     set({ user });

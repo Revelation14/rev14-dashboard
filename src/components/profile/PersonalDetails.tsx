@@ -108,6 +108,7 @@ const PersonalDetails = () => {
           <input
             id="email"
             type="text"
+            disabled
             value={userData.email}
             className="h-[36px] w-[432px] self-stretch rounded-lg bg-gray-150 p-5 text-sm font-medium text-black"
             onChange={(e) => {

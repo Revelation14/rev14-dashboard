@@ -78,6 +78,7 @@ const Devotions = () => {
               <AddDevotion
                 setShowAddSplitScreens={setShowAddSplitScreens}
                 setDevotions={setDevotions}
+                setAllDevotions={setAllDevotions}
               />
             }
           />
@@ -101,6 +102,7 @@ const Devotions = () => {
                 setShowAddSplitScreens={setShowEditSplitScreens}
                 defaultValues={selectedDevotion}
                 setDevotions={setDevotions}
+                setAllDevotions={setAllDevotions}
               />
             }
           />
@@ -126,8 +128,8 @@ const Devotions = () => {
                 setShowEditSplitScreens={setShowEditSplitScreens}
                 devotion={selectedDevotion}
                 attachments={selectedDevotion?.attachments ?? []}
-                numberOfViews={20}
                 setDevotions={setDevotions}
+                setAllDevotions={setAllDevotions}
               />
             }
           />

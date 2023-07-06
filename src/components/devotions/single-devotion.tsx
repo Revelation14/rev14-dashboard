@@ -19,7 +19,6 @@ const SingleDevotion: FC<ISingleDevotion> = ({
   return (
     <Card
       devotion={devotion}
-      views={20}
       handleClick={() => {
         if (setSelectedDevotion) {
           setSelectedDevotion(devotion);

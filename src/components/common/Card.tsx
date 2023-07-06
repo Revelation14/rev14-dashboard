@@ -9,11 +9,10 @@ import { EDevotionStatus, type IDevotion } from '@/types/devotion.types';
 import { Badge } from './Badge';
 
 interface ICard {
-  views: number;
   devotion: IDevotion;
   handleClick?: () => void;
 }
-const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
+const Card: React.FC<ICard> = ({ devotion, handleClick }) => {
   return (
     <div
       className="grid cursor-pointer grid-cols-8 items-start gap-4 font-dmSans md:flex-row"
@@ -92,7 +91,7 @@ const Card: React.FC<ICard> = ({ views, devotion, handleClick }) => {
                 {devotion?.user?.name}
               </span>
             </div>
-            <div className="text-sm text-gray-600">{views} Views</div>
+            {/* <div className="text-sm text-gray-600">{views} Views</div> */}
           </div>
         </div>
       </div>
