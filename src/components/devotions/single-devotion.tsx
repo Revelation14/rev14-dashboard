@@ -9,12 +9,14 @@ interface ISingleDevotion {
   devotion: IDevotion;
   setSelectedDevotion?: Dispatch<SetStateAction<IDevotion | undefined>>;
   setShowViewSplitScreens: Dispatch<SetStateAction<boolean>>;
+  onClick?: () => void;
 }
 
 const SingleDevotion: FC<ISingleDevotion> = ({
   setShowViewSplitScreens,
   setSelectedDevotion,
   devotion,
+  onClick,
 }) => {
   return (
     <Card
@@ -22,6 +24,9 @@ const SingleDevotion: FC<ISingleDevotion> = ({
       handleClick={() => {
         if (setSelectedDevotion) {
           setSelectedDevotion(devotion);
+        }
+        if (onClick) {
+          onClick();
         }
         setShowViewSplitScreens(true);
       }}

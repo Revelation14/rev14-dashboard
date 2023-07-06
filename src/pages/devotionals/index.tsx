@@ -11,7 +11,7 @@ import Layout from '@/layouts/dashboard/Layout';
 import { getDevotions } from '@/services/devotion.service';
 import type { IDevotion } from '@/types/devotion.types';
 
-import { getFromLocalStorage } from '../../lib/helper';
+import { getFromLocalStorage, removeFromLocalStorage } from '../../lib/helper';
 import { useAuth } from '../../store/auth.store';
 
 const Devotions = () => {
@@ -44,6 +44,9 @@ const Devotions = () => {
 
   const auth = useAuth();
   const user = JSON.parse(getFromLocalStorage('user'));
+  const devotionFromLocalStorage = JSON.parse(
+    getFromLocalStorage('selectedDevotion')
+  );
 
   useEffect(() => {
     setIsClient(true);
@@ -51,6 +54,16 @@ const Devotions = () => {
       router.push('/auth/login');
     }
   }, []);
+
+  useEffect(() => {
+    if (!selectedDevotion && devotionFromLocalStorage) {
+      setSelectedDevotion(devotionFromLocalStorage);
+      setShowViewSplitScreens(true);
+    }
+    return () => {
+      removeFromLocalStorage('selectedDevotion');
+    };
+  }, [devotionFromLocalStorage]);
 
   if (!isClient) {
     return null;

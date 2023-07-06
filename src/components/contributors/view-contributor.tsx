@@ -2,12 +2,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import moment from 'moment';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { Badge } from '@/components/common/Badge';
 import Pagination from '@/components/common/Pagination';
-import { toTitleCase } from '@/lib/helper';
+import { setToLocalStorage, toTitleCase } from '@/lib/helper';
 import { getDevotionsByContributor } from '@/services/devotion.service';
 import usePaginationStore from '@/store/pagination';
 import type { ValueType } from '@/types/common.types';
@@ -34,6 +35,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
   const [loading, setLoading] = useState(false);
   const [devotions, setDevotions] = useState<IDevotion[]>([]);
   const [allDevotions, setAllDevotions] = useState<IDevotion[]>([]);
+  const router = useRouter();
 
   const handleChange = (e: ValueType) => {
     setSelectedDate(e.value.toString());
@@ -75,6 +77,11 @@ const ViewContributor: React.FC<IViewContributor> = ({
     }
   }, [contributor?.id]);
 
+  const goToDevotion = (devotion: IDevotion) => {
+    setToLocalStorage('selectedDevotion', devotion);
+    router.push('/devotionals');
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col justify-between md:flex-row md:items-center">
@@ -93,12 +100,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
                 title={toTitleCase(
                   contributor.role?.replaceAll('_', ' ') ?? ''
                 )}
-                backgroundColor={
-                  'bg-purple'
-                  // contributor.role === EUserRole.SYSTEM_ADMIN
-                  //   ? 'bg-purple'
-                  //   : 'bg-blue-600'
-                }
+                backgroundColor="bg-purple"
               />
             </div>
           </div>
@@ -139,6 +141,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
               key={devotion.id}
               devotion={devotion}
               setShowViewSplitScreens={setShowViewSplitScreens}
+              onClick={() => goToDevotion(devotion)}
             />
           ))
         )}

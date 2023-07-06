@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import type { Dispatch, FC, SetStateAction } from 'react';
 
 import Tooltip from '@/components/common/Tooltip';
@@ -93,7 +95,15 @@ const TableComponent: FC<IContributorTable> = ({
         </div>,
         <div
           key={`contributions-${user.name}`}
-          className={`mt-10 ${showAddSplitScreens ? 'text-xs' : 'text-sm'}`}
+          className={`mt-10 cursor-pointer ${
+            showAddSplitScreens ? 'text-xs' : 'text-sm'
+          }`}
+          onClick={() => {
+            setShowAddSplitScreens(false);
+            setShowEditSplitScreens(false);
+            setShowViewSplitScreens(true);
+            setSelectedContributor(user);
+          }}
         >
           {user.contributions === 1
             ? '1 contribution'
