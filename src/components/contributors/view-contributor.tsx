@@ -1,12 +1,14 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+import moment from 'moment';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { Badge } from '@/components/common/Badge';
 import Pagination from '@/components/common/Pagination';
-import { toTitleCase } from '@/lib/helper';
+import { setToLocalStorage, toTitleCase } from '@/lib/helper';
 import { getDevotionsByContributor } from '@/services/devotion.service';
 import usePaginationStore from '@/store/pagination';
 import type { ValueType } from '@/types/common.types';
@@ -32,9 +34,20 @@ const ViewContributor: React.FC<IViewContributor> = ({
   const [selectedDate, setSelectedDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [devotions, setDevotions] = useState<IDevotion[]>([]);
+  const [allDevotions, setAllDevotions] = useState<IDevotion[]>([]);
+  const router = useRouter();
 
   const handleChange = (e: ValueType) => {
     setSelectedDate(e.value.toString());
+    if (e.value.toString() === '') {
+      setDevotions(allDevotions);
+    } else {
+      setDevotions(
+        allDevotions?.filter((devotion) =>
+          moment(devotion.updatedAt).isSame(e.value.toString(), 'day')
+        )
+      );
+    }
   };
   const setCurrentPage = usePaginationStore((state) => state.setCurrentPage);
 
@@ -54,6 +67,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
       getDevotionsByContributor(contributor.id)
         .then((data) => {
           setDevotions(data as IDevotion[]);
+          setAllDevotions(data as IDevotion[]);
           setLoading(false);
         })
         .catch((err) => {
@@ -62,6 +76,11 @@ const ViewContributor: React.FC<IViewContributor> = ({
         });
     }
   }, [contributor?.id]);
+
+  const goToDevotion = (devotion: IDevotion) => {
+    setToLocalStorage('selectedDevotion', devotion);
+    router.push('/devotionals');
+  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -81,12 +100,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
                 title={toTitleCase(
                   contributor.role?.replaceAll('_', ' ') ?? ''
                 )}
-                backgroundColor={
-                  'bg-purple'
-                  // contributor.role === EUserRole.SYSTEM_ADMIN
-                  //   ? 'bg-purple'
-                  //   : 'bg-blue-600'
-                }
+                backgroundColor="bg-purple"
               />
             </div>
           </div>
@@ -105,15 +119,15 @@ const ViewContributor: React.FC<IViewContributor> = ({
         {/** End of Top */}
       </div>
       <div className="text-center text-xl font-medium">
-        {devotions.length} Contributions
+        {devotions.length === 1
+          ? '1 Contribution'
+          : `${devotions.length} Contributions`}
       </div>
-      {devotions.length !== 0 && (
-        <DatePicker
-          name="selectedDate"
-          value={selectedDate}
-          handleChange={handleChange}
-        />
-      )}
+      <DatePicker
+        name="selectedDate"
+        value={selectedDate}
+        handleChange={handleChange}
+      />
       <div className="flex min-h-screen flex-col gap-4">
         {loading ? (
           <div className="my-4 flex items-center justify-center">
@@ -127,6 +141,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
               key={devotion.id}
               devotion={devotion}
               setShowViewSplitScreens={setShowViewSplitScreens}
+              onClick={() => goToDevotion(devotion)}
             />
           ))
         )}

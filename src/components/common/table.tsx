@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import type { Dispatch, FC, SetStateAction } from 'react';
 
 import Tooltip from '@/components/common/Tooltip';
@@ -60,13 +62,13 @@ const TableComponent: FC<IContributorTable> = ({
                 alt=""
                 className="mr-2 hidden h-12 w-12 rounded-full md:block"
               /> */}
-            <div className="mr-2 hidden h-8 w-8 items-center justify-center rounded-full bg-backgroundAccent p-2 text-white md:flex">
+            <div className="mr-2 hidden h-8 w-8 items-center justify-center rounded-full bg-backgroundAccent p-2 text-sm text-white md:flex">
               {user.name?.charAt(0)}
             </div>
             <span
-              className={`text-sm md:text-base ${
-                showAddSplitScreens ? 'text-ellipsis' : ''
-              }`}
+              className={`text-sm ${
+                showAddSplitScreens ? 'text-xs' : `md:text-base`
+              } ${showAddSplitScreens ? 'text-ellipsis' : ''}`}
               style={
                 showAddSplitScreens
                   ? {
@@ -83,12 +85,29 @@ const TableComponent: FC<IContributorTable> = ({
           </div>
         </div>,
         <div key={`role-${user.name}`} className="mt-10">
-          <div className="h-fit w-fit rounded-3xl bg-purple px-3 text-xs font-light text-white md:text-sm">
+          <div
+            className={`h-fit w-fit rounded-3xl bg-purple px-3 text-xs font-light text-white ${
+              showAddSplitScreens ? 'text-xs' : 'md:text-sm'
+            }`}
+          >
             {toTitleCase(user.role?.replaceAll('_', ' ') ?? '')}
           </div>
         </div>,
-        <div key={`contributions-${user.name}`} className="mt-10">
-          {0} contributions
+        <div
+          key={`contributions-${user.name}`}
+          className={`mt-10 cursor-pointer ${
+            showAddSplitScreens ? 'text-xs' : 'text-sm'
+          }`}
+          onClick={() => {
+            setShowAddSplitScreens(false);
+            setShowEditSplitScreens(false);
+            setShowViewSplitScreens(true);
+            setSelectedContributor(user);
+          }}
+        >
+          {user.contributions === 1
+            ? '1 contribution'
+            : `${user.contributions} contributions`}
         </div>,
         <div
           key={`actions-${user.name}`}
