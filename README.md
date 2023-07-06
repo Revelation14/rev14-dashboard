@@ -14,7 +14,6 @@ Developer experience first:
 - 🚓 Lint git commit with Commitlint
 - 📓 Write standard compliant commit messages with Commitizen
 - 🦺 Unit Testing with Jest and React Testing Library
-- 🧪 E2E Testing with Cypress
 - 👷 Run tests on pull request with GitHub Actions
 - 🎉 Storybook for UI development
 - 🎁 Automatic changelog generation with Semantic Release
