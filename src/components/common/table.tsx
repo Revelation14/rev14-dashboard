@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import type { Dispatch, FC, SetStateAction } from 'react';
+import { type Dispatch, type FC, type SetStateAction, useState } from 'react';
 
 import Tooltip from '@/components/common/Tooltip';
 import { toTitleCase } from '@/lib/helper';
@@ -30,6 +30,15 @@ const TableComponent: FC<IContributorTable> = ({
   setSelectedContributor,
   setShowSuspendConfirmation,
 }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const filteredUsers = users.filter((user: IUser) =>
+    user.name?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   const edit = editUser();
 
   return (
@@ -48,13 +57,11 @@ const TableComponent: FC<IContributorTable> = ({
         <Search
           key="search"
           className="text-sm font-light"
-          onSearch={(query) => {
-            console.log('Search query:', query);
-          }}
-          onClearSearch={() => {}}
+          onSearch={handleSearch}
+          onClearSearch={() => setSearchQuery('')}
         />,
       ]}
-      data={users.map((user: IUser) => [
+      data={filteredUsers.map((user: IUser) => [
         <div key={`contributor-${user.name}`} className="mt-10">
           <div className="flex items-center text-lg font-normal">
             {/* <img
