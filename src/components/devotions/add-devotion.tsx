@@ -51,6 +51,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     attachments: [],
     coverImage: '',
     title: '',
+    verse: '',
     content: '',
     status: EDevotionStatus.DRAFT,
     createdBy: '',
@@ -281,15 +282,20 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             setNewDevotion({ ...newDevotion, title: value })
           }
         />
+        <InputText
+          label="Verse"
+          defaultValue={defaultValues?.verse}
+          onChange={({ value }) =>
+            setNewDevotion({ ...newDevotion, verse: value })
+          }
+        />
         <div className="flex flex-col gap-2">
-          <div className="font-raleway text-sm font-medium text-gray-600">
-            Content here
-          </div>
           <DraftEditor
             handleEditorChange={(value) =>
               setNewDevotion({ ...newDevotion, content: value })
             }
             defaultValue={defaultValues?.content}
+            placeholder="Verse's content goes here"
           />
         </div>
         {newDevotion.attachments.length !== 0 && (

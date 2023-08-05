@@ -5,7 +5,7 @@ import axios from 'axios';
 import { getFromLocalStorage } from './helper';
 
 const http = axios.create({
-  baseURL: 'https://grace.fly.dev/api/v1',
+  baseURL: 'https://grace-wizb.onrender.com/api/v1',
   headers: {
     Authorization: '',
     'Content-Type': 'application/json',

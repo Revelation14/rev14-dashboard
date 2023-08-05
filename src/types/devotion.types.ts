@@ -11,6 +11,7 @@ export interface INewDevotion {
   attachments: string[];
   coverImage: string;
   title: string;
+  verse: string;
   content: string;
   status: EDevotionStatus;
   createdBy: string;
