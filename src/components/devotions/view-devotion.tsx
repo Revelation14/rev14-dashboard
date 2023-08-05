@@ -188,8 +188,17 @@ const ViewDevotion: FC<IViewDevotion> = ({
         </div>
         {/** End of Top */}
       </div>
+      <img
+        src={
+          devotion?.coverImage
+            ? devotion?.coverImage
+            : 'https://placehold.co/600x400?text=Grace'
+        }
+        alt=""
+      />
+      <div className="text-base font-semibold">Title</div>
       <div className="flex items-center justify-between">
-        <div className="text-xl font-semibold">{devotion?.title ?? '-'}</div>
+        <div>{devotion?.title ?? '-'}</div>
         <Badge
           title={
             devotion?.status === EDevotionStatus.DRAFT
@@ -205,14 +214,8 @@ const ViewDevotion: FC<IViewDevotion> = ({
           }
         />
       </div>
-      <img
-        src={
-          devotion?.coverImage
-            ? devotion?.coverImage
-            : 'https://placehold.co/600x400?text=Grace'
-        }
-        alt=""
-      />
+      <div className="text-base font-semibold">Verse</div>
+      <div>{devotion?.verse ?? '-'}</div>
       <div className="scrollbar overflow-auto">
         <DraftEditor
           viewOnly

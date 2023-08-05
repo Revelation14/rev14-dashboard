@@ -11,6 +11,7 @@ interface IDraftEditor {
   viewOnly?: boolean;
   handleEditorChange: (value: string) => void;
   defaultValue?: string;
+  placeholder?: string;
 }
 
 const modules = {
@@ -55,6 +56,7 @@ const DraftEditor: React.FC<IDraftEditor> = ({
   viewOnly,
   handleEditorChange,
   defaultValue = '',
+  placeholder = ''
 }) => {
   const [value, setValue] = useState('');
 
@@ -74,7 +76,7 @@ const DraftEditor: React.FC<IDraftEditor> = ({
   ) : (
     <QuillNoSSRWrapper
       modules={modules}
-      placeholder="My story is..."
+      placeholder={placeholder}
       value={value}
       onChange={handleChange}
       formats={formats}
