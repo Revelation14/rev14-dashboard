@@ -56,7 +56,7 @@ const DraftEditor: React.FC<IDraftEditor> = ({
   viewOnly,
   handleEditorChange,
   defaultValue = '',
-  placeholder = ''
+  placeholder = '',
 }) => {
   const [value, setValue] = useState('');
 
