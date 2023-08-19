@@ -43,12 +43,13 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   defaultValues,
 }) => {
   const [uploadedImage, setUploadedImage] = useState<File>();
-  const [uploadedAudio, setUploadedAudio] = useState<File[]>();
+  const [uploadedAudio, setUploadedAudio] = useState<File>();
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const user = JSON.parse(getFromLocalStorage('user'));
   const [newDevotion, setNewDevotion] = useState<INewDevotion>({
     attachments: [],
+    timestamp: '',
     coverImage: '',
     title: '',
     verse: '',
@@ -109,21 +110,26 @@ const AddDevotion: React.FC<IAddDevotion> = ({
 
     let newAttachments = newDevotion.attachments;
     let coverPhoto = newDevotion.coverImage;
+    let newTimestamp = newDevotion.timestamp;
 
     if (uploadedAudio) {
-      newAttachments = [
-        ...newAttachments,
-        ...(await uploadMultipleFiles(uploadedAudio, 'audio')),
-      ];
-    } else if (uploadedImage) {
+      const uploadedAudioRes = await uploadMultipleFiles(
+        [uploadedAudio],
+        'audio'
+      );
+      if (uploadedAudioRes) {
+        newAttachments = [uploadedAudioRes.secure_url];
+        newTimestamp = uploadedAudioRes.duration.toString();
+      }
+    }
+    if (uploadedImage) {
       coverPhoto = await uploadSingleFile(uploadedImage);
     }
 
     if (defaultValues) {
       if (
         newDevotion.status === EDevotionStatus.PUBLISHED &&
-        coverPhoto === '' &&
-        newAttachments.length === 0
+        (coverPhoto === '' || newAttachments === undefined)
       ) {
         toast.error(
           `A devotion can't be published if it doesn't have a cover image or an audio!`,
@@ -137,7 +143,8 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           {
             ...newDevotion,
             coverImage: coverPhoto,
-            attachments: [...newAttachments],
+            attachments: newAttachments,
+            timestamp: newTimestamp,
             createdBy: defaultValues?.createdBy ?? (user as IUser)?.id ?? '',
           },
           defaultValues.id
@@ -157,6 +164,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         ...newDevotion,
         coverImage: coverPhoto,
         attachments: newAttachments,
+        timestamp: newTimestamp,
         createdBy: (user as IUser)?.id ?? '',
       })
         .then((res) => {
@@ -332,7 +340,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           file={uploadedAudio}
           setFile={setUploadedAudio}
           accepted="audio/*"
-          multiple
         />
       </div>
     </>

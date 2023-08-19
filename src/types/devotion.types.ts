@@ -10,6 +10,7 @@ export interface IDevotion extends INewDevotion {
 export interface INewDevotion {
   attachments: string[];
   coverImage: string;
+  timestamp: string;
   title: string;
   verse: string;
   content: string;
