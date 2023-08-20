@@ -9,7 +9,7 @@ export const uploadMultipleFiles = async (
   fileType: 'audio' | 'image'
 ) => {
   // Create an empty array to store the URLs
-  const urls: string[] = [];
+  const urls: Array<{ secure_url: string; duration: number }> = [];
   // Use Promise.all to upload all the files at once
   const promises = audios.map(async (audio) => {
     return new Promise((resolve, reject) => {
@@ -32,8 +32,8 @@ export const uploadMultipleFiles = async (
         )
         .then((res) => {
           // Push the URL to the array
-          urls.push(res.data.secure_url);
-          resolve(res.data.secure_url);
+          urls.push(res.data);
+          resolve(res.data);
         })
         .catch((e) => {
           toast.error(
@@ -46,7 +46,7 @@ export const uploadMultipleFiles = async (
   // Wait for all the promises to resolve
   await Promise.all(promises);
   // Return the array of URLs
-  return urls;
+  return urls[0];
 };
 
 export const uploadSingleFile = (file: File): Promise<string> => {
