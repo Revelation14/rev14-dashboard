@@ -46,6 +46,10 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   const [uploadedAudio, setUploadedAudio] = useState<File>();
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [titleIsEmpty, setTitleIsEmpty] = useState(false);
+  const [verseIsEmpty, setVerseIsEmpty] = useState(false);
+  const [audioIsEmpty, setAudioIsEmpty] = useState(false);
+  const [coverImageIsEmpty, setCoverImageIsEmpty] = useState(false);
   const user = JSON.parse(getFromLocalStorage('user'));
   const [newDevotion, setNewDevotion] = useState<INewDevotion>({
     attachments: [],
@@ -105,6 +109,43 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     toast.error(err.message);
   };
 
+  const validateForm = () => {
+    if (!newDevotion.title) {
+      setTitleIsEmpty(true);
+    } else {
+      setTitleIsEmpty(false);
+    }
+    if (!newDevotion.verse) {
+      setVerseIsEmpty(true);
+    } else {
+      setVerseIsEmpty(false);
+    }
+    if (newDevotion.coverImage === '') {
+      setCoverImageIsEmpty(true);
+    } else {
+      setCoverImageIsEmpty(false);
+    }
+    if (newDevotion.attachments.length === 0) {
+      setAudioIsEmpty(true);
+    } else {
+      setAudioIsEmpty(false);
+    }
+    // check form validity
+    if (
+      !newDevotion.title ||
+      !newDevotion.verse ||
+      !newDevotion.coverImage ||
+      !newDevotion.content ||
+      newDevotion.attachments.length === 0
+    ) {
+      setErrorMsg('Please fill in all the required fields');
+      toast.error('Please fill in all the required fields');
+      setLoading(false);
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
 
@@ -112,6 +153,8 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     let coverPhoto = newDevotion.coverImage;
     let newTimestamp = newDevotion.timestamp;
 
+    const formIsValid = validateForm();
+    if (!formIsValid) return;
     if (uploadedAudio) {
       const uploadedAudioRes = await uploadMultipleFiles(
         [uploadedAudio],
@@ -281,6 +324,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             file={uploadedImage}
             setFile={setUploadedImage}
             accepted="image/*"
+            hasError={coverImageIsEmpty}
           />
         </div>
         <InputText
@@ -289,6 +333,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           onChange={({ value }) =>
             setNewDevotion({ ...newDevotion, title: value })
           }
+          hasError={titleIsEmpty}
         />
         <InputText
           label="Verse"
@@ -296,8 +341,15 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           onChange={({ value }) =>
             setNewDevotion({ ...newDevotion, verse: value })
           }
+          hasError={verseIsEmpty}
         />
-        <div className="flex flex-col gap-2">
+        <div
+          className={
+            newDevotion.content.length === 0
+              ? 'flex flex-col gap-2 border border-secondary-orange '
+              : 'flex flex-col gap-2 border'
+          }
+        >
           <DraftEditor
             handleEditorChange={(value) =>
               setNewDevotion({ ...newDevotion, content: value })
@@ -340,6 +392,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           file={uploadedAudio}
           setFile={setUploadedAudio}
           accepted="audio/*"
+          hasError={audioIsEmpty}
         />
       </div>
     </>
