@@ -31,6 +31,7 @@ interface IInputText {
   defaultValue?: string;
   background?: string;
   placeholder?: string;
+  hasError?: boolean;
   onChange?: (object: { name: string; value: string }) => void;
 }
 
@@ -41,6 +42,7 @@ const InputText: React.FC<IInputText> = ({
   onChange,
   background = 'bg-gray-50',
   placeholder = '',
+  hasError = false,
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [value, setValue] = useState('');
@@ -66,7 +68,7 @@ const InputText: React.FC<IInputText> = ({
           <input
             type={showPassword ? 'text' : 'password'}
             placeholder={placeholder === '' ? label : placeholder}
-            className={`w-full rounded-lg ${background} px-4 py-2 text-[#6B6B6B] outline-none`}
+            className={`w-full rounded-lg  ${background} px-4 py-2 text-[#6B6B6B] outline-none`}
             value={value}
             name={label}
             onChange={handleChange}
@@ -96,7 +98,11 @@ const InputText: React.FC<IInputText> = ({
         <input
           type={type}
           placeholder={placeholder === '' ? label : placeholder}
-          className={`w-full rounded-lg ${background} px-4 py-2 text-[#6B6B6B] outline-none`}
+          className={
+            hasError
+              ? `w-full rounded-lg border border-secondary-orange ${background} px-4 py-2 text-[#6B6B6B] outline-none`
+              : `w-full rounded-lg  ${background} px-4 py-2 text-[#6B6B6B] outline-none`
+          }
           value={value}
           name={label}
           onChange={handleChange}

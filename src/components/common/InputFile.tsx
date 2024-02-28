@@ -16,6 +16,7 @@ interface IInputFile {
     | Dispatch<SetStateAction<File[] | undefined>>;
   accepted: string;
   multiple?: boolean;
+  hasError?: boolean;
 }
 
 const InputFile: React.FC<IInputFile> = ({
@@ -25,6 +26,7 @@ const InputFile: React.FC<IInputFile> = ({
   setFile,
   accepted,
   multiple = false,
+  hasError=false,
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -97,10 +99,16 @@ const InputFile: React.FC<IInputFile> = ({
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="font-raleway text-sm font-medium text-gray-600">
+      <div className="text-sm font-medium text-gray-600 font-raleway">
         {label}
       </div>
-      <div className="flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed border-borderOpaque bg-gray-50 px-16 py-7">
+      <div className=
+      {
+        hasError
+        ? `flex cursor-pointer flex-col items-center gap-3 rounded-xl  border-2 border-dashed border-borderOpaque border-secondary-orange bg-gray-50 px-16 py-7`
+        : `flex cursor-pointer flex-col items-center gap-3 rounded-xl  border-2 border-dashed border-borderOpaque bg-gray-50 px-16 py-7`
+      }
+      >
         <div className="text-sm">{title}</div>
         <div className="">
           <ActionButton
@@ -120,7 +128,7 @@ const InputFile: React.FC<IInputFile> = ({
             multiple={multiple}
           />
           {file && (
-            <div className="mt-2 flex items-center justify-center gap-4">
+            <div className="flex items-center justify-center gap-4 mt-2">
               {Array.isArray(file) ? (
                 file.map((f) => (
                   <div
