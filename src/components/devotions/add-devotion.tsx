@@ -62,17 +62,18 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     createdBy: '',
   });
 
-  // useEffect(() => {
-  //   if (defaultValues?.coverImage) {
-  //     setUploadedImage(defaultValues.coverImage);
-  //   }
-  //   if (defaultValues?.attachments) {
-  //     setUploadedAudio(defaultValues.attachments);
-  //   }
-  // }, [defaultValues]);
+  useEffect(() => {
+    if (defaultValues?.coverImage) {
+      setUploadedImage(defaultValues.coverImage as unknown as File);
+    }
+    if (defaultValues?.attachments) {
+      setUploadedAudio(defaultValues.attachments[0] as unknown as File);
+    }
+  }, [defaultValues]);
 
   useEffect(() => {
     if (defaultValues) {
+      console.log('defaultValues', defaultValues);
       const defaultDevotion = newDevotion;
       // eslint-disable-next-line no-restricted-syntax
       for (const key in defaultValues) {
@@ -120,12 +121,12 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     } else {
       setVerseIsEmpty(false);
     }
-    if (newDevotion.coverImage === '') {
+    if (uploadedImage?.length === 0) {
       setCoverImageIsEmpty(true);
     } else {
       setCoverImageIsEmpty(false);
     }
-    if (newDevotion.attachments.length === 0) {
+    if (uploadedAudio?.length === 0) {
       setAudioIsEmpty(true);
     } else {
       setAudioIsEmpty(false);
@@ -134,9 +135,9 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     if (
       !newDevotion.title ||
       !newDevotion.verse ||
-      !newDevotion.coverImage ||
-      !newDevotion.content ||
-      newDevotion.attachments.length === 0
+      !uploadedImage ||
+      !uploadedAudio ||
+      !newDevotion.content
     ) {
       setErrorMsg('Please fill in all the required fields');
       toast.error('Please fill in all the required fields');
@@ -152,7 +153,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     let newAttachments = newDevotion.attachments;
     let coverPhoto = newDevotion.coverImage;
     let newTimestamp = newDevotion.timestamp;
-
     const formIsValid = validateForm();
     if (!formIsValid) return;
     if (uploadedAudio) {
@@ -203,6 +203,11 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           });
       }
     } else {
+      setNewDevotion({
+        ...newDevotion,
+        coverImage: coverPhoto,
+      });
+
       addDevotion({
         ...newDevotion,
         coverImage: coverPhoto,
