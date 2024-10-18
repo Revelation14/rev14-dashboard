@@ -5,7 +5,8 @@ import axios from 'axios';
 import { getFromLocalStorage } from './helper';
 
 const http = axios.create({
-  baseURL: 'https://api.graceministries.online/api/v1',
+  // baseURL: 'https://api.graceministries.online/api/v1',
+  baseURL: 'http://localhost:3000/api/v1',
   headers: {
     Authorization: '',
     'Content-Type': 'application/json',
