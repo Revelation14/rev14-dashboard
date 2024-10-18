@@ -73,7 +73,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
 
   useEffect(() => {
     if (defaultValues) {
-      console.log('defaultValues', defaultValues);
       const defaultDevotion = newDevotion;
       // eslint-disable-next-line no-restricted-syntax
       for (const key in defaultValues) {
