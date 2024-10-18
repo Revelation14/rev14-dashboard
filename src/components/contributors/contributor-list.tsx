@@ -43,19 +43,27 @@ const ContributorList: React.FC<IContributorList> = ({
   setLoading,
 }) => {
   const [users, setUsers] = React.useState<IUser[]>([]);
+  const [suspendUsers, setSuspendedUsers] = React.useState<IUser[]>([]);
   const [showSuspendConfirmation, setShowSuspendConfirmation] = useState(false);
   const fetchData = async () => {
     try {
       setLoading(true);
       const contributors = await getContributorService();
+      const suspendedContributors = (contributors as IUser[])?.filter(
+        (user) => user.status === EStatus.SUSPENDED
+      );
+      setSuspendedUsers(suspendedContributors as IUser[]);
+      const activeContributors: IUser[] = (contributors as IUser[])?.filter(
+        (user) => user.status !== EStatus.SUSPENDED
+      );
 
       // order data by updatedAt
-      (contributors as IUser[])?.sort((a: any, b: any) => {
+      (activeContributors as IUser[])?.sort((a: any, b: any) => {
         return (
           new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
         );
       });
-      setUsers(contributors as IUser[]);
+      setUsers(activeContributors as IUser[]);
     } catch (error) {
       toast.error((error as IHttpException)?.message);
     }
@@ -126,7 +134,7 @@ const ContributorList: React.FC<IContributorList> = ({
         }
         hasBorder={false}
       >
-        <Tab label="All">
+        <Tab label="Active">
           {isLoading ? (
             <div className="flex h-screen w-full items-center justify-center">
               <Spinner className="h-5 w-5" />
@@ -146,12 +154,11 @@ const ContributorList: React.FC<IContributorList> = ({
           )}
         </Tab>
         <Tab label="Suspended">
-          {users.filter((user) => user.status === EStatus.SUSPENDED)?.length ===
-          0 ? (
+          {suspendUsers?.length === 0 ? (
             <NoDataAvailable />
           ) : (
             <TableComponent
-              users={users.filter((user) => user.status === EStatus.SUSPENDED)}
+              users={suspendUsers}
               showAddSplitScreens={showAddSplitScreens}
               setShowAddSplitScreens={setShowAddSplitScreens}
               setShowEditSplitScreens={setShowEditSplitScreens}
