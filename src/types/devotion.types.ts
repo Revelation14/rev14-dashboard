@@ -1,5 +1,12 @@
 import type { IUser } from './user.types';
 
+export interface IDevotionCategory {
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+  categoryName: string;
+  createdBy: string;
+}
 export interface IDevotion extends INewDevotion {
   user: IUser;
   createdAt: string;
@@ -14,6 +21,8 @@ export interface INewDevotion {
   title: string;
   verse: string;
   content: string;
+  category: string;
+  releaseDate: string;
   status: EDevotionStatus;
   createdBy: string;
 }

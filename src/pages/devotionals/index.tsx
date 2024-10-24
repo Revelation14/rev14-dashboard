@@ -8,8 +8,11 @@ import AddDevotion from '@/components/devotions/add-devotion';
 import DevotionList from '@/components/devotions/devotion-list';
 import ViewDevotion from '@/components/devotions/view-devotion';
 import Layout from '@/layouts/dashboard/Layout';
-import { getDevotions } from '@/services/devotion.service';
-import type { IDevotion } from '@/types/devotion.types';
+import {
+  getDevotionCategories,
+  getDevotions,
+} from '@/services/devotion.service';
+import type { IDevotion, IDevotionCategory } from '@/types/devotion.types';
 
 import { getFromLocalStorage, removeFromLocalStorage } from '../../lib/helper';
 import { useAuth } from '../../store/auth.store';
@@ -19,6 +22,9 @@ const Devotions = () => {
   const [showEditSplitScreen, setShowEditSplitScreens] = useState(false);
   const [showViewSplitScreens, setShowViewSplitScreens] = useState(false);
   const [devotions, setDevotions] = useState<IDevotion[]>([]);
+  const [devotionCategories, setDevotionCategories] = useState<
+    IDevotionCategory[]
+  >([]);
   const [allDevotions, setAllDevotions] = useState<IDevotion[]>([]);
   const [isLoading, setLoading] = useState(true);
   const [selectedDevotion, setSelectedDevotion] = useState<
@@ -38,6 +44,9 @@ const Devotions = () => {
         setError(err as Error);
         setLoading(false);
       });
+    getDevotionCategories().then((data) => {
+      setDevotionCategories(data as IDevotionCategory[]);
+    });
   }, []);
 
   const [isClient, setIsClient] = useState(false);
@@ -89,6 +98,7 @@ const Devotions = () => {
             }
             secondScreen={
               <AddDevotion
+                categories={devotionCategories}
                 setShowAddSplitScreens={setShowAddSplitScreens}
                 setDevotions={setDevotions}
                 setAllDevotions={setAllDevotions}
@@ -112,6 +122,7 @@ const Devotions = () => {
             }
             secondScreen={
               <AddDevotion
+                categories={devotionCategories}
                 setShowAddSplitScreens={setShowEditSplitScreens}
                 defaultValues={selectedDevotion}
                 setDevotions={setDevotions}
