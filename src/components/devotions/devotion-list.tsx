@@ -9,7 +9,8 @@ import { DatePicker } from '@/components/common/DatePicker';
 import Search from '@/components/common/Search';
 import { Tab, Tabs } from '@/components/common/Tabs';
 import type { ValueType } from '@/types/common.types';
-import { EDevotionStatus, type IDevotion } from '@/types/devotion.types';
+import type { IDevotion } from '@/types/devotion.types';
+import { EDevotionStatus } from '@/types/devotion.types';
 
 import Spinner from '../common/Spinner';
 import Devotions from './devotions';

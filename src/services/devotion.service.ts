@@ -2,7 +2,11 @@ import axios, { type AxiosError, type AxiosResponse } from 'axios';
 
 import http from '@/lib/axios';
 import type { IHttpException, IHttpResponse } from '@/types/common.types';
-import type { IDevotion, INewDevotion } from '@/types/devotion.types';
+import type {
+  IDevotion,
+  IDevotionCategory,
+  INewDevotion,
+} from '@/types/devotion.types';
 
 export async function addDevotion(
   newDevotion: INewDevotion
@@ -56,7 +60,7 @@ export async function getDevotions(): Promise<
 > {
   try {
     const res: AxiosResponse<IHttpResponse<IDevotion[]>> = await http.get(
-      '/post/all'
+      '/post/dashboard'
     );
 
     return res.data.data;
@@ -102,4 +106,22 @@ export async function deleteDevotion(
     }
     return null;
   }
+}
+
+export async function getDevotionCategories(): Promise<
+  IDevotionCategory[] | IHttpException | null
+> {
+  try {
+    const res: AxiosResponse<IHttpResponse<IDevotionCategory[]>> =
+      await http.get('/devotion-categories/all');
+
+    return res.data.data;
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+  }
+  return null;
 }

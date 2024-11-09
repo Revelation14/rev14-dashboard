@@ -18,14 +18,16 @@ import {
   updateDevotion,
 } from '@/services/devotion.service';
 import { useDevotion } from '@/store/devotion.store';
-import type { IHttpException } from '@/types/common.types';
-import {
-  EDevotionStatus,
-  type IDevotion,
-  type INewDevotion,
+import type { IHttpException, ValueType } from '@/types/common.types';
+import type {
+  IDevotion,
+  IDevotionCategory,
+  INewDevotion,
 } from '@/types/devotion.types';
+import { EDevotionStatus } from '@/types/devotion.types';
 import { EUserRole, type IUser } from '@/types/user.types';
 
+import { DatePicker } from '../common/DatePicker';
 import ErrorMessage from '../common/ErrorMessage';
 import { InputSelect } from '../common/InputSelect';
 
@@ -34,14 +36,17 @@ interface IAddDevotion {
   setDevotions: Dispatch<SetStateAction<IDevotion[]>>;
   setAllDevotions: Dispatch<SetStateAction<IDevotion[]>>;
   defaultValues?: IDevotion;
+  categories: IDevotionCategory[];
 }
 
 const AddDevotion: React.FC<IAddDevotion> = ({
   setShowAddSplitScreens,
   setDevotions,
+  categories,
   setAllDevotions,
   defaultValues,
 }) => {
+  const [releaseDate, setReleaseDate] = useState('');
   const [uploadedImage, setUploadedImage] = useState<File>();
   const [uploadedAudio, setUploadedAudio] = useState<File>();
   const [errorMsg, setErrorMsg] = useState('');
@@ -58,9 +63,15 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     title: '',
     verse: '',
     content: '',
+    category: '',
+    releaseDate: new Date().toISOString(),
     status: EDevotionStatus.DRAFT,
     createdBy: '',
   });
+
+  const handleChange = (e: ValueType) => {
+    setReleaseDate(e.value.toString());
+  };
 
   useEffect(() => {
     if (defaultValues?.coverImage) {
@@ -188,6 +199,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             attachments: newAttachments,
             timestamp: newTimestamp,
             createdBy: defaultValues?.createdBy ?? (user as IUser)?.id ?? '',
+            releaseDate: releaseDate ?? new Date().toISOString(),
           },
           defaultValues.id
         )
@@ -209,9 +221,11 @@ const AddDevotion: React.FC<IAddDevotion> = ({
 
       addDevotion({
         ...newDevotion,
+        releaseDate: releaseDate ?? new Date().toISOString(),
         coverImage: coverPhoto,
         attachments: newAttachments,
         timestamp: newTimestamp,
+
         createdBy: (user as IUser)?.id ?? '',
       })
         .then((res) => {
@@ -331,6 +345,24 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             hasError={coverImageIsEmpty}
           />
         </div>
+
+        <div className="flex flex-col gap-2 pt-11">
+          <InputSelect
+            roundedStyle="rounded-md"
+            label="Category"
+            background="bg-gray-50"
+            options={categories.map((category) => ({
+              label: category.categoryName,
+              value: category.id,
+            }))}
+            onChange={(value) => {
+              setNewDevotion({
+                ...newDevotion,
+                category: value as string,
+              });
+            }}
+          />
+        </div>
         <InputText
           label="Title"
           defaultValue={defaultValues?.title}
@@ -398,6 +430,16 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           accepted="audio/*"
           hasError={audioIsEmpty}
         />
+
+        <div>
+          <h2>Release Date:</h2>
+          <br />
+          <DatePicker
+            name="releaseDate"
+            value={releaseDate}
+            handleChange={handleChange}
+          />
+        </div>
       </div>
     </>
   );
