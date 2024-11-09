@@ -199,6 +199,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             attachments: newAttachments,
             timestamp: newTimestamp,
             createdBy: defaultValues?.createdBy ?? (user as IUser)?.id ?? '',
+            releaseDate: releaseDate ?? new Date().toISOString(),
           },
           defaultValues.id
         )
