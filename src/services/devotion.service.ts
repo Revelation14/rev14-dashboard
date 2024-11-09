@@ -60,7 +60,7 @@ export async function getDevotions(): Promise<
 > {
   try {
     const res: AxiosResponse<IHttpResponse<IDevotion[]>> = await http.get(
-      '/post/all'
+      '/post/dashboard'
     );
 
     return res.data.data;
