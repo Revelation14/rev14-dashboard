@@ -1,7 +1,10 @@
+'use client';
+
 /* eslint-disable jsx-a11y/media-has-caption */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+import { TuiDatePicker } from 'nextjs-tui-date-picker';
 import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -25,9 +28,9 @@ import type {
   INewDevotion,
 } from '@/types/devotion.types';
 import { EDevotionStatus } from '@/types/devotion.types';
-import { EUserRole, type IUser } from '@/types/user.types';
+import type { IUser } from '@/types/user.types';
+import { EUserRole } from '@/types/user.types';
 
-import { DatePicker } from '../common/DatePicker';
 import ErrorMessage from '../common/ErrorMessage';
 import { InputSelect } from '../common/InputSelect';
 
@@ -56,6 +59,9 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   const [audioIsEmpty, setAudioIsEmpty] = useState(false);
   const [coverImageIsEmpty, setCoverImageIsEmpty] = useState(false);
   const user = JSON.parse(getFromLocalStorage('user'));
+  const [startTime, setStartTime] = useState(
+    new Date(new Date().setDate(new Date().getDate() + 1))
+  );
   const [newDevotion, setNewDevotion] = useState<INewDevotion>({
     attachments: [],
     timestamp: '',
@@ -70,10 +76,14 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   });
 
   const handleChange = (e: ValueType) => {
-    setReleaseDate(e.value.toString());
+    setReleaseDate(e.toString());
   };
 
   useEffect(() => {
+    if (defaultValues?.releaseDate) {
+      setStartTime(new Date(defaultValues.releaseDate));
+      setReleaseDate(startTime.toISOString());
+    }
     if (defaultValues?.coverImage) {
       setUploadedImage(defaultValues.coverImage as unknown as File);
     }
@@ -159,7 +169,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
 
   const handleSubmit = async () => {
     setLoading(true);
-
     let newAttachments = newDevotion.attachments;
     let coverPhoto = newDevotion.coverImage;
     let newTimestamp = newDevotion.timestamp;
@@ -178,7 +187,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     if (uploadedImage) {
       coverPhoto = await uploadSingleFile(uploadedImage);
     }
-
     if (defaultValues) {
       if (
         newDevotion.status === EDevotionStatus.PUBLISHED &&
@@ -199,7 +207,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             attachments: newAttachments,
             timestamp: newTimestamp,
             createdBy: defaultValues?.createdBy ?? (user as IUser)?.id ?? '',
-            releaseDate: releaseDate ?? new Date().toISOString(),
+            releaseDate: new Date(releaseDate).toISOString(),
           },
           defaultValues.id
         )
@@ -218,14 +226,12 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         ...newDevotion,
         coverImage: coverPhoto,
       });
-
       addDevotion({
         ...newDevotion,
-        releaseDate: releaseDate ?? new Date().toISOString(),
+        releaseDate: new Date(releaseDate).toISOString(),
         coverImage: coverPhoto,
         attachments: newAttachments,
         timestamp: newTimestamp,
-
         createdBy: (user as IUser)?.id ?? '',
       })
         .then((res) => {
@@ -274,6 +280,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           </div>
         </div>
       </div>
+
       <div className="flex flex-col gap-6">
         {errorMsg && (
           <div className="mt-4">
@@ -304,6 +311,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             />
           </div>
         )}
+
         <div
           className={
             defaultValues && user.role === EUserRole.SYSTEM_ADMIN ? '' : 'pt-11'
@@ -336,9 +344,21 @@ const AddDevotion: React.FC<IAddDevotion> = ({
               </div>
             </div>
           )}
+          <div className="flex items-center gap-2">
+            <h2>Release Date:</h2>
+            <TuiDatePicker
+              handleChange={handleChange}
+              date={startTime}
+              inputWidth={140}
+              fontSize={16}
+              timePicker
+              format="M/d/YY HH:mm"
+              containerWidth={180}
+            />
+          </div>
           <InputFile
-            label="The devotional’s image goes here"
-            title="Upload the devotional’s Image"
+            label="The devotional's image goes here"
+            title="Upload the devotional's Image"
             file={uploadedImage}
             setFile={setUploadedImage}
             accepted="image/*"
@@ -424,22 +444,12 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         )}
         <InputFile
           label="Audio goes here"
-          title="Upload the devotional’s Audio"
+          title="Upload the devotional's Audio"
           file={uploadedAudio}
           setFile={setUploadedAudio}
           accepted="audio/*"
           hasError={audioIsEmpty}
         />
-
-        <div>
-          <h2>Release Date:</h2>
-          <br />
-          <DatePicker
-            name="releaseDate"
-            value={releaseDate}
-            handleChange={handleChange}
-          />
-        </div>
       </div>
     </>
   );

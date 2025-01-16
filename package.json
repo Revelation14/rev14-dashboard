@@ -17,6 +17,9 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
+    "@heroui/date-picker": "^2.3.9",
+    "@heroui/react": "^2.6.12",
+    "@internationalized/date": "^3.7.0",
     "axios": "^1.4.0",
     "file-saver": "^2.0.5",
     "html-react-parser": "^4.0.0",
@@ -24,6 +27,7 @@
     "next": "^13.4.1",
     "next-seo": "^6.0.0",
     "next-sitemap": "^4.0.9",
+    "nextjs-tui-date-picker": "^2.2.3",
     "react": "^18.2.0",
     "react-csv": "^2.2.2",
     "react-dom": "^18.2.0",
