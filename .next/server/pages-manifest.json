@@ -2,14 +2,14 @@
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/auth/confirm-email": "pages/auth/confirm-email.html",
+  "/auth/reset-password": "pages/auth/reset-password.html",
   "/auth/login": "pages/auth/login.html",
   "/auth/password-recovery": "pages/auth/password-recovery.html",
-  "/auth/reset-password": "pages/auth/reset-password.html",
   "/contributors": "pages/contributors.html",
-  "/devotionals": "pages/devotionals.html",
   "/": "pages/index.html",
   "/insights": "pages/insights.html",
   "/profile": "pages/profile.html",
+  "/devotionals": "pages/devotionals.html",
   "/_error": "pages/_error.js",
   "/404": "pages/404.html"
 }
