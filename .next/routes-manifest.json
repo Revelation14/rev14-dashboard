@@ -1,0 +1,88 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:file((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/]+\\.\\w+)/",
+      "destination": "/:file",
+      "internal": true,
+      "missing": [{ "type": "header", "key": "x-nextjs-data" }],
+      "statusCode": 308,
+      "regex": "^(?:/((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/]+\\.\\w+))/$"
+    },
+    {
+      "source": "/:notfile((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/\\.]+)",
+      "destination": "/:notfile/",
+      "internal": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?!\\.well-known(?:/.*)?)(?:[^/]+/)*[^/\\.]+))$"
+    }
+  ],
+  "headers": [],
+  "dynamicRoutes": [],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/auth/confirm-email",
+      "regex": "^/auth/confirm\\-email(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/confirm\\-email(?:/)?$"
+    },
+    {
+      "page": "/auth/login",
+      "regex": "^/auth/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/login(?:/)?$"
+    },
+    {
+      "page": "/auth/password-recovery",
+      "regex": "^/auth/password\\-recovery(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/password\\-recovery(?:/)?$"
+    },
+    {
+      "page": "/auth/reset-password",
+      "regex": "^/auth/reset\\-password(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/reset\\-password(?:/)?$"
+    },
+    {
+      "page": "/contributors",
+      "regex": "^/contributors(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/contributors(?:/)?$"
+    },
+    {
+      "page": "/devotionals",
+      "regex": "^/devotionals(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/devotionals(?:/)?$"
+    },
+    {
+      "page": "/insights",
+      "regex": "^/insights(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/insights(?:/)?$"
+    },
+    {
+      "page": "/profile",
+      "regex": "^/profile(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/profile(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "RSC",
+    "varyHeader": "RSC, Next-Router-State-Tree, Next-Router-Prefetch",
+    "contentTypeHeader": "text/x-component"
+  },
+  "rewrites": []
+}
