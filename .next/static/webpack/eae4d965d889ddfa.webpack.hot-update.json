@@ -1,5 +1,0 @@
-{
-  "c": ["pages/devotionals", "webpack"],
-  "r": [],
-  "m": ["./src/lib/file-upload.ts"]
-}

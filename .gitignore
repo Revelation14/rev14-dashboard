@@ -42,7 +42,6 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env
 .env*.local
 
 # local folder
@@ -50,3 +49,4 @@ local
 
 # vercel
 .vercel
+config.bat
