@@ -49,7 +49,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   setAllDevotions,
   defaultValues,
 }) => {
-  const [releaseDate, setReleaseDate] = useState('');
   const [uploadedImage, setUploadedImage] = useState<File>();
   const [uploadedAudio, setUploadedAudio] = useState<File>();
   const [errorMsg, setErrorMsg] = useState('');
@@ -59,9 +58,11 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   const [audioIsEmpty, setAudioIsEmpty] = useState(false);
   const [coverImageIsEmpty, setCoverImageIsEmpty] = useState(false);
   const user = JSON.parse(getFromLocalStorage('user'));
+
   const [startTime, setStartTime] = useState(
     new Date(new Date().setDate(new Date().getDate() + 1))
   );
+  const [releaseDate, setReleaseDate] = useState(startTime.toISOString());
   const [newDevotion, setNewDevotion] = useState<INewDevotion>({
     attachments: [],
     timestamp: '',
@@ -76,13 +77,20 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   });
 
   const handleChange = (e: ValueType) => {
-    setReleaseDate(e.toString());
+    const date = new Date(e.toString());
+    // Ensure valid date before converting
+    if (!Number.isNaN(date.getTime())) {
+      setReleaseDate(date.toISOString());
+    }
   };
 
   useEffect(() => {
     if (defaultValues?.releaseDate) {
-      setStartTime(new Date(defaultValues.releaseDate));
-      setReleaseDate(startTime.toISOString());
+      const date = new Date(defaultValues.releaseDate);
+      if (!Number.isNaN(date.getTime())) {
+        setStartTime(date);
+        setReleaseDate(date.toISOString());
+      }
     }
     if (defaultValues?.coverImage) {
       setUploadedImage(defaultValues.coverImage as unknown as File);
@@ -207,7 +215,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             attachments: newAttachments,
             timestamp: newTimestamp,
             createdBy: defaultValues?.createdBy ?? (user as IUser)?.id ?? '',
-            releaseDate: new Date(releaseDate).toISOString(),
+            releaseDate,
           },
           defaultValues.id
         )
@@ -228,7 +236,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
       });
       addDevotion({
         ...newDevotion,
-        releaseDate: new Date(releaseDate).toISOString(),
+        releaseDate, // Use releaseDate directly
         coverImage: coverPhoto,
         attachments: newAttachments,
         timestamp: newTimestamp,
