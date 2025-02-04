@@ -1,0 +1,20 @@
+{
+  "c": ["pages/devotionals", "webpack"],
+  "r": ["pages/contributors", "pages/auth/login"],
+  "m": [
+    "./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?absolutePagePath=%2FUsers%2Fknowbee%2Fworkspace%2Ftony%2Fgrace_dashboard%2Fsrc%2Fpages%2Fcontributors%2Findex.tsx&page=%2Fcontributors!",
+    "./src/components/common/Tooltip.tsx",
+    "./src/components/common/customTable.tsx",
+    "./src/components/common/table.tsx",
+    "./src/components/contributors/add-contributor.tsx",
+    "./src/components/contributors/contributor-list.tsx",
+    "./src/components/contributors/edit-contributor.tsx",
+    "./src/components/contributors/view-contributor.tsx",
+    "./src/pages/contributors/index.tsx",
+    "./src/services/contributor.service.ts",
+    "./src/store/oneUser.ts",
+    "./node_modules/next/dist/build/webpack/loaders/next-client-pages-loader.js?absolutePagePath=%2FUsers%2Fknowbee%2Fworkspace%2Ftony%2Fgrace_dashboard%2Fsrc%2Fpages%2Fauth%2Flogin%2Findex.tsx&page=%2Fauth%2Flogin!",
+    "./src/pages/auth/login/index.tsx",
+    "./src/services/auth.service.ts"
+  ]
+}
