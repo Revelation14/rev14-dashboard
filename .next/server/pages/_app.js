@@ -1,139 +1,46 @@
-"use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
 (() => {
 var exports = {};
-exports.id = 888;
-exports.ids = [888];
+exports.id = "pages/_app";
+exports.ids = ["pages/_app"];
 exports.modules = {
 
-/***/ 6042:
+/***/ "./src/pages/_app.tsx":
+/*!****************************!*\
+  !*** ./src/pages/_app.tsx ***!
+  \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   config: () => (/* binding */ config),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
-/* harmony export */   getServerSideProps: () => (/* binding */ getServerSideProps),
-/* harmony export */   getStaticPaths: () => (/* binding */ getStaticPaths),
-/* harmony export */   getStaticProps: () => (/* binding */ getStaticProps),
-/* harmony export */   reportWebVitals: () => (/* binding */ reportWebVitals),
-/* harmony export */   routeModule: () => (/* binding */ routeModule),
-/* harmony export */   unstable_getServerProps: () => (/* binding */ unstable_getServerProps),
-/* harmony export */   unstable_getServerSideProps: () => (/* binding */ unstable_getServerSideProps),
-/* harmony export */   unstable_getStaticParams: () => (/* binding */ unstable_getStaticParams),
-/* harmony export */   unstable_getStaticPaths: () => (/* binding */ unstable_getStaticPaths),
-/* harmony export */   unstable_getStaticProps: () => (/* binding */ unstable_getStaticProps)
-/* harmony export */ });
-/* harmony import */ var next_dist_server_future_route_modules_pages_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3185);
-/* harmony import */ var next_dist_server_future_route_modules_pages_module__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(next_dist_server_future_route_modules_pages_module__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7182);
-/* harmony import */ var private_next_pages_document_tsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(2834);
-/* harmony import */ var private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(9212);
-
-        // Next.js Route Loader
-        
-        
-
-        // Import the app and document modules.
-        
-        
-
-        // Import the userland code.
-        
-
-        // Re-export the component (should be the default export).
-        /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "default"));
-
-        // Re-export methods.
-        const getStaticProps = (0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "getStaticProps")
-        const getStaticPaths = (0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "getStaticPaths")
-        const getServerSideProps = (0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "getServerSideProps")
-        const config = (0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "config")
-        const reportWebVitals = (0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "reportWebVitals")
-        
-
-        // Re-export legacy methods.
-        const unstable_getStaticProps = (0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "unstable_getStaticProps")
-        const unstable_getStaticPaths = (0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "unstable_getStaticPaths")
-        const unstable_getStaticParams = (0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "unstable_getStaticParams")
-        const unstable_getServerProps = (0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "unstable_getServerProps")
-        const unstable_getServerSideProps = (0,next_dist_build_webpack_loaders_next_route_loader_helpers__WEBPACK_IMPORTED_MODULE_1__/* .hoist */ .l)(private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__, "unstable_getServerSideProps")
-
-        // Create and export the route module that will be consumed.
-        const options = {"definition":{"kind":"PAGES","page":"/_app","pathname":"/_app","bundlePath":"","filename":""}}
-        const routeModule = new (next_dist_server_future_route_modules_pages_module__WEBPACK_IMPORTED_MODULE_0___default())({
-          ...options,
-          components: {
-            App: private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__["default"],
-            Document: private_next_pages_document_tsx__WEBPACK_IMPORTED_MODULE_2__["default"],
-          },
-          userland: private_next_pages_app_tsx__WEBPACK_IMPORTED_MODULE_3__,
-        })
-        
-        
-    
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"react/jsx-dev-runtime\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _styles_global_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../styles/global.css */ \"./src/styles/global.css\");\n/* harmony import */ var _styles_global_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_styles_global_css__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var react_quill_dist_quill_snow_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-quill/dist/quill.snow.css */ \"./node_modules/.pnpm/react-quill@2.0.0_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/react-quill/dist/quill.snow.css\");\n/* harmony import */ var react_quill_dist_quill_snow_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_quill_dist_quill_snow_css__WEBPACK_IMPORTED_MODULE_2__);\n\n\n\nconst MyApp = ({ Component, pageProps })=>/*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(Component, {\n        ...pageProps\n    }, void 0, false, {\n        fileName: \"/Users/loraine/Documents/Work/Grace/grace_dashboard/src/pages/_app.tsx\",\n        lineNumber: 7,\n        columnNumber: 3\n    }, undefined);\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MyApp);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvcGFnZXMvX2FwcC50c3giLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7QUFBOEI7QUFDVztBQUl6QyxNQUFNQSxRQUFRLENBQUMsRUFBRUMsU0FBUyxFQUFFQyxTQUFTLEVBQVksaUJBQy9DLDhEQUFDRDtRQUFXLEdBQUdDLFNBQVM7Ozs7OztBQUcxQixpRUFBZUYsS0FBS0EsRUFBQyIsInNvdXJjZXMiOlsid2VicGFjazovL2dyYWNlX2Rhc2hib2FyZC8uL3NyYy9wYWdlcy9fYXBwLnRzeD9mOWQ2Il0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCAnLi4vc3R5bGVzL2dsb2JhbC5jc3MnO1xuaW1wb3J0ICdyZWFjdC1xdWlsbC9kaXN0L3F1aWxsLnNub3cuY3NzJztcblxuaW1wb3J0IHR5cGUgeyBBcHBQcm9wcyB9IGZyb20gJ25leHQvYXBwJztcblxuY29uc3QgTXlBcHAgPSAoeyBDb21wb25lbnQsIHBhZ2VQcm9wcyB9OiBBcHBQcm9wcykgPT4gKFxuICA8Q29tcG9uZW50IHsuLi5wYWdlUHJvcHN9IC8+XG4pO1xuXG5leHBvcnQgZGVmYXVsdCBNeUFwcDtcbiJdLCJuYW1lcyI6WyJNeUFwcCIsIkNvbXBvbmVudCIsInBhZ2VQcm9wcyJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/pages/_app.tsx\n");
 
 /***/ }),
 
-/***/ 3076:
-/***/ ((module) => {
+/***/ "./src/styles/global.css":
+/*!*******************************!*\
+  !*** ./src/styles/global.css ***!
+  \*******************************/
+/***/ (() => {
 
-module.exports = require("next/dist/server/future/route-modules/route-module.js");
 
-/***/ }),
-
-/***/ 4140:
-/***/ ((module) => {
-
-module.exports = require("next/dist/server/get-page-files.js");
 
 /***/ }),
 
-/***/ 9716:
+/***/ "react/jsx-dev-runtime":
+/*!****************************************!*\
+  !*** external "react/jsx-dev-runtime" ***!
+  \****************************************/
 /***/ ((module) => {
 
-module.exports = require("next/dist/server/htmlescape.js");
-
-/***/ }),
-
-/***/ 3100:
-/***/ ((module) => {
-
-module.exports = require("next/dist/server/render.js");
-
-/***/ }),
-
-/***/ 6368:
-/***/ ((module) => {
-
-module.exports = require("next/dist/server/utils.js");
-
-/***/ }),
-
-/***/ 6724:
-/***/ ((module) => {
-
-module.exports = require("next/dist/shared/lib/constants.js");
-
-/***/ }),
-
-/***/ 8743:
-/***/ ((module) => {
-
-module.exports = require("next/dist/shared/lib/html-context.js");
-
-/***/ }),
-
-/***/ 8524:
-/***/ ((module) => {
-
-module.exports = require("next/dist/shared/lib/is-plain-object.js");
-
-/***/ }),
-
-/***/ 6689:
-/***/ ((module) => {
-
-module.exports = require("react");
+"use strict";
+module.exports = require("react/jsx-dev-runtime");
 
 /***/ })
 
@@ -144,7 +51,7 @@ module.exports = require("react");
 var __webpack_require__ = require("../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, [884,710], () => (__webpack_exec__(6042)));
+var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/react-quill@2.0.0_react-dom@18.3.1_react@18.3.1__react@18.3.1"], () => (__webpack_exec__("./src/pages/_app.tsx")));
 module.exports = __webpack_exports__;
 
 })();
