@@ -59,7 +59,7 @@ module.exports = {
           900: '#2a4365',
         },
         borderOpaque: '#E2E2E2',
-        gold: '#DF9A57',
+        gold: '#0112D4',
         backgroundAccent: '#276EF1',
         secondary: { green: '#3AA76D', orange: '#ED6E33' },
         purple: '#7356BF',
