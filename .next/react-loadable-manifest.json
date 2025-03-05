@@ -1,12 +1,1 @@
-{
-  "../../node_modules/nextjs-tui-date-picker/dist/nextjs-tui-date-picker.esm.js -> ./date-picker-ea72acfe.esm.js": {
-    "id": "../../node_modules/nextjs-tui-date-picker/dist/nextjs-tui-date-picker.esm.js -> ./date-picker-ea72acfe.esm.js",
-    "files": [
-      "static/chunks/node_modules_nextjs-tui-date-picker_dist_date-picker-ea72acfe_esm_js.js"
-    ]
-  },
-  "../components/common/Editor.tsx -> react-quill": {
-    "id": "../components/common/Editor.tsx -> react-quill",
-    "files": ["static/chunks/node_modules_react-quill_lib_index_js.js"]
-  }
-}
+{}

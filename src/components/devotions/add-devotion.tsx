@@ -149,12 +149,12 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     } else {
       setVerseIsEmpty(false);
     }
-    if (uploadedImage?.length === 0) {
+    if (uploadedImage) {
       setCoverImageIsEmpty(true);
     } else {
       setCoverImageIsEmpty(false);
     }
-    if (uploadedAudio?.length === 0) {
+    if (uploadedAudio) {
       setAudioIsEmpty(true);
     } else {
       setAudioIsEmpty(false);
@@ -273,9 +273,9 @@ const AddDevotion: React.FC<IAddDevotion> = ({
 
         <div className="flex items-center gap-4">
           <ActionButton
-            backgroundColor="bg-gray-50"
-            hoverBackgroundColor="hover:bg-gray-100"
-            color="text-gray-400"
+            backgroundColor="bg-gold"
+            hoverBackgroundColor="hover:bg-gold/75"
+            color="text-white"
             label="Save"
             handleClick={handleSubmit}
             loading={loading}
