@@ -83,7 +83,7 @@ const ViewDevotion: FC<IViewDevotion> = ({
         <div className="flex flex-col gap-3 md:hidden">
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-4">
-              <span className="h-7 w-7 rounded-full bg-backgroundAccent pt-1 text-center text-xs text-white">
+              <span className="size-7 rounded-full bg-backgroundAccent pt-1 text-center text-xs text-white">
                 {devotion?.user?.name?.split('')[0]?.charAt(0) ?? '-'}
               </span>
               <span className="text-sm font-medium text-black">
@@ -137,7 +137,7 @@ const ViewDevotion: FC<IViewDevotion> = ({
         <div className="hidden w-full md:block">
           <div className="flex w-full items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <span className="h-7 w-7 rounded-full bg-backgroundAccent pt-1 text-center text-xs text-white">
+              <span className="size-7 rounded-full bg-backgroundAccent pt-1 text-center text-xs text-white">
                 {devotion?.user?.name?.split('')[0]?.charAt(0) ?? '-'}
               </span>
               <span className="text-sm font-medium text-black">
@@ -216,6 +216,8 @@ const ViewDevotion: FC<IViewDevotion> = ({
       </div>
       <div className="text-base font-semibold">Verse</div>
       <div>{devotion?.verse ?? '-'}</div>
+      <div className="text-base font-semibold">Speaker</div>
+      <div>{devotion?.speaker ?? '-'}</div>
       <div className="scrollbar overflow-auto">
         <DraftEditor
           viewOnly

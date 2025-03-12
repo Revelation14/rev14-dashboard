@@ -51,3 +51,7 @@ a:hover {
 .ql-editor {
   @apply bg-gray-50 min-h-[50vh];
 }
+
+.rdt .form-control {
+  @apply bg-gray-50 outline-none w-full;
+}

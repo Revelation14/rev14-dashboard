@@ -4,9 +4,13 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { TuiDatePicker } from 'nextjs-tui-date-picker';
+import 'react-datetime/css/react-datetime.css';
+
+import type { Moment } from 'moment';
+import moment from 'moment';
 import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
+import Datetime from 'react-datetime';
 import { toast } from 'react-hot-toast';
 
 import { ActionButton } from '@/components/common/ActionButton';
@@ -21,7 +25,7 @@ import {
   updateDevotion,
 } from '@/services/devotion.service';
 import { useDevotion } from '@/store/devotion.store';
-import type { IHttpException, ValueType } from '@/types/common.types';
+import type { IHttpException } from '@/types/common.types';
 import type {
   IDevotion,
   IDevotionCategory,
@@ -55,6 +59,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   const [loading, setLoading] = useState(false);
   const [titleIsEmpty, setTitleIsEmpty] = useState(false);
   const [verseIsEmpty, setVerseIsEmpty] = useState(false);
+  const [speakerIsEmpty, setSpeakerIsEmpty] = useState(false);
   const [audioIsEmpty, setAudioIsEmpty] = useState(false);
   const [coverImageIsEmpty, setCoverImageIsEmpty] = useState(false);
   const user = JSON.parse(getFromLocalStorage('user'));
@@ -69,6 +74,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     coverImage: '',
     title: '',
     verse: '',
+    speaker: '',
     content: '',
     category: '',
     releaseDate: new Date().toISOString(),
@@ -76,11 +82,12 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     createdBy: '',
   });
 
-  const handleChange = (e: ValueType) => {
+  const handleChange = (e: Moment | string) => {
     const date = new Date(e.toString());
     // Ensure valid date before converting
     if (!Number.isNaN(date.getTime())) {
-      setReleaseDate(date.toISOString());
+      setStartTime(new Date(moment(e.toString()).utc().toISOString()));
+      setReleaseDate(moment(e.toString()).utc().toISOString());
     }
   };
 
@@ -149,12 +156,17 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     } else {
       setVerseIsEmpty(false);
     }
-    if (uploadedImage?.length === 0) {
+    if (!newDevotion.speaker) {
+      setSpeakerIsEmpty(true);
+    } else {
+      setSpeakerIsEmpty(false);
+    }
+    if (uploadedImage) {
       setCoverImageIsEmpty(true);
     } else {
       setCoverImageIsEmpty(false);
     }
-    if (uploadedAudio?.length === 0) {
+    if (uploadedAudio) {
       setAudioIsEmpty(true);
     } else {
       setAudioIsEmpty(false);
@@ -163,6 +175,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     if (
       !newDevotion.title ||
       !newDevotion.verse ||
+      !newDevotion.speaker ||
       !uploadedImage ||
       !uploadedAudio ||
       !newDevotion.content
@@ -273,9 +286,9 @@ const AddDevotion: React.FC<IAddDevotion> = ({
 
         <div className="flex items-center gap-4">
           <ActionButton
-            backgroundColor="bg-gray-50"
-            hoverBackgroundColor="hover:bg-gray-100"
-            color="text-gray-400"
+            backgroundColor="bg-gold"
+            hoverBackgroundColor="hover:bg-gold/75"
+            color="text-white"
             label="Save"
             handleClick={handleSubmit}
             loading={loading}
@@ -352,16 +365,14 @@ const AddDevotion: React.FC<IAddDevotion> = ({
               </div>
             </div>
           )}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 pb-4">
             <h2>Release Date:</h2>
-            <TuiDatePicker
-              handleChange={handleChange}
-              date={startTime}
-              inputWidth={140}
-              fontSize={16}
-              timePicker
-              format="M/d/YY HH:mm"
-              containerWidth={180}
+            <Datetime
+              onChange={handleChange}
+              value={startTime}
+              dateFormat="DD-mm-yyyy"
+              timeFormat
+              className="bg-gray-50 p-2 text-base"
             />
           </div>
           <InputFile
@@ -406,6 +417,14 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             setNewDevotion({ ...newDevotion, verse: value })
           }
           hasError={verseIsEmpty}
+        />
+        <InputText
+          label="Speaker"
+          defaultValue={defaultValues?.speaker}
+          onChange={({ value }) =>
+            setNewDevotion({ ...newDevotion, speaker: value })
+          }
+          hasError={speakerIsEmpty}
         />
         <div
           className={

@@ -56,7 +56,8 @@ const OtpInput: React.FC<IOtpInput> = ({
         <input
           // eslint-disable-next-line react/no-array-index-key
           key={index}
-          className={`h-12 w-12 rounded-lg text-center text-[#6B6B6B] outline-none ${background}`}
+          title="OTP"
+          className={`size-12 rounded-lg text-center text-[#6B6B6B] outline-none ${background}`}
           type="password"
           maxLength={1}
           value={digit}
@@ -64,7 +65,7 @@ const OtpInput: React.FC<IOtpInput> = ({
           onKeyDown={(e) => handleKeyDown(e, index)}
           ref={
             // @ts-expect-error can be null
-            (ref) => (inputRefs.current[index] = ref)
+            (ref) => (inputRefs.current[index] = ref) as unknown as void
           }
         />
       ))}
