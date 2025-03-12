@@ -4,9 +4,13 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { TuiDatePicker } from 'nextjs-tui-date-picker';
+import 'react-datetime/css/react-datetime.css';
+
+import type { Moment } from 'moment';
+import moment from 'moment';
 import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
+import Datetime from 'react-datetime';
 import { toast } from 'react-hot-toast';
 
 import { ActionButton } from '@/components/common/ActionButton';
@@ -21,7 +25,7 @@ import {
   updateDevotion,
 } from '@/services/devotion.service';
 import { useDevotion } from '@/store/devotion.store';
-import type { IHttpException, ValueType } from '@/types/common.types';
+import type { IHttpException } from '@/types/common.types';
 import type {
   IDevotion,
   IDevotionCategory,
@@ -78,11 +82,12 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     createdBy: '',
   });
 
-  const handleChange = (e: ValueType) => {
+  const handleChange = (e: Moment | string) => {
     const date = new Date(e.toString());
     // Ensure valid date before converting
     if (!Number.isNaN(date.getTime())) {
-      setReleaseDate(date.toISOString());
+      setStartTime(new Date(moment(e.toString()).utc().toISOString()));
+      setReleaseDate(moment(e.toString()).utc().toISOString());
     }
   };
 
@@ -360,16 +365,14 @@ const AddDevotion: React.FC<IAddDevotion> = ({
               </div>
             </div>
           )}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 pb-4">
             <h2>Release Date:</h2>
-            <TuiDatePicker
-              handleChange={handleChange}
-              date={startTime}
-              inputWidth={140}
-              fontSize={16}
-              timePicker
-              format="M/d/YY HH:mm"
-              containerWidth={180}
+            <Datetime
+              onChange={handleChange}
+              value={startTime}
+              dateFormat="DD-mm-yyyy"
+              timeFormat
+              className="bg-gray-50 p-2 text-base"
             />
           </div>
           <InputFile
