@@ -55,6 +55,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   const [loading, setLoading] = useState(false);
   const [titleIsEmpty, setTitleIsEmpty] = useState(false);
   const [verseIsEmpty, setVerseIsEmpty] = useState(false);
+  const [speakerIsEmpty, setSpeakerIsEmpty] = useState(false);
   const [audioIsEmpty, setAudioIsEmpty] = useState(false);
   const [coverImageIsEmpty, setCoverImageIsEmpty] = useState(false);
   const user = JSON.parse(getFromLocalStorage('user'));
@@ -69,6 +70,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     coverImage: '',
     title: '',
     verse: '',
+    speaker: '',
     content: '',
     category: '',
     releaseDate: new Date().toISOString(),
@@ -149,6 +151,11 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     } else {
       setVerseIsEmpty(false);
     }
+    if (!newDevotion.speaker) {
+      setSpeakerIsEmpty(true);
+    } else {
+      setSpeakerIsEmpty(false);
+    }
     if (uploadedImage) {
       setCoverImageIsEmpty(true);
     } else {
@@ -163,6 +170,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     if (
       !newDevotion.title ||
       !newDevotion.verse ||
+      !newDevotion.speaker ||
       !uploadedImage ||
       !uploadedAudio ||
       !newDevotion.content
@@ -406,6 +414,14 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             setNewDevotion({ ...newDevotion, verse: value })
           }
           hasError={verseIsEmpty}
+        />
+        <InputText
+          label="Speaker"
+          defaultValue={defaultValues?.speaker}
+          onChange={({ value }) =>
+            setNewDevotion({ ...newDevotion, speaker: value })
+          }
+          hasError={speakerIsEmpty}
         />
         <div
           className={

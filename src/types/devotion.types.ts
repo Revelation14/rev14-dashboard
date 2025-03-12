@@ -20,6 +20,7 @@ export interface INewDevotion {
   timestamp: string;
   title: string;
   verse: string;
+  speaker: string;
   content: string;
   category: string;
   releaseDate: string;
