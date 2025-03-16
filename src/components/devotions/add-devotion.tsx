@@ -365,15 +365,22 @@ const AddDevotion: React.FC<IAddDevotion> = ({
               </div>
             </div>
           )}
-          <div className="flex items-center gap-2 pb-4">
+          <div className="flex flex-col gap-2 pb-4">
             <h2>Release Date:</h2>
             <Datetime
               onChange={handleChange}
               value={startTime}
-              dateFormat="DD-mm-yyyy"
+              dateFormat="DD-MM-yyyy"
               timeFormat
               className="bg-gray-50 p-2 text-base"
             />
+            <div className="text-xs">
+              The date format used is {`"`}DD-MM-yyyy{`"`}, which represents the
+              day, month, and year.
+              <br />
+              The time format used is {`"`}HH:MM XM{`"`}, which represents the
+              12-hour clock system showing hour, minutes and (AM or PM)
+            </div>
           </div>
           <InputFile
             label="The devotional's image goes here"
