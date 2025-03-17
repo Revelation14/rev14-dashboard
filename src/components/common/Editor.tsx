@@ -2,7 +2,7 @@ import parse from 'html-react-parser';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 
-const QuillNoSSRWrapper = dynamic(import('react-quill'), {
+const QuillNoSSRWrapper = dynamic(() => import('react-quill'), {
   ssr: false,
   loading: () => <p>Loading ...</p>,
 });
