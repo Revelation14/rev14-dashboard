@@ -18,18 +18,18 @@ const Card: React.FC<ICard> = ({ devotion, handleClick }) => {
       className="grid cursor-pointer grid-cols-8 items-start gap-4 font-dmSans md:flex-row"
       onClick={handleClick}
     >
-      {devotion?.createdAt && (
+      {devotion?.releaseDate && (
         <div className="pt-5 font-poppins text-sm font-light text-gray-600 md:col-span-2 lg:col-span-1">
-          {moment(devotion.createdAt).format('MMM')}{' '}
-          {moment(devotion.createdAt).format('DD')}{' '}
+          {moment(devotion.releaseDate).format('MMM')}{' '}
+          {moment(devotion.releaseDate).format('DD')}{' '}
           <span className="md:text-xl">
-            {moment(devotion.createdAt).format('YYYY')}
+            {moment(devotion.releaseDate).format('YYYY')}
           </span>
         </div>
       )}
       <div className="col-span-7 flex flex-col gap-6 rounded-2xl border-2 border-gray-150 p-2 pr-4 hover:shadow-lg md:col-span-6 lg:col-span-7 lg:flex-row">
         <div className="">
-          <div className="relative h-full w-full lg:h-40 lg:w-40">
+          <div className="relative size-full lg:size-40">
             <img
               src={
                 devotion.coverImage
@@ -37,7 +37,7 @@ const Card: React.FC<ICard> = ({ devotion, handleClick }) => {
                   : 'https://placehold.co/600x400?text=Grace'
               }
               alt=""
-              className="h-full w-full rounded-xl object-cover object-center"
+              className="size-full rounded-xl object-cover object-center"
             />
             <div className="absolute bottom-2 left-2 font-raleway">
               <Badge
@@ -59,7 +59,7 @@ const Card: React.FC<ICard> = ({ devotion, handleClick }) => {
             </div>
           </div>
         </div>
-        <div className="flex w-[100%] flex-col justify-between gap-2">
+        <div className="flex w-full flex-col justify-between gap-2">
           <div className="flex items-center justify-between">
             <div className="justify-start font-dmSans text-xl font-semibold">
               {devotion?.title.length > 10
