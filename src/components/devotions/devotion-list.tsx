@@ -48,7 +48,7 @@ const DevotionList: FC<IDevotionList> = ({
     } else {
       setDevotions(
         allDevotions?.filter((devotion) =>
-          moment(devotion.updatedAt).isSame(e.value.toString(), 'day')
+          moment(devotion.releaseDate).isSame(e.value.toString(), 'day')
         )
       );
     }
@@ -87,7 +87,7 @@ const DevotionList: FC<IDevotionList> = ({
       </div>
       {loading ? (
         <div className="flex items-center justify-center pt-60">
-          <Spinner className="h-5 w-5" />
+          <Spinner className="size-5" />
         </div>
       ) : error ? (
         <div>Error occured</div>
@@ -107,12 +107,12 @@ const DevotionList: FC<IDevotionList> = ({
             <Devotions
               devotions={
                 devotions.sort((a, b) => {
-                  const updatedAtA = moment(a.updatedAt);
-                  const updatedAtB = moment(b.updatedAt);
-                  if (updatedAtA.isAfter(updatedAtB)) {
+                  const releaseDateA = moment(a.releaseDate);
+                  const releaseDateB = moment(b.releaseDate);
+                  if (releaseDateA.isAfter(releaseDateB)) {
                     return -1; // a should come before b
                   }
-                  if (updatedAtA.isBefore(updatedAtB)) {
+                  if (releaseDateA.isBefore(releaseDateB)) {
                     return 1; // b should come before a
                   }
                   return 0; // both timestamps are equal
@@ -129,12 +129,12 @@ const DevotionList: FC<IDevotionList> = ({
                 devotions
                   ?.filter((dev) => dev.status === EDevotionStatus.DRAFT)
                   .sort((a, b) => {
-                    const updatedAtA = moment(a.updatedAt);
-                    const updatedAtB = moment(b.updatedAt);
-                    if (updatedAtA.isAfter(updatedAtB)) {
+                    const releaseDateA = moment(a.releaseDate);
+                    const releaseDateB = moment(b.releaseDate);
+                    if (releaseDateA.isAfter(releaseDateB)) {
                       return -1; // a should come before b
                     }
-                    if (updatedAtA.isBefore(updatedAtB)) {
+                    if (releaseDateA.isBefore(releaseDateB)) {
                       return 1; // b should come before a
                     }
                     return 0; // both timestamps are equal
@@ -151,12 +151,12 @@ const DevotionList: FC<IDevotionList> = ({
                 devotions
                   ?.filter((dev) => dev.status === EDevotionStatus.PUBLISHED)
                   .sort((a, b) => {
-                    const updatedAtA = moment(a.updatedAt);
-                    const updatedAtB = moment(b.updatedAt);
-                    if (updatedAtA.isAfter(updatedAtB)) {
+                    const releaseDateA = moment(a.releaseDate);
+                    const releaseDateB = moment(b.releaseDate);
+                    if (releaseDateA.isAfter(releaseDateB)) {
                       return -1; // a should come before b
                     }
-                    if (updatedAtA.isBefore(updatedAtB)) {
+                    if (releaseDateA.isBefore(releaseDateB)) {
                       return 1; // b should come before a
                     }
                     return 0; // both timestamps are equal
