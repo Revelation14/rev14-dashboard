@@ -17,5 +17,6 @@
   "prettier.ignorePath": ".gitignore",
   "workbench.colorCustomizations": {
     "editorUnnecessaryCode.border": "#dd7aab"
-  } // Don't run prettier for files listed in .gitignore
+  },
+  "postman.settings.dotenv-detection-notification-visibility": false // Don't run prettier for files listed in .gitignore
 }
