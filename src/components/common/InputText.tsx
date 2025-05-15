@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useEffect, useState } from 'react';
 
 interface IInputText {
@@ -33,6 +33,7 @@ interface IInputText {
   placeholder?: string;
   hasError?: boolean;
   onChange?: (object: { name: string; value: string }) => void;
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const InputText: React.FC<IInputText> = ({
@@ -40,6 +41,7 @@ const InputText: React.FC<IInputText> = ({
   type = 'text',
   defaultValue,
   onChange,
+  onKeyDown,
   background = 'bg-gray-50',
   placeholder = '',
   hasError = false,
@@ -51,6 +53,12 @@ const InputText: React.FC<IInputText> = ({
     setValue(e.target.value);
     if (onChange) {
       onChange({ name: e.target.name, value: e.target.value });
+    }
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (onKeyDown) {
+      onKeyDown(e);
     }
   };
 
@@ -72,6 +80,7 @@ const InputText: React.FC<IInputText> = ({
             value={value}
             name={label}
             onChange={handleChange}
+            onKeyDown={handleKeyDown}
           />
           <div
             className="absolute right-3 top-1/4 cursor-pointer"
@@ -106,6 +115,7 @@ const InputText: React.FC<IInputText> = ({
           value={value}
           name={label}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
         />
       )}
     </div>

@@ -8,7 +8,7 @@ import 'react-datetime/css/react-datetime.css';
 
 import type { Moment } from 'moment';
 import moment from 'moment';
-import type { Dispatch, SetStateAction } from 'react';
+import type { Dispatch, KeyboardEvent, SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import Datetime from 'react-datetime';
 import { toast } from 'react-hot-toast';
@@ -27,6 +27,7 @@ import {
 import { useDevotion } from '@/store/devotion.store';
 import type { IHttpException } from '@/types/common.types';
 import type {
+  IBibleResponse,
   IDevotion,
   IDevotionCategory,
   INewDevotion,
@@ -57,12 +58,27 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   const [uploadedAudio, setUploadedAudio] = useState<File>();
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const [fetchingVerse, setFetchingVerse] = useState(false);
   const [titleIsEmpty, setTitleIsEmpty] = useState(false);
   const [verseIsEmpty, setVerseIsEmpty] = useState(false);
   const [speakerIsEmpty, setSpeakerIsEmpty] = useState(false);
   const [audioIsEmpty, setAudioIsEmpty] = useState(false);
   const [coverImageIsEmpty, setCoverImageIsEmpty] = useState(false);
+  const [bibleVersion, setBibleVersion] = useState('web');
   const user = JSON.parse(getFromLocalStorage('user'));
+
+  const bibleVersions = [
+    { label: 'World English Bible (WEB)', value: 'web' },
+    { label: 'King James Version (KJV)', value: 'kjv' },
+    { label: 'American Standard Version (1901)', value: 'asv' },
+    { label: 'Bible in Basic English', value: 'bbe' },
+    { label: 'Darby Bible', value: 'darby' },
+    { label: 'Douay-Rheims 1899 American Edition', value: 'dra' },
+    { label: `Young's Literal Translation (NT only)`, value: 'ylt' },
+    { label: 'Open English Bible, Commonwealth Edition', value: 'oeb-cw' },
+    { label: 'World English Bible, British Edition', value: 'webbe' },
+    { label: 'Open English Bible, US Edition', value: 'oeb-us' },
+  ];
 
   const [startTime, setStartTime] = useState(
     new Date(new Date().setDate(new Date().getDate() + 1))
@@ -279,6 +295,54 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     setNewDevotion({ ...newDevotion, attachments: newAttachments });
   };
 
+  const fetchVerseContent = async (verseReference: string, version: string) => {
+    if (!verseReference) return;
+
+    try {
+      setFetchingVerse(true);
+
+      const response = await fetch(
+        `https://bible-api.com/${verseReference}?translation=${version}`
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch verse content');
+      }
+
+      const data = (await response.json()) as IBibleResponse;
+
+      if (data && data.text) {
+        setNewDevotion({
+          ...newDevotion,
+          content: data.text,
+        });
+
+        if (!newDevotion.title) {
+          setNewDevotion((prev) => ({
+            ...prev,
+            title: `Devotion on ${verseReference}`,
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching verse content:', error);
+      toast.error(
+        'Failed to fetch verse content. Please check the verse reference and try again.'
+      );
+    } finally {
+      setFetchingVerse(false);
+    }
+  };
+
+  useEffect(() => {
+    if (defaultValues?.content) {
+      setNewDevotion({
+        ...newDevotion,
+        content: defaultValues.content,
+      });
+    }
+  }, [defaultValues]);
+
   return (
     <>
       <div className="flex items-center justify-between font-raleway">
@@ -417,14 +481,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           }
           hasError={titleIsEmpty}
         />
-        <InputText
-          label="Verse"
-          defaultValue={defaultValues?.verse}
-          onChange={({ value }) =>
-            setNewDevotion({ ...newDevotion, verse: value })
-          }
-          hasError={verseIsEmpty}
-        />
+
         <InputText
           label="Speaker"
           defaultValue={defaultValues?.speaker}
@@ -433,6 +490,54 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           }
           hasError={speakerIsEmpty}
         />
+
+        <div className="flex flex-col gap-2">
+          <InputSelect
+            roundedStyle="rounded-md"
+            label="Bible Version"
+            background="bg-gray-50"
+            options={bibleVersions}
+            defaultValue={bibleVersion}
+            onChange={(value) => {
+              if (value === '') return;
+              setBibleVersion(value as string);
+              // Refetch verse content with new version if verse reference exists
+              if (newDevotion.verse) {
+                fetchVerseContent(newDevotion.verse, value);
+              }
+            }}
+          />
+          <div className="text-xs text-gray-500">
+            Select the Bible version you want to use for the verse content
+          </div>
+        </div>
+
+        {/* Verse Input with auto-fetch capability */}
+        <div className="relative">
+          <InputText
+            label="Verse"
+            defaultValue={defaultValues?.verse}
+            onChange={({ value }) =>
+              setNewDevotion({ ...newDevotion, verse: value })
+            }
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                fetchVerseContent(newDevotion.verse, bibleVersion);
+              }
+            }}
+            hasError={verseIsEmpty}
+          />
+          {fetchingVerse && (
+            <div className="absolute right-3 top-3">
+              <div className="size-5 animate-spin rounded-full border-y-2 border-gold" />
+            </div>
+          )}
+          <div className="mt-1 text-xs text-gray-500">
+            Enter a valid Bible verse and press enter to automatically populate
+            the content
+          </div>
+        </div>
         <div
           className={
             newDevotion.content.length === 0
@@ -444,7 +549,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             handleEditorChange={(value) =>
               setNewDevotion({ ...newDevotion, content: value })
             }
-            defaultValue={defaultValues?.content}
+            defaultValue={newDevotion.content}
             placeholder="Verse's content goes here"
           />
         </div>
