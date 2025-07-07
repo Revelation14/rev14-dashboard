@@ -3,6 +3,8 @@ import axios, { type AxiosError, type AxiosResponse } from 'axios';
 import http from '@/lib/axios';
 import type { IHttpException, IHttpResponse } from '@/types/common.types';
 import type {
+  IBiblePassageResponse,
+  IBibleResponse,
   IDevotion,
   IDevotionCategory,
   INewDevotion,
@@ -124,4 +126,87 @@ export async function getDevotionCategories(): Promise<
     }
   }
   return null;
+}
+
+export async function getBibleVersions(): Promise<
+  IBibleResponse[] | IHttpException | null
+> {
+  try {
+    const res: AxiosResponse<IHttpResponse<IBibleResponse[]>> = await axios.get(
+      'https://api.scripture.api.bible/v1/bibles?language=eng',
+      {
+        headers: {
+          'api-key':
+            process.env.NEXT_PUBLIC_BIBLE_API_KEY ||
+            process.env.NEXT_PUBLIC_BIBLE_API_KEY2 ||
+            '',
+        },
+      }
+    );
+
+    return res.data.data as IBibleResponse[];
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
+
+export async function getBibleBooks(
+  versionId: string
+): Promise<IBibleResponse[] | IHttpException | null> {
+  try {
+    const res: AxiosResponse<IHttpResponse<IBibleResponse[]>> = await axios.get(
+      `https://api.scripture.api.bible/v1/bibles/${versionId}/books`,
+      {
+        headers: {
+          'api-key':
+            process.env.NEXT_PUBLIC_BIBLE_API_KEY ||
+            process.env.NEXT_PUBLIC_BIBLE_API_KEY2 ||
+            '',
+        },
+      }
+    );
+
+    return res.data.data as IBibleResponse[];
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
+
+export async function getBiblePassage(
+  verse: string,
+  versionId: string
+): Promise<IBiblePassageResponse | IHttpException | null> {
+  try {
+    const res: AxiosResponse<IHttpResponse<IBiblePassageResponse>> =
+      await axios.get(
+        `https://api.scripture.api.bible/v1/bibles/${versionId}/passages/${verse}`,
+        {
+          headers: {
+            'api-key':
+              process.env.NEXT_PUBLIC_BIBLE_API_KEY ||
+              process.env.NEXT_PUBLIC_BIBLE_API_KEY2 ||
+              '',
+          },
+        }
+      );
+
+    return res.data.data as IBiblePassageResponse;
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
 }

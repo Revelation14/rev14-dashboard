@@ -35,17 +35,43 @@ export enum EDevotionStatus {
 }
 
 export interface IBibleResponse {
-  reference: string;
-  text: string;
-  translation_id: string;
-  translation_name: string;
-  translation_note: string;
-  verses: IBibleVerse[];
+  abbreviation: string;
+  abbreviationLocal: string;
+  audioBibles: string[];
+  countries: { id: string; name: string; nameLocal: string }[];
+  dblId: string;
+  description?: string;
+  descriptionLocal?: string;
+  id: string;
+  language: {
+    id: string;
+    name: string;
+    nameLocal: string;
+    script: string;
+    scriptDirection: string;
+  };
+  name: string;
+  nameLocal: string;
+  relatedDbl?: string;
+  type: string;
+  updatedAt: string;
 }
 
-export interface IBibleVerse {
-  book_id: string;
-  book_name: string;
-  chapter: number;
-  verse: number;
+export interface IBibleBookResponse {
+  abbreviation: string;
+  bibleId: string;
+  id: string;
+  name: string;
+  nameLong: string;
+}
+
+export interface IBiblePassageResponse {
+  bibleId: string;
+  bookId: string;
+  chapterIds: string[];
+  content: string;
+  copyright: string;
+  id: string;
+  orgId: string;
+  reference: string;
 }
