@@ -574,6 +574,18 @@ const AddDevotion: React.FC<IAddDevotion> = ({
                   setFetchingVerse(true);
                   getBiblePassage(newDevotion.verse, bibleVersion)
                     .then((data) => {
+                      if ((data as IHttpException).statusCode === 400) {
+                        toast.error(
+                          'Format for the verse is incorrect! Please use MAT.1.12 or MAT.1.12-MAT.1.20. Ensure the book name and dot notation are correct.'
+                        );
+                        setVerseIsEmpty(true);
+                        return;
+                      }
+                      if ((data as IHttpException).message) {
+                        toast.error((data as IHttpException).message);
+                        setVerseIsEmpty(true);
+                        return;
+                      }
                       setNewDevotion((prev) => ({
                         ...prev,
                         content: (data as unknown as IBiblePassageResponse)
@@ -601,7 +613,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         </div>
         <div
           className={
-            newDevotion.content.length === 0
+            newDevotion.content?.length === 0
               ? 'flex flex-col gap-2 border border-secondary-orange '
               : 'flex flex-col gap-2 border'
           }

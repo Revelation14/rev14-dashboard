@@ -15,7 +15,7 @@ export enum IHttpMethod {
 }
 export interface IHttpException {
   message: string;
-  statusCode: string;
+  statusCode: number;
 }
 
 export interface IHttpResponse<T> {
