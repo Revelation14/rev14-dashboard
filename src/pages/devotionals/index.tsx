@@ -12,6 +12,7 @@ import {
   getDevotionCategories,
   getDevotions,
 } from '@/services/devotion.service';
+import type { IHttpException } from '@/types/common.types';
 import type { IDevotion, IDevotionCategory } from '@/types/devotion.types';
 
 import { getFromLocalStorage, removeFromLocalStorage } from '../../lib/helper';
@@ -30,18 +31,22 @@ const Devotions = () => {
   const [selectedDevotion, setSelectedDevotion] = useState<
     IDevotion | undefined
   >();
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<IHttpException>();
 
   useEffect(() => {
     setLoading(true);
     getDevotions()
       .then((data) => {
-        setDevotions(data as IDevotion[]);
-        setAllDevotions(data as IDevotion[]);
-        setLoading(false);
+        if (Array.isArray(data)) {
+          setDevotions(data as IDevotion[]);
+          setAllDevotions(data as IDevotion[]);
+        } else if (data && typeof data === 'object') {
+          setError(data as IHttpException);
+          setLoading(false);
+        }
       })
       .catch((err) => {
-        setError(err as Error);
+        setError(err);
         setLoading(false);
       });
     getDevotionCategories().then((data) => {

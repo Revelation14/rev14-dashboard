@@ -8,7 +8,7 @@ import Button from '@/components/common/Button';
 import { DatePicker } from '@/components/common/DatePicker';
 import Search from '@/components/common/Search';
 import { Tab, Tabs } from '@/components/common/Tabs';
-import type { ValueType } from '@/types/common.types';
+import type { IHttpException, ValueType } from '@/types/common.types';
 import type { IDevotion } from '@/types/devotion.types';
 import { EDevotionStatus } from '@/types/devotion.types';
 
@@ -23,7 +23,7 @@ interface IDevotionList {
   allDevotions: IDevotion[];
   setDevotions: Dispatch<SetStateAction<IDevotion[]>>;
   setSelectedDevotion: Dispatch<SetStateAction<IDevotion | undefined>>;
-  error?: Error;
+  error?: IHttpException;
   loading: boolean;
 }
 
@@ -90,7 +90,9 @@ const DevotionList: FC<IDevotionList> = ({
           <Spinner className="size-5" />
         </div>
       ) : error ? (
-        <div>Error occured</div>
+        <div>
+          Error occured. Please logout and login again to resolve this issue.
+        </div>
       ) : (
         <Tabs
           activeIndex={0}
