@@ -33,6 +33,7 @@ const Profile = () => {
   return (
     <div className="m-5 flex h-full flex-col items-center rounded-2xl border border-gray-200 bg-white p-6">
       <button
+        aria-label="exit_profile"
         type="button"
         className="fixed right-8 top-8 z-10 gap-2.5 rounded-full bg-gray-150 p-2.5"
         onClick={handleExit}
