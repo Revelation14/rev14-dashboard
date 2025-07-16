@@ -42,11 +42,12 @@ const Devotions = () => {
           setAllDevotions(data as IDevotion[]);
         } else if (data && typeof data === 'object') {
           setError(data as IHttpException);
-          setLoading(false);
         }
       })
       .catch((err) => {
         setError(err);
+      })
+      .finally(() => {
         setLoading(false);
       });
     getDevotionCategories().then((data) => {

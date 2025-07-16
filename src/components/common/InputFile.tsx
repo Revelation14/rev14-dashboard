@@ -26,7 +26,7 @@ const InputFile: React.FC<IInputFile> = ({
   setFile,
   accepted,
   multiple = false,
-  hasError=false,
+  hasError = false,
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -99,15 +99,15 @@ const InputFile: React.FC<IInputFile> = ({
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="text-sm font-medium text-gray-600 font-raleway">
+      <div className="font-raleway text-sm font-medium text-gray-600">
         {label}
       </div>
-      <div className=
-      {
-        hasError
-        ? `flex cursor-pointer flex-col items-center gap-3 rounded-xl  border-2 border-dashed border-borderOpaque border-secondary-orange bg-gray-50 px-16 py-7`
-        : `flex cursor-pointer flex-col items-center gap-3 rounded-xl  border-2 border-dashed border-borderOpaque bg-gray-50 px-16 py-7`
-      }
+      <div
+        className={
+          hasError
+            ? `flex cursor-pointer flex-col items-center gap-3 rounded-xl  border-2 border-dashed border-secondary-orange bg-gray-50 px-16 py-7`
+            : `flex cursor-pointer flex-col items-center gap-3 rounded-xl  border-2 border-dashed border-borderOpaque bg-gray-50 px-16 py-7`
+        }
       >
         <div className="text-sm">{title}</div>
         <div className="">
@@ -120,6 +120,7 @@ const InputFile: React.FC<IInputFile> = ({
             handleClick={handleUpload}
           />
           <input
+            title="file-upload"
             ref={inputRef}
             type="file"
             onChange={handleFileUpload}
@@ -128,7 +129,7 @@ const InputFile: React.FC<IInputFile> = ({
             multiple={multiple}
           />
           {file && (
-            <div className="flex items-center justify-center gap-4 mt-2">
+            <div className="mt-2 flex items-center justify-center gap-4">
               {Array.isArray(file) ? (
                 file.map((f) => (
                   <div
@@ -146,7 +147,10 @@ const InputFile: React.FC<IInputFile> = ({
                 ))
               ) : (
                 <div className="flex items-center justify-center gap-2">
-                  <div className="text-xs text-gray-850">{file.name}</div>
+                  <div className="text-xs text-gray-850">
+                    {file.name ??
+                      (file as unknown as String)?.split('/')?.pop()}
+                  </div>
                   <div onClick={clearFile} className="text-sm text-red-600">
                     x
                   </div>

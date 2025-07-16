@@ -269,28 +269,41 @@ const AddDevotion: React.FC<IAddDevotion> = ({
 
   const handleSubmit = async () => {
     setLoading(true);
-    let newAttachments = newDevotion.attachments;
-    let coverPhoto = newDevotion.coverImage;
-    let newTimestamp = newDevotion.timestamp;
+    let newAttachments;
+    let coverPhoto;
+    let newTimestamp;
     const formIsValid = validateForm();
     if (!formIsValid) return;
-    if (uploadedAudio) {
-      const uploadedAudioRes = await uploadMultipleFiles(
-        [uploadedAudio],
-        'audio'
-      );
-      if (uploadedAudioRes) {
-        newAttachments = [uploadedAudioRes.secure_url];
-        newTimestamp = uploadedAudioRes.duration.toString();
-      }
-    }
-    if (uploadedImage) {
+    if (defaultValues?.coverImage === uploadedImage) {
+      coverPhoto = defaultValues?.coverImage
+        ? defaultValues.coverImage
+        : newDevotion.coverImage;
+    } else if (uploadedImage) {
       coverPhoto = await uploadSingleFile(uploadedImage);
+    }
+    if (uploadedAudio) {
+      if (
+        defaultValues?.attachments.includes(uploadedAudio as unknown as string)
+      ) {
+        newAttachments = defaultValues.attachments;
+        newTimestamp = defaultValues.timestamp;
+      } else {
+        const uploadedAudioRes = await uploadMultipleFiles(
+          [uploadedAudio],
+          'audio'
+        );
+        if (uploadedAudioRes) {
+          newAttachments = [uploadedAudioRes.secure_url];
+          newTimestamp = uploadedAudioRes.duration.toString();
+        }
+      }
     }
     if (defaultValues) {
       if (
         newDevotion.status === EDevotionStatus.PUBLISHED &&
-        (coverPhoto === '' || newAttachments === undefined)
+        (coverPhoto === '' ||
+          coverPhoto === undefined ||
+          newAttachments === undefined)
       ) {
         toast.error(
           `A devotion can't be published if it doesn't have a cover image or an audio!`,
@@ -303,9 +316,9 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         updateDevotion(
           {
             ...newDevotion,
-            coverImage: coverPhoto,
-            attachments: newAttachments,
-            timestamp: newTimestamp,
+            coverImage: coverPhoto ?? '',
+            attachments: newAttachments ?? [],
+            timestamp: newTimestamp ?? '',
             createdBy: defaultValues?.createdBy ?? (user as IUser)?.id ?? '',
             releaseDate,
           },
@@ -324,14 +337,14 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     } else {
       setNewDevotion({
         ...newDevotion,
-        coverImage: coverPhoto,
+        coverImage: coverPhoto ?? '',
       });
       addDevotion({
         ...newDevotion,
         releaseDate, // Use releaseDate directly
-        coverImage: coverPhoto,
-        attachments: newAttachments,
-        timestamp: newTimestamp,
+        coverImage: coverPhoto ?? '',
+        attachments: newAttachments ?? [],
+        timestamp: newTimestamp ?? '',
         createdBy: (user as IUser)?.id ?? '',
       })
         .then((res) => {
@@ -438,18 +451,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
                   width={120}
                   height={120}
                 />
-                <div
-                  className="absolute right-1 top-1 cursor-pointer rounded-full bg-white p-1 hover:bg-gray-200"
-                  onClick={() => {
-                    setNewDevotion({ ...newDevotion, coverImage: '' });
-                  }}
-                >
-                  <img
-                    src="/assets/icons/black-close.svg"
-                    alt="close"
-                    className="w-2"
-                  />
-                </div>
               </div>
             </div>
           )}
