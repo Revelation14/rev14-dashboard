@@ -124,10 +124,8 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         setBibles((prev) => ({
           ...prev,
           versions: (data as IBibleResponse[]).map((version) => ({
-            label: `${version.nameLocal}${
-              version.description ? ` (${version.description})` : ''
-            }`,
-            value: version.id,
+            label: `${version.full_name} (${version.short_name})`,
+            value: version.short_name,
           })),
           versionsLoading: false,
         }));
@@ -153,7 +151,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           ...prev,
           books: (data as unknown as IBibleBookResponse[]).map((bk) => ({
             label: bk.name,
-            value: bk.id,
+            value: bk.bookid.toString(),
           })),
           booksLoading: false,
         }));
@@ -165,7 +163,8 @@ const AddDevotion: React.FC<IAddDevotion> = ({
     if (bibleBook && bibleVersion) {
       setNewDevotion((prev) => ({
         ...prev,
-        verse: bibleBook,
+        verse:
+          bibles.books.find((book) => book.value === bibleBook)?.label ?? '',
       }));
     }
   }, [bibleBook]);
@@ -571,26 +570,29 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
-                if (bibleVersion) {
+                if (bibleVersion && bibleBook) {
                   setFetchingVerse(true);
-                  getBiblePassage(newDevotion.verse, bibleVersion)
+                  getBiblePassage(
+                    bibleVersion,
+                    bibleBook,
+                    newDevotion.verse.split(' ')[
+                      newDevotion.verse.split(' ').length - 1
+                    ] ?? ''
+                  )
                     .then((data) => {
-                      if ((data as IHttpException).statusCode === 400) {
+                      if ((data as IHttpException)?.message) {
                         toast.error(
-                          'Format for the verse is incorrect! Please use MAT.1.12 or MAT.1.12-MAT.1.20. Ensure the book name and dot notation are correct.'
+                          (data as IHttpException)?.message ??
+                            'Format for the verse is incorrect. Please ensure it is in the format "Book Chapter:Verse" or "Book Chapter:Verse-Verse".'
                         );
-                        setVerseIsEmpty(true);
-                        return;
-                      }
-                      if ((data as IHttpException).message) {
-                        toast.error((data as IHttpException).message);
                         setVerseIsEmpty(true);
                         return;
                       }
                       setNewDevotion((prev) => ({
                         ...prev,
-                        content: (data as unknown as IBiblePassageResponse)
-                          .content,
+                        content: (data as unknown as IBiblePassageResponse[][])
+                          ?.flatMap((passages) => passages.map((p) => p.text))
+                          .join('\n'),
                       }));
                     })
                     .finally(() => {
@@ -607,9 +609,8 @@ const AddDevotion: React.FC<IAddDevotion> = ({
             </div>
           )}
           <div className="mt-1 text-xs text-gray-500">
-            Enter a valid Bible verse (i.e. MAT.1.12) or range of verses (i.e.
-            MAT.1.12-MAT.1.20) and press enter to automatically populate the
-            content.
+            Enter a valid Bible verse (i.e. John 4:13) or range of verses (i.e.
+            John 4:10-11) and press enter to automatically populate the content.
           </div>
         </div>
         <div

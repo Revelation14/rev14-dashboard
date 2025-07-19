@@ -132,16 +132,8 @@ export async function getBibleVersions(): Promise<
   IBibleResponse[] | IHttpException | null
 > {
   try {
-    const res: AxiosResponse<IHttpResponse<IBibleResponse[]>> = await axios.get(
-      'https://api.scripture.api.bible/v1/bibles?language=eng',
-      {
-        headers: {
-          'api-key':
-            process.env.NEXT_PUBLIC_BIBLE_API_KEY ||
-            process.env.NEXT_PUBLIC_BIBLE_API_KEY2 ||
-            '',
-        },
-      }
+    const res: AxiosResponse<IHttpResponse<IBibleResponse[]>> = await http.get(
+      '/bible/translation?language=english'
     );
 
     return res.data.data as IBibleResponse[];
@@ -159,16 +151,8 @@ export async function getBibleBooks(
   versionId: string
 ): Promise<IBibleResponse[] | IHttpException | null> {
   try {
-    const res: AxiosResponse<IHttpResponse<IBibleResponse[]>> = await axios.get(
-      `https://api.scripture.api.bible/v1/bibles/${versionId}/books`,
-      {
-        headers: {
-          'api-key':
-            process.env.NEXT_PUBLIC_BIBLE_API_KEY ||
-            process.env.NEXT_PUBLIC_BIBLE_API_KEY2 ||
-            '',
-        },
-      }
+    const res: AxiosResponse<IHttpResponse<IBibleResponse[]>> = await http.get(
+      `/bible/books?translation=${versionId}`
     );
 
     return res.data.data as IBibleResponse[];
@@ -183,24 +167,19 @@ export async function getBibleBooks(
 }
 
 export async function getBiblePassage(
-  verse: string,
-  versionId: string
-): Promise<IBiblePassageResponse | IHttpException | null> {
+  translation: string,
+  book: string,
+  verse: string
+): Promise<IBiblePassageResponse[][] | IHttpException | null> {
   try {
-    const res: AxiosResponse<IHttpResponse<IBiblePassageResponse>> =
-      await axios.get(
-        `https://api.scripture.api.bible/v1/bibles/${versionId}/passages/${verse}`,
-        {
-          headers: {
-            'api-key':
-              process.env.NEXT_PUBLIC_BIBLE_API_KEY ||
-              process.env.NEXT_PUBLIC_BIBLE_API_KEY2 ||
-              '',
-          },
-        }
+    const res: AxiosResponse<IHttpResponse<IBiblePassageResponse[][]>> =
+      await http.get(
+        `/bible/verses?translation=${translation}&book=${book}&verse=${verse}`
       );
-
-    return res.data.data as IBiblePassageResponse;
+    if (res.data.statusCode === 400 || res.data.statusCode === 500) {
+      return res.data as IHttpException;
+    }
+    return res.data.data as IBiblePassageResponse[][];
   } catch (err) {
     const error = err as Error | AxiosError;
     if (axios.isAxiosError(error)) {
