@@ -33,25 +33,3 @@ export enum EDevotionStatus {
   PUBLISHED = 'PUBLISHED',
   DELETED = 'DELETED',
 }
-
-export interface IBibleResponse {
-  full_name: string;
-  short_name: string;
-  updated: number;
-}
-
-export interface IBibleBookResponse {
-  bookid: number;
-  chronorder: number;
-  name: string;
-  chapters: number;
-}
-
-export interface IBiblePassageResponse {
-  book: number;
-  chapter: number;
-  pk: number;
-  text: string;
-  translation: string;
-  verse: number;
-}

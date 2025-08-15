@@ -8,7 +8,7 @@ import 'react-datetime/css/react-datetime.css';
 
 import type { Moment } from 'moment';
 import moment from 'moment';
-import type { Dispatch, KeyboardEvent, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { useEffect, useState } from 'react';
 import Datetime from 'react-datetime';
 import { toast } from 'react-hot-toast';
@@ -21,18 +21,12 @@ import { uploadMultipleFiles, uploadSingleFile } from '@/lib/file-upload';
 import { getFromLocalStorage } from '@/lib/helper';
 import {
   addDevotion,
-  getBibleBooks,
-  getBiblePassage,
-  getBibleVersions,
   getDevotions,
   updateDevotion,
 } from '@/services/devotion.service';
 import { useDevotion } from '@/store/devotion.store';
 import type { IHttpException } from '@/types/common.types';
 import type {
-  IBibleBookResponse,
-  IBiblePassageResponse,
-  IBibleResponse,
   IDevotion,
   IDevotionCategory,
   INewDevotion,
@@ -63,25 +57,11 @@ const AddDevotion: React.FC<IAddDevotion> = ({
   const [uploadedAudio, setUploadedAudio] = useState<File>();
   const [errorMsg, setErrorMsg] = useState('');
   const [loading, setLoading] = useState(false);
-  const [fetchingVerse, setFetchingVerse] = useState(false);
-  const [bibles, setBibles] = useState<{
-    versions: { label: string; value: string }[];
-    versionsLoading: boolean;
-    books: { label: string; value: string }[];
-    booksLoading: boolean;
-  }>({
-    versions: [],
-    versionsLoading: false,
-    books: [],
-    booksLoading: false,
-  });
   const [titleIsEmpty, setTitleIsEmpty] = useState(false);
   const [verseIsEmpty, setVerseIsEmpty] = useState(false);
   const [speakerIsEmpty, setSpeakerIsEmpty] = useState(false);
   const [audioIsEmpty, setAudioIsEmpty] = useState(false);
   const [coverImageIsEmpty, setCoverImageIsEmpty] = useState(false);
-  const [bibleVersion, setBibleVersion] = useState<string>();
-  const [bibleBook, setBibleBook] = useState<string>();
   const user = JSON.parse(getFromLocalStorage('user'));
 
   const [startTime, setStartTime] = useState(
@@ -110,64 +90,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
       setReleaseDate(moment(e.toString()).utc().toISOString());
     }
   };
-
-  useEffect(() => {
-    setBibles((prev) => ({
-      ...prev,
-      versions: [],
-      versionsLoading: true,
-    }));
-
-    // fetch bible versions on component mount
-    getBibleVersions()
-      .then((data) => {
-        setBibles((prev) => ({
-          ...prev,
-          versions: (data as IBibleResponse[]).map((version) => ({
-            label: `${version.full_name} (${version.short_name})`,
-            value: version.short_name,
-          })),
-          versionsLoading: false,
-        }));
-      })
-      .catch((err) => {
-        setBibles((prev) => ({
-          ...prev,
-          versionsLoading: false,
-        }));
-        toast.error((err as IHttpException).message);
-      });
-  }, []);
-
-  useEffect(() => {
-    setBibles((prev) => ({
-      ...prev,
-      books: [],
-      booksLoading: true,
-    }));
-    if (bibleVersion) {
-      getBibleBooks(bibleVersion).then((data) => {
-        setBibles((prev) => ({
-          ...prev,
-          books: (data as unknown as IBibleBookResponse[]).map((bk) => ({
-            label: bk.name,
-            value: bk.bookid.toString(),
-          })),
-          booksLoading: false,
-        }));
-      });
-    }
-  }, [bibleVersion]);
-
-  useEffect(() => {
-    if (bibleBook && bibleVersion) {
-      setNewDevotion((prev) => ({
-        ...prev,
-        verse:
-          bibles.books.find((book) => book.value === bibleBook)?.label ?? '',
-      }));
-    }
-  }, [bibleBook]);
 
   useEffect(() => {
     if (defaultValues?.releaseDate) {
@@ -505,7 +427,14 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           }
           hasError={titleIsEmpty}
         />
-
+        <InputText
+          label="Verse"
+          defaultValue={defaultValues?.verse}
+          onChange={({ value }) =>
+            setNewDevotion({ ...newDevotion, verse: value })
+          }
+          hasError={verseIsEmpty}
+        />
         <InputText
           label="Speaker"
           defaultValue={defaultValues?.speaker}
@@ -514,105 +443,6 @@ const AddDevotion: React.FC<IAddDevotion> = ({
           }
           hasError={speakerIsEmpty}
         />
-
-        <div className="flex flex-col gap-2">
-          <InputSelect
-            roundedStyle="rounded-md"
-            label="Bible Version"
-            background="bg-gray-50"
-            options={bibles.versions}
-            defaultValue={bibleVersion}
-            onChange={(value) => {
-              if (value === '') return;
-              setBibleVersion(value as string);
-            }}
-          />
-          <div className="flex items-center gap-2">
-            {bibles.versionsLoading && (
-              <div className="size-5 animate-spin rounded-full border-y-2 border-gold" />
-            )}
-            <div className="text-xs text-gray-500">
-              Select the Bible version you want to use for the verse content
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <InputSelect
-            roundedStyle="rounded-md"
-            label="Bible Book"
-            background="bg-gray-50"
-            options={bibles.books}
-            defaultValue={bibleBook}
-            onChange={(value) => {
-              if (value === '') return;
-              setBibleBook(value as string);
-            }}
-          />
-          <div className="flex items-center gap-2">
-            {bibles.versionsLoading && (
-              <div className="size-5 animate-spin rounded-full border-y-2 border-gold" />
-            )}
-            <div className="text-xs text-gray-500">
-              Select the bible book you want to use to populate the verse input
-              with the correct book name.
-            </div>
-          </div>
-        </div>
-
-        {/* Verse Input with auto-fetch capability */}
-        <div className="relative">
-          <InputText
-            label="Verse"
-            defaultValue={newDevotion.verse}
-            onChange={({ value }) =>
-              setNewDevotion({ ...newDevotion, verse: value })
-            }
-            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                if (bibleVersion && bibleBook) {
-                  setFetchingVerse(true);
-                  getBiblePassage(
-                    bibleVersion,
-                    bibleBook,
-                    newDevotion.verse.split(' ')[
-                      newDevotion.verse.split(' ').length - 1
-                    ] ?? ''
-                  )
-                    .then((data) => {
-                      if ((data as IHttpException)?.message) {
-                        toast.error(
-                          (data as IHttpException)?.message ??
-                            'Format for the verse is incorrect. Please ensure it is in the format "Book Chapter:Verse" or "Book Chapter:Verse-Verse".'
-                        );
-                        setVerseIsEmpty(true);
-                        return;
-                      }
-                      setNewDevotion((prev) => ({
-                        ...prev,
-                        content: (data as unknown as IBiblePassageResponse[][])
-                          ?.flatMap((passages) => passages.map((p) => p.text))
-                          .join('\n'),
-                      }));
-                    })
-                    .finally(() => {
-                      setFetchingVerse(false);
-                    });
-                }
-              }
-            }}
-            hasError={verseIsEmpty}
-          />
-          {fetchingVerse && (
-            <div className="absolute right-3 top-3">
-              <div className="size-5 animate-spin rounded-full border-y-2 border-gold" />
-            </div>
-          )}
-          <div className="mt-1 text-xs text-gray-500">
-            Enter a valid Bible verse (i.e. John 4:13) or range of verses (i.e.
-            John 4:10-11) and press enter to automatically populate the content.
-          </div>
-        </div>
         <div
           className={
             newDevotion.content?.length === 0
