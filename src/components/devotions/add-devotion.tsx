@@ -215,7 +215,7 @@ const AddDevotion: React.FC<IAddDevotion> = ({
         );
         if (uploadedAudioRes) {
           newAttachments = [uploadedAudioRes.secure_url];
-          newTimestamp = uploadedAudioRes.duration.toString();
+          newTimestamp = uploadedAudioRes.duration?.toString();
         }
       }
     }

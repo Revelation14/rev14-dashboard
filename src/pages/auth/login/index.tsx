@@ -43,7 +43,7 @@ const Login = () => {
       setLoading(true);
       try {
         const res: any = await signin(formData);
-        if ((res as IAuth).accessToken) {
+        if ((res as IAuth)?.accessToken) {
           const userRole = (res as IAuth).user.role;
           setToLocalStorage('user', (res as IAuth).user);
           setToLocalStorage('token', (res as IAuth).accessToken);
@@ -62,10 +62,12 @@ const Login = () => {
             router.push('/auth/login');
           }
         } else {
-          setErrorMsg((res as IHttpException).message);
+          setErrorMsg(
+            (res as IHttpException)?.message ?? 'Invalid login credentials'
+          );
         }
       } catch (error) {
-        setErrorMsg((error as IHttpException).message);
+        setErrorMsg((error as IHttpException)?.message ?? 'An error occurred');
       }
       setLoading(false);
     }
