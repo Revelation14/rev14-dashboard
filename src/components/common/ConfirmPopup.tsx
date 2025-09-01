@@ -21,7 +21,7 @@ const ConfirmPopup: FC<IConfirmPopup> = ({
   loading,
 }) => {
   return (
-    <div className="fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black/75 font-raleway">
+    <div className="fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-black/75 font-raleway">
       <div className="rounded-lg bg-white p-8">
         <div className="mb-4 flex items-center justify-between">
           <div className="text-lg font-bold">{title}</div>
@@ -43,7 +43,7 @@ const ConfirmPopup: FC<IConfirmPopup> = ({
             onClick={onConfirm}
             className="flex items-center justify-center rounded-lg bg-gold px-4 py-2 text-white hover:bg-gold/75"
           >
-            {loading ? <Spinner className="h-5 w-5" /> : 'Delete'}
+            {loading ? <Spinner className="size-5" /> : 'Delete'}
           </button>
         </div>
       </div>

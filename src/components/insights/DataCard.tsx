@@ -61,7 +61,7 @@ const DataCard: React.FC<IdataCardProps> = ({ title, number, data }) => {
         <h3 className="text-sm font-light leading-6">{title}</h3>
         <p className="text-2xl font-normal leading-6">{number}</p>
         <p className="flex flex-row items-center text-sm font-normal leading-6">
-          <img src={arrowImageSource} alt="" className="mr-1 h-3.5 w-3.5" />
+          <img src={arrowImageSource} alt="" className="mr-1 size-3.5" />
           <span style={{ color: statusColor }}>{comparisonText} </span>
           <span className="ml-2 text-black"> since yesterday</span>
         </p>

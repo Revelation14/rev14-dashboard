@@ -177,7 +177,7 @@ const Security = () => {
         <Button
           type="submit"
           text="Save"
-          className="h-fit w-fit self-center bg-gray-50 p-1 text-sm font-normal text-gray-400"
+          className="size-fit self-center bg-gray-50 p-1 text-sm font-normal text-gray-400"
           color="#FFFFFF"
           handleClick={savePassword}
           loading={passwordLoading}

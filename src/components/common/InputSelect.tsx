@@ -31,7 +31,7 @@ const InputSelect: React.FC<IInputSelect> = ({
     <>
       <div className="text-sm text-black">{label}</div>
       <div
-        className={`relative ml-1 flex h-full w-full items-center gap-2 ${roundedStyle} border-gray-150 bg-gray-150`}
+        className={`relative ml-1 flex size-full items-center gap-2 ${roundedStyle} border-gray-150 bg-gray-150`}
       >
         <span className="absolute right-4 top-4">
           <img src="/assets/icons/dropdown.svg" alt="" />

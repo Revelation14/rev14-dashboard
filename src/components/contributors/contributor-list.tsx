@@ -137,7 +137,7 @@ const ContributorList: React.FC<IContributorList> = ({
         <Tab label="Active">
           {isLoading ? (
             <div className="flex h-screen w-full items-center justify-center">
-              <Spinner className="h-5 w-5" />
+              <Spinner className="size-5" />
             </div>
           ) : users?.length === 0 ? (
             <NoDataAvailable />

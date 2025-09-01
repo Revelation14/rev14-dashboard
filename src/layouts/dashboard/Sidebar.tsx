@@ -64,7 +64,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ mobileNavsidebar }) => {
               height={44}
               width={44}
             /> */}
-            <div className="relative flex h-[44px] w-[44px] items-center justify-center rounded-full bg-backgroundAccent text-2xl font-medium text-white">
+            <div className="relative flex size-[44px] items-center justify-center rounded-full bg-backgroundAccent text-2xl font-medium text-white">
               <div>{profileInitials}</div>
             </div>
           </NavItem>

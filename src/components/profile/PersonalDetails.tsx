@@ -77,7 +77,7 @@ const PersonalDetails = () => {
   };
   return (
     <div className="flex flex-col items-center gap-12">
-      <div className="relative flex h-[80px] w-[80px] items-center justify-center rounded-full bg-backgroundAccent text-4xl font-medium text-white">
+      <div className="relative flex size-[80px] items-center justify-center rounded-full bg-backgroundAccent text-4xl font-medium text-white">
         {/* <AddProfilePicturePopup /> */}
         {/* {user?.profilePicture ? (
           <img src={user?.profilePicture} alt={profileInitials} />
@@ -118,7 +118,7 @@ const PersonalDetails = () => {
         <Button
           type="submit"
           text="Save"
-          className="h-fit w-fit self-center bg-gray-50 p-1 text-sm font-normal text-gray-400"
+          className="size-fit self-center bg-gray-50 p-1 text-sm font-normal text-gray-400"
           color="#FFFFFF"
           handleClick={handleSubmit}
           loading={isLoading}

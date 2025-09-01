@@ -66,12 +66,12 @@ const AddProfilePicturePopup = () => {
           <div className="w-1/3 rounded-md bg-white p-6" ref={popupRef}>
             <h2 className="mb-4 text-xl">Add Profile Picture</h2>
             <div className="mt-4 flex flex-col items-center justify-center">
-              <div className="flex h-60 w-60 items-center justify-center overflow-hidden rounded-full bg-gray-100">
+              <div className="flex size-60 items-center justify-center overflow-hidden rounded-full bg-gray-100">
                 {selectedPicture ? (
                   <img
                     src={selectedPicture}
                     alt="Preview"
-                    className="h-full w-full object-cover"
+                    className="size-full object-cover"
                   />
                 ) : (
                   <span className="text-sm font-normal text-gray-400">

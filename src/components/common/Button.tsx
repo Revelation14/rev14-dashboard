@@ -35,7 +35,7 @@ const Button: React.FC<IButton> = ({
       onClick={handleClick}
     >
       {loading ? (
-        <Spinner className="w-5 h-5" />
+        <Spinner className="size-5" />
       ) : (
         <>
           {icon && <img src={icon} alt="Button Icon" />}

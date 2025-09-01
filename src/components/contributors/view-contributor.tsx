@@ -89,7 +89,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-4">
-              <span className="h-8 w-8 rounded-full bg-backgroundAccent pt-1 text-center text-lg text-white">
+              <span className="size-8 rounded-full bg-backgroundAccent pt-1 text-center text-lg text-white">
                 {contributor.name?.split(' ')[0]?.charAt(0) ?? ''}
                 {contributor.name?.split(' ')[1]?.charAt(0) ?? ''}
               </span>
@@ -131,7 +131,7 @@ const ViewContributor: React.FC<IViewContributor> = ({
       <div className="flex min-h-screen flex-col gap-4">
         {loading ? (
           <div className="my-4 flex items-center justify-center">
-            <Spinner className="h-12 w-12" />
+            <Spinner className="size-12" />
           </div>
         ) : devotions.length === 0 ? (
           <NoDataAvailable />

@@ -50,65 +50,19 @@ const compressImage = (
   });
 };
 
-// Add optimization parameters to existing Cloudinary URLs
-export const addOptimizationToUrl = (url: string): string => {
-  if (!url.includes('cloudinary.com')) return url;
-
-  // Insert optimization parameters after '/upload/'
-  const optimizationParams = 'q_auto:good,f_auto,dpr_auto';
-  return url.replace('/upload/', `/upload/${optimizationParams}/`);
-};
-
 export const uploadMultipleFiles = async (
-  files: File[],
-  fileType: 'audio' | 'image',
-  options: {
-    quality?: number;
-    maxWidth?: number;
-    enableCompression?: boolean;
-  } = {}
+  audios: File[],
+  fileType: 'audio' | 'image'
 ) => {
-  const { quality = 0.8, maxWidth = 1920, enableCompression = true } = options;
-
-  // Process files before upload
-  const processedFiles = await Promise.all(
-    files.map(async (file) => {
-      if (
-        fileType === 'image' &&
-        enableCompression &&
-        file.type.startsWith('image/')
-      ) {
-        // Only compress if file is larger than 500KB
-        if (file.size > 500000) {
-          console.log(
-            `Compressing ${file.name} from ${(file.size / 1024 / 1024).toFixed(
-              2
-            )}MB`
-          );
-          return compressImage(file, quality, maxWidth);
-        }
-      }
-      return file;
-    })
-  );
-
-  const promises = processedFiles.map(async (file, index) => {
-    return new Promise<{
-      secure_url: string;
-      duration?: number;
-      public_id: string;
-    }>((resolve, reject) => {
+  // Create an empty array to store the URLs
+  const urls: Array<{ secure_url: string; duration: number }> = [];
+  // Use Promise.all to upload all the files at once
+  const promises = audios.map(async (audio) => {
+    return new Promise((resolve, reject) => {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', audio);
       formData.append('upload_preset', presetName);
       formData.append('cloud_name', cloudName);
-
-      // Add optimization parameters for images
-      if (fileType === 'image') {
-        formData.append('quality', 'auto:good'); // Automatic quality optimization
-        formData.append('format', 'auto'); // Automatic format selection
-      }
-
       const config = {
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
         use_filename: true,
@@ -123,26 +77,9 @@ export const uploadMultipleFiles = async (
           config
         )
         .then((res) => {
-          const originalFile = files[index];
-          const originalSize = originalFile ? originalFile.size : 0;
-          const optimizedUrl =
-            fileType === 'image'
-              ? addOptimizationToUrl(res.data.secure_url)
-              : res.data.secure_url;
-
-          console.log(
-            `Uploaded ${originalFile ? originalFile.name : 'Unknown'}: ${(
-              originalSize /
-              1024 /
-              1024
-            ).toFixed(2)}MB`
-          );
-
-          resolve({
-            secure_url: optimizedUrl,
-            duration: res.data.duration,
-            public_id: res.data.public_id,
-          });
+          // Push the URL to the array
+          urls.push(res.data);
+          resolve(res.data);
         })
         .catch((e) => {
           toast.error(
@@ -153,13 +90,9 @@ export const uploadMultipleFiles = async (
     });
   });
   // Wait for all the promises to resolve
-  try {
-    const results = await Promise.all(promises);
-    return results[0]; // Return first result for compatibility
-  } catch (error) {
-    console.error('Upload failed:', error);
-    throw error;
-  }
+  await Promise.all(promises);
+  // Return the array of URLs
+  return urls[0];
 };
 
 export const uploadSingleFile = async (
@@ -168,21 +101,14 @@ export const uploadSingleFile = async (
     quality?: number;
     maxWidth?: number;
     enableCompression?: boolean;
-    fileType?: 'audio' | 'image';
   } = {}
 ): Promise<string> => {
-  const {
-    quality = 0.8,
-    maxWidth = 1920,
-    enableCompression = true,
-    fileType = 'image',
-  } = options;
+  const { quality = 0.8, maxWidth = 1920, enableCompression = true } = options;
 
   let processedFile = file;
 
   // Pre-upload compression for images
   if (
-    fileType === 'image' &&
     enableCompression &&
     file.type.startsWith('image/') &&
     file.size > 500000
@@ -202,12 +128,6 @@ export const uploadSingleFile = async (
     formData.append('upload_preset', presetName);
     formData.append('cloud_name', cloudName);
 
-    // Add optimization parameters for images
-    if (fileType === 'image') {
-      formData.append('quality', 'auto:good');
-      formData.append('format', 'auto');
-    }
-
     const config = {
       headers: { 'X-Requested-With': 'XMLHttpRequest' },
       use_filename: true,
@@ -216,21 +136,14 @@ export const uploadSingleFile = async (
 
     axios
       .post(
-        fileType === 'audio'
-          ? `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`
-          : `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
         formData,
         config
       )
       .then((res) => {
-        resolve(
-          fileType === 'image'
-            ? addOptimizationToUrl(res.data.secure_url)
-            : res.data.secure_url
-        );
+        resolve(res.data.secure_url);
       })
       .catch((e) => {
-        console.error(`Upload failed for ${file.name}:`, e);
         toast.error(
           'Failed to upload files, please try again or check your internet'
         );

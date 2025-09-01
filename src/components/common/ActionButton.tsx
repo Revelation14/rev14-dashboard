@@ -24,7 +24,7 @@ const ActionButton: React.FC<IActionButton> = ({
     className={`flex h-8 items-center justify-center rounded-2xl text-sm font-normal ${width} ${color} ${backgroundColor} ${hoverBackgroundColor}`}
     onClick={handleClick}
   >
-    {loading ? <Spinner className="h-5 w-5" /> : label}
+    {loading ? <Spinner className="size-5" /> : label}
   </button>
 );
 

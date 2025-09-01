@@ -65,7 +65,7 @@ const EditContributor: React.FC<IEditContributor> = ({
       </div>
       {/* end of top */}
       <div className="flex flex-col items-center justify-center pt-11">
-        <div className="mb-8 h-20 w-20 rounded-full bg-backgroundAccent pt-3 text-center text-4xl text-white">
+        <div className="mb-8 size-20 rounded-full bg-backgroundAccent pt-3 text-center text-4xl text-white">
           {contributor.name?.charAt(0)}
           {contributor.name?.charAt(1)}
         </div>

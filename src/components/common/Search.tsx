@@ -32,7 +32,7 @@ const Search: React.FC<SearchProps> = ({
 
   return (
     <div className={`flex flex-row items-center justify-end px-2 ${className}`}>
-      <img src="/assets/icons/search.svg" alt="Search" className="h-4 w-4" />
+      <img src="/assets/icons/search.svg" alt="Search" className="size-4" />
       <input
         id="search"
         ref={inputRef}

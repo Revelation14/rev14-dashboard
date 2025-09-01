@@ -188,7 +188,7 @@ const Insights = () => {
 
         {isLoading ? (
           <div className="flex h-screen w-full items-center justify-center">
-            <Spinner className="h-5 w-5" />
+            <Spinner className="size-5" />
           </div>
         ) : (
           <div className="flex w-[98%] flex-col items-start justify-between gap-4 md:m-4 md:flex-row">
@@ -204,7 +204,7 @@ const Insights = () => {
                       <img
                         src={arrowImageSource}
                         alt=""
-                        className="mr-2 h-3.5 w-3.5"
+                        className="mr-2 size-3.5"
                       />
                       {rate}%
                     </span>{' '}
