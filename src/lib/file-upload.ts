@@ -113,13 +113,7 @@ export const uploadSingleFile = async (
     file.type.startsWith('image/') &&
     file.size > 500000
   ) {
-    console.log(
-      `Compressing ${file.name} from ${(file.size / 1024 / 1024).toFixed(2)}MB`
-    );
     processedFile = await compressImage(file, quality, maxWidth);
-    console.log(
-      `Compressed to ${(processedFile.size / 1024 / 1024).toFixed(2)}MB`
-    );
   }
 
   return new Promise((resolve, reject) => {
