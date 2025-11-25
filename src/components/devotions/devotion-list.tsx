@@ -55,9 +55,14 @@ const DevotionList: FC<IDevotionList> = ({
   };
 
   const handleSearch = (query: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     setDevotions(
-      allDevotions?.filter((devotion) =>
-        devotion.title.toLowerCase().includes(query.toLowerCase())
+      allDevotions?.filter(
+        (devotion) =>
+          devotion.title.toLowerCase().includes(query.toLowerCase()) ||
+          devotion.speaker.toLowerCase().includes(query.toLowerCase()) ||
+          devotion.verse.toLowerCase().includes(query.toLowerCase()) ||
+          devotion.content.toLowerCase().includes(query.toLowerCase())
       )
     );
   };

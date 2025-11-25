@@ -70,6 +70,9 @@ const Card: React.FC<ICard> = ({ devotion, handleClick }) => {
               {moment(devotion?.createdAt).fromNow()}
             </div>
           </div>
+          <div className="text-sm font-medium text-gray-700">
+            {devotion?.verse}
+          </div>
           <div className="max-h-10 overflow-hidden text-sm text-gray-850">
             <span
               className="text-ellipsis"
