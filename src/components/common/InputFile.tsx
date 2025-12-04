@@ -79,8 +79,8 @@ const InputFile: React.FC<IInputFile> = ({
       if (!newfile.type.startsWith(accepted.split('*')[0])) {
         toast.error('Invalid file format. Please select an audio file.');
       }
-      if (fileSizeInMB > 10) {
-        toast.error('File size exceeds the maximum allowed limit of 10 MB.');
+      if (fileSizeInMB > 15) {
+        toast.error('File size exceeds the maximum allowed limit of 15 MB.');
       } else {
         setFile(newfile);
       }
