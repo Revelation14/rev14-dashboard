@@ -56,6 +56,13 @@ const Categories = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
+    if (
+      !window.confirm(
+        'Are you sure you want to delete this category? This action cannot be undone.'
+      )
+    ) {
+      return;
+    }
     setIsDeleting(id);
     const result = (await deleteDevotionCategory(id)) as unknown as {
       data: { message: string; statusCode: number };
@@ -197,12 +204,7 @@ const Categories = () => {
                               </button>
                               <button
                                 type="button"
-                                onClick={() =>
-                                  // alert before delete
-                                  window.confirm(
-                                    'Are you sure you want to delete this category? This action cannot be undone.'
-                                  ) && handleDelete(category.id)
-                                }
+                                onClick={() => handleDelete(category.id)}
                                 disabled={isDeleting === category.id}
                                 className="rounded border border-red-600 px-3 py-1 text-sm text-red-600 hover:bg-red-100 disabled:opacity-50"
                               >
