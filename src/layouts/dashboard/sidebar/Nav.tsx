@@ -15,6 +15,7 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
   const [insightsHovered, setInsightsHovered] = useState(false);
   const [contributorHovered, setContributorHovered] = useState(false);
   const [devotionHovered, setDevotionHovered] = useState(false);
+  const [categoryHovered, setCategoryHovered] = useState(false);
   const { route } = router;
   const user: IUser = JSON.parse(getFromLocalStorage('user'));
 
@@ -97,6 +98,31 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
             width={16}
           />
         </NavItem>
+      </div>
+
+      <div
+        onMouseOver={() => setCategoryHovered(true)}
+        onMouseLeave={() => setCategoryHovered(false)}
+      >
+        {user && user.role === EUserRole.SYSTEM_ADMIN ? (
+          <NavItem
+            hrefLink="/categories"
+            sidebarStatus={sidebarStatus}
+            menuTitle="Categories"
+            active={route === '/categories'}
+          >
+            <Image
+              src={
+                categoryHovered || route === '/categories'
+                  ? '/assets/icons/white-menu.svg'
+                  : '/assets/icons/menu.svg'
+              }
+              alt=""
+              height={16}
+              width={16}
+            />
+          </NavItem>
+        ) : null}
       </div>
     </nav>
   );

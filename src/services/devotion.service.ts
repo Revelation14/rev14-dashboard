@@ -161,3 +161,69 @@ export async function getDevotionCategories(): Promise<
   }
   return null;
 }
+
+export async function addDevotionCategory(
+  categoryName: string,
+  createdBy: string
+): Promise<IDevotionCategory | IHttpException | null> {
+  try {
+    const res: AxiosResponse<IHttpResponse<IDevotionCategory>> =
+      await http.post('/devotion-categories', {
+        categoryName,
+        createdBy,
+      });
+    if (res.data.data?.id) {
+      return res.data.data as IDevotionCategory;
+    }
+
+    return res.data as unknown as IHttpException;
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
+
+export async function updateDevotionCategory(
+  id: string,
+  categoryName: string
+): Promise<IDevotionCategory | IHttpException | null> {
+  try {
+    const res: AxiosResponse<IHttpResponse<IDevotionCategory>> = await http.put(
+      `/devotion-categories/${id}`,
+      {
+        categoryName,
+      }
+    );
+    if (res.data.data?.id) {
+      return res.data.data as IDevotionCategory;
+    }
+
+    return res.data as unknown as IHttpException;
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
+
+export async function deleteDevotionCategory(
+  id: string
+): Promise<IHttpException | null> {
+  try {
+    return await http.delete(`/devotion-categories/${id}`);
+  } catch (err) {
+    const error = err as Error | AxiosError;
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as IHttpException;
+      return data;
+    }
+    return null;
+  }
+}
