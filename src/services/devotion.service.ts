@@ -8,6 +8,25 @@ import type {
   INewDevotion,
 } from '@/types/devotion.types';
 
+// Audio duration used to be extracted server-side by Cloudinary; with files
+// now stored in Supabase Storage, read it from the file in the browser.
+function getAudioDuration(file: File): Promise<string | null> {
+  return new Promise((resolve) => {
+    const audio = document.createElement('audio');
+    const url = URL.createObjectURL(file);
+    audio.preload = 'metadata';
+    audio.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      resolve(Number.isFinite(audio.duration) ? String(audio.duration) : null);
+    };
+    audio.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(null);
+    };
+    audio.src = url;
+  });
+}
+
 export async function addDevotion(
   newDevotion: INewDevotion,
   coverImage?: File,
@@ -24,7 +43,11 @@ export async function addDevotion(
   formData.append('createdBy', newDevotion.createdBy);
 
   if (coverImage) formData.append('coverImage', coverImage);
-  if (audio) formData.append('audio', audio);
+  if (audio) {
+    formData.append('audio', audio);
+    const duration = await getAudioDuration(audio);
+    if (duration) formData.set('timestamp', duration);
+  }
 
   try {
     const res: AxiosResponse<IHttpResponse<IDevotion>> = await http.post(
@@ -33,6 +56,7 @@ export async function addDevotion(
       { headers: { 'Content-Type': 'multipart/form-data' } }
     );
     if (res.data.data?.id) {
+      // The backend pushes the devotion directly to Supabase on create.
       return res.data.data as IDevotion;
     }
 
@@ -68,7 +92,11 @@ export async function updateDevotion(
   formData.append('timestamp', editedDevotion.timestamp);
 
   if (coverImage) formData.append('cover', coverImage);
-  if (audio) formData.append('audio', audio);
+  if (audio) {
+    formData.append('audio', audio);
+    const duration = await getAudioDuration(audio);
+    if (duration) formData.set('timestamp', duration);
+  }
 
   try {
     const res: AxiosResponse<IHttpResponse<IDevotion>> = await http.put(
@@ -77,6 +105,7 @@ export async function updateDevotion(
       { headers: { 'Content-Type': 'multipart/form-data' } }
     );
     if (res.data.data?.id) {
+      // The backend pushes the devotion directly to Supabase on update.
       return res.data.data as IDevotion;
     }
 
@@ -109,7 +138,6 @@ export async function getDevotions(): Promise<
   }
   return null;
 }
-
 export async function getDevotionsByContributor(
   contributorId: string
 ): Promise<IDevotion[] | IHttpException | null> {

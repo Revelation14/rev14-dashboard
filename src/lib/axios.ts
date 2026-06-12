@@ -5,8 +5,12 @@ import axios from 'axios';
 import { getFromLocalStorage } from './helper';
 
 const http = axios.create({
-  baseURL: 'https://api.graceministries.online/api/v1',
-  // baseURL: 'http://localhost:3000/api/v1',
+  // All dashboard traffic goes to the Supabase `dashboard` edge function,
+  // which mirrors the old NestJS route paths.
+  baseURL: `${
+    process.env.NEXT_PUBLIC_SUPABASE_URL ??
+    'https://rzqklwfhwqmviintncqh.supabase.co'
+  }/functions/v1/dashboard`,
   headers: {
     Authorization: '',
     'Content-Type': 'application/json',

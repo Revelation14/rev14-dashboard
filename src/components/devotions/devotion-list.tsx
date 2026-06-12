@@ -80,14 +80,16 @@ const DevotionList: FC<IDevotionList> = ({
           handleChange={handleChange}
         />
         {!showAddSplitScreens && (
-          <Button
-            icon="/assets/icons/plus.svg"
-            text="Add Devotional"
-            className="hover:bg-gold/75"
-            handleClick={() => {
-              setShowAddSplitScreens(true);
-            }}
-          />
+          <div className="flex gap-2">
+            <Button
+              icon="/assets/icons/plus.svg"
+              text="Add Devotional"
+              className="hover:bg-gold/75"
+              handleClick={() => {
+                setShowAddSplitScreens(true);
+              }}
+            />
+          </div>
         )}
       </div>
       {loading ? (

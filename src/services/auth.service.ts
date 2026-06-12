@@ -57,9 +57,19 @@ export async function requestPasswordRecovery(
   requestPassword: IRequestPasswordRecovery
 ): Promise<any | IHttpException | null> {
   try {
-    const res: AxiosResponse<IHttpResponse<any>> = await http.post(
-      '/user/reset-password/request',
-      requestPassword
+    const supabaseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL ??
+      'https://rzqklwfhwqmviintncqh.supabase.co';
+
+    // Use Supabase edge function for password reset
+    const res: AxiosResponse<IHttpResponse<any>> = await axios.post(
+      `${supabaseUrl}/functions/v1/password-reset/request`,
+      requestPassword,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
     );
     return res;
   } catch (err) {
