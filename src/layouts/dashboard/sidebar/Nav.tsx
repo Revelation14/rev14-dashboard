@@ -124,6 +124,30 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
           </NavItem>
         ) : null}
       </div>
+      <div
+        onMouseOver={() => setContributorHovered(true)}
+        onMouseLeave={() => setContributorHovered(false)}
+      >
+        {user ? (
+          <NavItem
+            hrefLink="/active-users"
+            sidebarStatus={sidebarStatus}
+            menuTitle="Active Users"
+            active={route === '/active-users'}
+          >
+            <Image
+              src={
+                contributorHovered || route === '/active-users'
+                  ? '/assets/icons/white-people.svg'
+                  : '/assets/icons/people.svg'
+              }
+              alt=""
+              height={16}
+              width={16}
+            />
+          </NavItem>
+        ) : null}
+      </div>
     </nav>
   );
 };
