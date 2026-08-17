@@ -4,16 +4,22 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import { ActiveUserDetail } from '@/components/active-users/active-users-detail';
 import { ActiveUserList } from '@/components/active-users/active-users-list';
+import { ActiveUserStats } from '@/components/active-users/active-users-stats';
 import { PaginationFooter } from '@/components/active-users/pagination-footer';
 import SplitScreens from '@/components/common/SplitScreens';
 import Layout from '@/layouts/dashboard/Layout';
 import { getActiveUsers } from '@/services/active-users.service';
 import { useAuth } from '@/store/auth.store';
-import type { DateRangeFilter, IActiveUser } from '@/types/active-users.types';
+import type {
+  DateRangeFilter,
+  IActiveUser,
+  IUserStats,
+} from '@/types/active-users.types';
 
 const ActiveUsersPage = () => {
   // --- 1. State Management ---
   const [users, setUsers] = useState<IActiveUser[]>([]);
+  const [stats, setStats] = useState<IUserStats | null>(null);
   const [selectedUser, setSelectedUser] = useState<IActiveUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
@@ -45,12 +51,13 @@ const ActiveUsersPage = () => {
   useEffect(() => {
     setIsLoading(true);
 
-    getActiveUsers({ filter: dateFilter, page, limit })
+    getActiveUsers({ filter: dateFilter, page, limit, token: auth.accessToken })
       .then((response) => {
         if ('data' in response) {
           setUsers(response.data);
           setTotalCount(response.meta.total);
           setTotalPages(response.meta.totalPages);
+          setStats(response.meta.stats);
         } else {
           toast.error(response.message || 'Failed to load active users');
         }
@@ -59,7 +66,7 @@ const ActiveUsersPage = () => {
         toast.error(err.message || 'An unexpected error occurred')
       )
       .finally(() => setIsLoading(false));
-  }, [dateFilter, page, limit]);
+  }, [dateFilter, page, limit, auth.accessToken]);
 
   if (!isClient) return null;
 
@@ -94,6 +101,9 @@ const ActiveUsersPage = () => {
               )}
             </div>
           </div>
+
+          {/* KPI Stat Cards Summary Row */}
+          <ActiveUserStats stats={stats} isLoading={isLoading} />
 
           {selectedUser ? (
             <SplitScreens

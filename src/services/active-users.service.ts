@@ -1,53 +1,57 @@
-import axiosInstance from '@/lib/axios';
-import type { DateRangeFilter, IActiveUser } from '@/types/active-users.types';
+import type {
+  DateRangeFilter,
+  IActiveUsersResponse,
+} from '@/types/active-users.types';
 import type { IHttpException } from '@/types/common.types';
 
-// 1. Request Contract for Pagination & Filtering
 export interface IGetActiveUsersParams {
   filter?: DateRangeFilter;
   page?: number;
   limit?: number;
-}
-
-// 2. Response Contract with Meta Information for Scalability
-export interface IActiveUsersResponse {
-  data: IActiveUser[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
+  token?: string;
 }
 
 export async function getActiveUsers(
   params: IGetActiveUsersParams = {}
 ): Promise<IActiveUsersResponse | IHttpException> {
-  const { filter = '7d', page = 1, limit = 10 } = params;
+  const { page = 1, limit = 10, filter = '7d', token } = params;
+
+  if (!token) {
+    return {
+      statusCode: 401,
+      message: 'Authorization token is missing',
+    };
+  }
 
   try {
-    // Axios GET request to our backend proxy route
-    const response = await axiosInstance.get<IActiveUsersResponse>(
-      '/dashboard/active-users',
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321';
+
+    const response = await fetch(
+      `${baseUrl}/functions/v1/active-users?page=${page}&limit=${limit}&filter=${filter}`,
       {
-        params: {
-          filter,
-          page,
-          limit,
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
       }
     );
 
-    // Guaranteed return path for successful HTTP 200 OK
-    return response.data;
-  } catch (err: unknown) {
-    const errorResponse = err as { response?: { data?: IHttpException } };
+    if (!response.ok) {
+      return {
+        statusCode: response.status,
+        message: `Edge function returned status: ${response.status}`,
+      };
+    }
 
-    return (
-      errorResponse.response?.data ?? {
-        statusCode: 500,
-        message: 'Failed to retrieve active users payload from PostHog proxy',
-      }
-    );
+    const data = await response.json();
+
+    return data as IActiveUsersResponse;
+  } catch (err: unknown) {
+    return {
+      statusCode: 500,
+      message: err instanceof Error ? err.message : 'Network error occurred',
+    };
   }
 }
