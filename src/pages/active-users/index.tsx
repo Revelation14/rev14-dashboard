@@ -53,19 +53,48 @@ const ActiveUsersPage = () => {
 
     getActiveUsers({ filter: dateFilter, page, limit, token: auth.accessToken })
       .then((response) => {
-        if ('data' in response) {
-          setUsers(response.data);
-          setTotalCount(response.meta.total);
-          setTotalPages(response.meta.totalPages);
-          setStats(response.meta.stats);
+        // 1. Guard against non-200 or missing payload envelopes[cite: 2]
+        if ('data' in response && response.data) {
+          const {
+            users: rawUsers,
+            totalActiveUsers,
+            platformBreakdown,
+          } = response.data;
+
+          // 2. Defensive check: Enforce Array type before committing to state
+          if (Array.isArray(rawUsers)) {
+            setUsers(rawUsers);
+          } else {
+            setUsers([]);
+            toast.error('Invalid user array structure received from backend.');
+          }
+
+          // 3. Map telemetry stats cleanly into page state
+          setTotalCount(totalActiveUsers ?? 0);
+          setTotalPages(Math.ceil((totalActiveUsers ?? 0) / limit));
+
+          if (platformBreakdown) {
+            setStats({
+              totalActive: totalActiveUsers ?? 0,
+              androidCount: platformBreakdown.android ?? 0,
+              iosCount: platformBreakdown.ios ?? 0,
+              webCount: platformBreakdown.web ?? 0,
+              verifiedCount: 0,
+            });
+          }
         } else {
           toast.error(response.message || 'Failed to load active users');
         }
       })
-      .catch((err) =>
-        toast.error(err.message || 'An unexpected error occurred')
-      )
-      .finally(() => setIsLoading(false));
+      .catch((err: unknown) => {
+        const errorMessage =
+          err instanceof Error ? err.message : 'An unexpected error occurred';
+        toast.error(errorMessage);
+        setUsers([]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [dateFilter, page, limit, auth.accessToken]);
 
   if (!isClient) return null;

@@ -2,6 +2,25 @@ import React from 'react';
 
 import type { IActiveUser } from '@/types/active-users.types';
 
+function formatLastSeen(isoString: string): string {
+  try {
+    const date = new Date(isoString);
+    const time = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+    const day = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+    return `${time} on ${day}`;
+  } catch {
+    return 'Unknown time';
+  }
+}
+
 function ListSkeleton() {
   return (
     <div className="animate-pulse space-y-3">
@@ -38,12 +57,10 @@ export const ActiveUserList: React.FC<IActiveUserListProps> = ({
   selectedUser,
   onSelectUser,
 }) => {
-  // 1. Loading State
   if (isLoading) {
     return <ListSkeleton />;
   }
 
-  // 2. Empty State: Render clean message if users array is empty
   if (users.length === 0) {
     return <EmptyStateMessage />;
   }
@@ -89,8 +106,8 @@ export const ActiveUserList: React.FC<IActiveUserListProps> = ({
                 </td>
 
                 {/* Column 4: Last Active Timestamp */}
-                <td className="px-4 py-3 text-xs text-gray-500">
-                  {user.lastSeenAt}
+                <td className="px-4 py-3 text-xs font-medium text-gray-700">
+                  {formatLastSeen(user.lastSeenAt)}
                 </td>
               </tr>
             );
