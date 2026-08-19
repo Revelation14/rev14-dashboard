@@ -45,7 +45,7 @@ export const ActiveUserDetail: React.FC<IActiveUserDetailProps> = ({
     <div className="h-full rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       {/* Header with dismiss button */}
       <div className="flex items-center justify-between border-b pb-4">
-        <h3 className="text-lg font-semibold text-gray-900">User Telemetry</h3>
+        <h3 className="text-lg font-semibold text-gray-900">{user.name}</h3>
         <button
           onClick={onClose}
           type="button"
@@ -63,10 +63,8 @@ export const ActiveUserDetail: React.FC<IActiveUserDetailProps> = ({
           copyable
         />
         <DetailItem label="Email" value={user.email} />
-        <DetailItem
-          label="Assigned Role"
-          value={user.role ?? 'STANDARD_USER'}
-        />
+        <DetailItem label="Mobile Platform" value={user.os ?? 'UNKNOWN'} />
+        <DetailItem label="Role" value={user.role ?? 'STANDARD_USER'} />
         <DetailItem label="Last Active Timestamp" value={user.lastSeenAt} />
         <DetailItem
           label="Detected Region"

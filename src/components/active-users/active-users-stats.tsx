@@ -1,34 +1,48 @@
 import React from 'react';
 
-import type { IUserStats } from '@/types/active-users.types';
+import type { IUserStats, PlatformFilter } from '@/types/active-users.types';
 
 interface ActiveUserStatsProps {
   stats: IUserStats | null;
   isLoading: boolean;
+  selectedFilter: PlatformFilter;
+  onSelectFilter: (filter: PlatformFilter) => void;
 }
 
 function StatCardItem({
   title,
   value,
   meta,
+  isSelected,
+  onClick,
 }: {
   title: string;
   value: string;
   meta: string;
+  isSelected: boolean;
+  onClick: () => void;
 }) {
   return (
-    <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
-      <p className="text-xl font-medium text-gray-900">{title}</p>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`w-full rounded-xl border p-5 text-left transition-all hover:border-indigo-200 hover:shadow-md ${
+        isSelected
+          ? 'border-indigo-600 bg-indigo-50/30 ring-2 ring-indigo-600/20'
+          : 'border-gray-100 bg-white shadow-sm'
+      }`}
+    >
+      <p className="text-sm font-medium text-gray-600">{title}</p>
       <p className="mt-2 text-2xl font-bold text-gray-900">{value}</p>
       <p className="mt-1 text-sm text-gray-400">{meta}</p>
-    </div>
+    </button>
   );
 }
 
 function StatsSkeleton() {
-  const skeletonKeys = ['sk-1', 'sk-2', 'sk-3', 'sk-4'];
+  const skeletonKeys = ['sk-1', 'sk-2', 'sk-3'];
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {skeletonKeys.map((k) => (
         <div
           key={k}
@@ -39,7 +53,12 @@ function StatsSkeleton() {
   );
 }
 
-export function ActiveUserStats({ stats, isLoading }: ActiveUserStatsProps) {
+export function ActiveUserStats({
+  stats,
+  isLoading,
+  selectedFilter,
+  onSelectFilter,
+}: ActiveUserStatsProps) {
   if (isLoading) {
     return <StatsSkeleton />;
   }
@@ -60,45 +79,46 @@ export function ActiveUserStats({ stats, isLoading }: ActiveUserStatsProps) {
     ? Math.round((stats.iosCount / stats.totalActive) * 100)
     : 0;
 
-  const statCards = [
+  const statCards: Array<{
+    id: string;
+    filter: PlatformFilter;
+    title: string;
+    value: string;
+    meta: string;
+  }> = [
     {
       id: 'card-total',
+      filter: 'ALL',
       title: 'Total Active Users',
       value: stats.totalActive.toLocaleString(),
       meta: 'Active in timeframe',
     },
     {
       id: 'card-android',
+      filter: 'ANDROID',
       title: 'Users on Android',
       value: stats.androidCount.toLocaleString(),
       meta: `${androidPct}% of active devices`,
     },
     {
       id: 'card-ios',
+      filter: 'IOS',
       title: 'Users on iOS',
       value: stats.iosCount.toLocaleString(),
       meta: `${iosPct}% of active devices`,
     },
-    {
-      id: 'card-verified',
-      title: 'Verified Accounts',
-      value: stats.verifiedCount.toLocaleString(),
-      meta: `${
-        stats.totalActive
-          ? Math.round((stats.verifiedCount / stats.totalActive) * 100)
-          : 0
-      }% verification rate`,
-    },
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {statCards.map((card) => (
         <StatCardItem
           key={card.id}
           title={card.title}
           value={card.value}
           meta={card.meta}
+          isSelected={selectedFilter === card.filter}
+          onClick={() => onSelectFilter(card.filter)}
         />
       ))}
     </div>

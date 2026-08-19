@@ -14,6 +14,7 @@ import type {
   DateRangeFilter,
   IActiveUser,
   IUserStats,
+  PlatformFilter,
 } from '@/types/active-users.types';
 
 const ActiveUsersPage = () => {
@@ -30,6 +31,9 @@ const ActiveUsersPage = () => {
   const [limit, setLimit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState<number>(0);
+  const [selectedFilter, setSelectedFilter] = useState<PlatformFilter>('ALL');
+
+  const handleClearFilter = () => setSelectedFilter('ALL');
 
   const auth = useAuth();
 
@@ -53,7 +57,6 @@ const ActiveUsersPage = () => {
 
     getActiveUsers({ filter: dateFilter, page, limit, token: auth.accessToken })
       .then((response) => {
-        // 1. Guard against non-200 or missing payload envelopes[cite: 2]
         if ('data' in response && response.data) {
           const {
             users: rawUsers,
@@ -61,7 +64,6 @@ const ActiveUsersPage = () => {
             platformBreakdown,
           } = response.data;
 
-          // 2. Defensive check: Enforce Array type before committing to state
           if (Array.isArray(rawUsers)) {
             setUsers(rawUsers);
           } else {
@@ -69,7 +71,6 @@ const ActiveUsersPage = () => {
             toast.error('Invalid user array structure received from backend.');
           }
 
-          // 3. Map telemetry stats cleanly into page state
           setTotalCount(totalActiveUsers ?? 0);
           setTotalPages(Math.ceil((totalActiveUsers ?? 0) / limit));
 
@@ -132,7 +133,12 @@ const ActiveUsersPage = () => {
           </div>
 
           {/* KPI Stat Cards Summary Row */}
-          <ActiveUserStats stats={stats} isLoading={isLoading} />
+          <ActiveUserStats
+            stats={stats}
+            isLoading={isLoading}
+            selectedFilter={selectedFilter}
+            onSelectFilter={setSelectedFilter}
+          />
 
           {selectedUser ? (
             <SplitScreens
@@ -143,6 +149,8 @@ const ActiveUsersPage = () => {
                   isLoading={isLoading}
                   selectedUser={selectedUser}
                   onSelectUser={setSelectedUser}
+                  selectedFilter={selectedFilter}
+                  onClearFilter={handleClearFilter}
                 />
               }
               secondScreen={
@@ -160,6 +168,8 @@ const ActiveUsersPage = () => {
                   isLoading={isLoading}
                   selectedUser={selectedUser}
                   onSelectUser={setSelectedUser}
+                  selectedFilter={selectedFilter}
+                  onClearFilter={handleClearFilter}
                 />
               </div>
 

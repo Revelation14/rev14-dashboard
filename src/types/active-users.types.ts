@@ -6,7 +6,7 @@ export interface IActiveUser {
   email: string;
   name?: string;
   role?: EUserRole;
-  os?: 'iOS' | 'Android' | 'Web'; // Made optional since PostHog didn't return it in the user object
+  os?: 'iOS' | 'Android' | 'Web';
   status?: EStatus;
   lastSeenAt: string;
   location?: string;
@@ -14,8 +14,8 @@ export interface IActiveUser {
 }
 
 export type DateRangeFilter = '24h' | '7d' | '30d' | 'all';
+export type PlatformFilter = 'ALL' | 'ANDROID' | 'IOS';
 
-// The exact shape of the Edge Function envelope
 export interface IActiveUsersResponse {
   success: boolean;
   statusCode: number;
@@ -31,7 +31,6 @@ export interface IActiveUsersResponse {
   };
 }
 
-// Our strict frontend UI state shape
 export interface IUserStats {
   totalActive: number;
   androidCount: number;
