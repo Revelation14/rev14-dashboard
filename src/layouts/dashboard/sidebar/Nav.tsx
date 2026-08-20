@@ -16,6 +16,7 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
   const [contributorHovered, setContributorHovered] = useState(false);
   const [devotionHovered, setDevotionHovered] = useState(false);
   const [categoryHovered, setCategoryHovered] = useState(false);
+  const [activeUsersHovered, setActiveUsersHovered] = useState(false);
   const { route } = router;
   const user: IUser = JSON.parse(getFromLocalStorage('user'));
 
@@ -125,10 +126,10 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
         ) : null}
       </div>
       <div
-        onMouseOver={() => setContributorHovered(true)}
-        onMouseLeave={() => setContributorHovered(false)}
+        onMouseOver={() => setActiveUsersHovered(true)}
+        onMouseLeave={() => setActiveUsersHovered(false)}
       >
-        {user ? (
+        {user && user.role === EUserRole.SYSTEM_ADMIN ? (
           <NavItem
             hrefLink="/active-users"
             sidebarStatus={sidebarStatus}
@@ -137,7 +138,7 @@ const Nav: React.FC<{ sidebarOutsideClick: boolean }> = ({
           >
             <Image
               src={
-                contributorHovered || route === '/active-users'
+                activeUsersHovered || route === '/active-users'
                   ? '/assets/icons/white-people.svg'
                   : '/assets/icons/people.svg'
               }

@@ -1,6 +1,9 @@
 import type {
   DateRangeFilter,
   IActiveUsersResponse,
+  PlatformFilter,
+  SortDirection,
+  SortField,
 } from '@/types/active-users.types';
 import type { IHttpException } from '@/types/common.types';
 
@@ -9,12 +12,23 @@ export interface IGetActiveUsersParams {
   page?: number;
   limit?: number;
   token?: string;
+  platform?: PlatformFilter;
+  sortBy?: SortField | null;
+  sortDir?: SortDirection | null;
 }
 
 export async function getActiveUsers(
   params: IGetActiveUsersParams = {}
 ): Promise<IActiveUsersResponse | IHttpException> {
-  const { page = 1, limit = 10, filter = '7d', token } = params;
+  const {
+    page = 1,
+    limit = 10,
+    filter = '7d',
+    token,
+    platform = 'ALL',
+    sortBy = null,
+    sortDir = null,
+  } = params;
 
   if (!token) {
     return {
@@ -27,8 +41,23 @@ export async function getActiveUsers(
     const baseUrl =
       process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321';
 
+    const query = new URLSearchParams({
+      page: String(page),
+      limit: String(limit),
+      dateRange: filter,
+    });
+
+    if (platform !== 'ALL') {
+      query.set('platform', platform);
+    }
+
+    if (sortBy) {
+      query.set('sortBy', sortBy);
+      query.set('sortDir', sortDir ?? 'asc');
+    }
+
     const response = await fetch(
-      `${baseUrl}/functions/v1/active-users?page=${page}&limit=${limit}&filter=${filter}`,
+      `${baseUrl}/functions/v1/active-users?${query.toString()}`,
       {
         method: 'GET',
         headers: {

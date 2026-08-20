@@ -1,14 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 
-import type { IActiveUser, PlatformFilter } from '@/types/active-users.types';
-
-type SortField = 'name' | 'role' | 'location' | 'lastSeenAt';
-type SortDirection = 'asc' | 'desc';
-
-interface ISortConfig {
-  field: SortField | null;
-  direction: SortDirection | null;
-}
+import type {
+  IActiveUser,
+  ISortConfig,
+  PlatformFilter,
+  SortField,
+} from '@/types/active-users.types';
 
 interface IActiveUserListProps {
   users: IActiveUser[];
@@ -17,6 +14,9 @@ interface IActiveUserListProps {
   onSelectUser: (user: IActiveUser) => void;
   selectedFilter: PlatformFilter;
   onClearFilter: () => void;
+  sortConfig: ISortConfig;
+  onSortChange: (field: SortField) => void;
+  onClearSort: () => void;
 }
 
 interface ISortIndicatorProps {
@@ -107,72 +107,12 @@ export function ActiveUserList({
   isLoading,
   selectedUser,
   onSelectUser,
-  selectedFilter,
   onClearFilter,
+  sortConfig,
+  onSortChange,
+  onClearSort,
+  selectedFilter,
 }: IActiveUserListProps) {
-  const [sortConfig, setSortConfig] = useState<ISortConfig>({
-    field: null,
-    direction: null,
-  });
-
-  // Tri-State cycle: asc -> desc -> null
-  const handleColumnHeaderClick = (field: SortField) => {
-    setSortConfig((prevConfig) => {
-      if (prevConfig.field !== field) {
-        return { field, direction: 'asc' };
-      }
-      if (prevConfig.direction === 'asc') {
-        return { field, direction: 'desc' };
-      }
-      if (prevConfig.direction === 'desc') {
-        return { field: null, direction: null };
-      }
-      return { field, direction: 'asc' };
-    });
-  };
-
-  const handleResetSort = () => {
-    setSortConfig({ field: null, direction: null });
-  };
-
-  const displayUsers = useMemo(() => {
-    let filtered = users;
-    if (selectedFilter !== 'ALL') {
-      filtered = users.filter(
-        (user) => user.os?.toUpperCase() === selectedFilter
-      );
-    }
-
-    if (!sortConfig.field || !sortConfig.direction) {
-      return filtered;
-    }
-
-    const { field, direction } = sortConfig;
-    const multiplier = direction === 'asc' ? 1 : -1;
-
-    return [...filtered].sort((userA, userB) => {
-      if (field === 'lastSeenAt') {
-        const timeA = userA.lastSeenAt
-          ? new Date(userA.lastSeenAt).getTime()
-          : 0;
-        const timeB = userB.lastSeenAt
-          ? new Date(userB.lastSeenAt).getTime()
-          : 0;
-        return (timeA - timeB) * multiplier;
-      }
-
-      const valA = userA[field] ?? '';
-      const valB = userB[field] ?? '';
-
-      return (
-        valA.toString().localeCompare(valB.toString(), undefined, {
-          numeric: true,
-          sensitivity: 'base',
-        }) * multiplier
-      );
-    });
-  }, [users, selectedFilter, sortConfig]);
-
   if (isLoading) {
     return <ListSkeleton />;
   }
@@ -183,14 +123,19 @@ export function ActiveUserList({
 
   return (
     <div className="space-y-2">
-      <div className="flex h-6 items-center justify-end">
+      <div className="flex h-6 items-center justify-between">
+        <div className="text-xs font-medium text-indigo-600">
+          {selectedFilter !== 'ALL'
+            ? `Showing all users on ${selectedFilter}`
+            : 'Showing All Users'}
+        </div>
         {sortConfig.field && (
           <button
             type="button"
-            onClick={handleResetSort}
+            onClick={onClearSort}
             className="text-xs font-medium text-indigo-600 transition-colors hover:text-indigo-800"
           >
-            Clear Sort ×
+            Clear Sort X
           </button>
         )}
       </div>
@@ -201,7 +146,7 @@ export function ActiveUserList({
             <tr>
               <th
                 className="cursor-pointer select-none px-4 py-3 hover:bg-gray-100"
-                onClick={() => handleColumnHeaderClick('name')}
+                onClick={() => onSortChange('name')}
               >
                 <div className="flex items-center gap-1">
                   <span>User</span>
@@ -211,7 +156,7 @@ export function ActiveUserList({
 
               <th
                 className="cursor-pointer select-none px-4 py-3 hover:bg-gray-100"
-                onClick={() => handleColumnHeaderClick('role')}
+                onClick={() => onSortChange('role')}
               >
                 <div className="flex items-center gap-1">
                   <span>Role</span>
@@ -221,7 +166,7 @@ export function ActiveUserList({
 
               <th
                 className="cursor-pointer select-none px-4 py-3 hover:bg-gray-100"
-                onClick={() => handleColumnHeaderClick('location')}
+                onClick={() => onSortChange('location')}
               >
                 <div className="flex items-center gap-1">
                   <span>Location</span>
@@ -231,7 +176,7 @@ export function ActiveUserList({
 
               <th
                 className="cursor-pointer select-none px-4 py-3 hover:bg-gray-100"
-                onClick={() => handleColumnHeaderClick('lastSeenAt')}
+                onClick={() => onSortChange('lastSeenAt')}
               >
                 <div className="flex items-center gap-1">
                   <span>Last Active (UTC)</span>
@@ -244,11 +189,11 @@ export function ActiveUserList({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {displayUsers.map((user) => {
+            {users.map((user) => {
               const isSelected = selectedUser?.id === user.id;
               return (
                 <tr
-                  key={user.id} // Satisfies no-array-index-key ESLint rule
+                  key={user.id}
                   onClick={() => onSelectUser(user)}
                   className={`cursor-pointer transition-colors hover:bg-gray-50 ${
                     isSelected ? 'bg-gray-100 font-semibold' : ''

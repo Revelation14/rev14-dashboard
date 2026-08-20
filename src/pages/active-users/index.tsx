@@ -1,66 +1,105 @@
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import { ActiveUserDetail } from '@/components/active-users/active-users-detail';
 import { ActiveUserList } from '@/components/active-users/active-users-list';
 import { ActiveUserStats } from '@/components/active-users/active-users-stats';
-import { PaginationFooter } from '@/components/active-users/pagination-footer';
+import Pagination from '@/components/common/Pagination';
 import SplitScreens from '@/components/common/SplitScreens';
 import Layout from '@/layouts/dashboard/Layout';
 import { getActiveUsers } from '@/services/active-users.service';
 import { useAuth } from '@/store/auth.store';
+import usePaginationStore from '@/store/pagination';
 import type {
-  DateRangeFilter,
   IActiveUser,
+  ISortConfig,
   IUserStats,
   PlatformFilter,
+  SortField,
 } from '@/types/active-users.types';
 
-const ActiveUsersPage = () => {
-  // --- 1. State Management ---
+export default function ActiveUsersPage() {
+  const router = useRouter();
+  const auth = useAuth();
+  const { setTotalPages, setCurrentPage } = usePaginationStore();
+
   const [users, setUsers] = useState<IActiveUser[]>([]);
   const [stats, setStats] = useState<IUserStats | null>(null);
   const [selectedUser, setSelectedUser] = useState<IActiveUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
 
-  // Pagination & Filter State
-  const [dateFilter, setDateFilter] = useState<DateRangeFilter>('7d');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalCount, setTotalCount] = useState<number>(0);
+  const [limit] = useState(10);
   const [selectedFilter, setSelectedFilter] = useState<PlatformFilter>('ALL');
+  const [sortConfig, setSortConfig] = useState<ISortConfig>({
+    field: null,
+    direction: null,
+  });
 
-  const handleClearFilter = () => setSelectedFilter('ALL');
+  const handleSelectFilter = (filter: PlatformFilter) => {
+    setSelectedFilter(filter);
+    setPage(1);
+    setCurrentPage(1);
+  };
 
-  const auth = useAuth();
+  const handleClearFilter = () => handleSelectFilter('ALL');
 
-  // --- 2. Client Hydration & Auth Guard ---
+  const handleSortChange = (field: SortField) => {
+    setSortConfig((prevConfig: ISortConfig): ISortConfig => {
+      if (prevConfig.field !== field) {
+        return { field, direction: 'asc' };
+      }
+      if (prevConfig.direction === 'asc') {
+        return { field, direction: 'desc' };
+      }
+      if (prevConfig.direction === 'desc') {
+        return { field: null, direction: null };
+      }
+      return { field, direction: 'asc' };
+    });
+    setPage(1);
+    setCurrentPage(1);
+  };
+
+  const handleClearSort = () => {
+    setSortConfig({ field: null, direction: null });
+    setPage(1);
+    setCurrentPage(1);
+  };
+
   useEffect(() => {
     setIsClient(true);
     if (!auth.user) {
       router.push('/auth/login');
     }
-  }, [auth.user]);
+  }, [auth.user, router]);
 
-  // --- 3. Filter/Limit Change Handler ---
-  const handleFilterChange = (range: DateRangeFilter) => {
-    setDateFilter(range);
-    setPage(1);
+  const handlePageChange = (newPage: number) => {
+    if (isLoading) return;
+    setPage(newPage);
   };
 
-  // --- 4. Fetch Active Users Effect ---
   useEffect(() => {
+    if (!auth.accessToken) return;
+
     setIsLoading(true);
 
-    getActiveUsers({ filter: dateFilter, page, limit, token: auth.accessToken })
+    getActiveUsers({
+      page,
+      limit,
+      token: auth.accessToken,
+      platform: selectedFilter,
+      sortBy: sortConfig.field,
+      sortDir: sortConfig.direction,
+    })
       .then((response) => {
         if ('data' in response && response.data) {
           const {
             users: rawUsers,
             totalActiveUsers,
+            totalFiltered,
             platformBreakdown,
           } = response.data;
 
@@ -71,8 +110,12 @@ const ActiveUsersPage = () => {
             toast.error('Invalid user array structure received from backend.');
           }
 
-          setTotalCount(totalActiveUsers ?? 0);
-          setTotalPages(Math.ceil((totalActiveUsers ?? 0) / limit));
+          const countForPaging = totalFiltered ?? totalActiveUsers ?? 0;
+          const calculatedPages = Math.max(
+            1,
+            Math.ceil(countForPaging / limit)
+          );
+          setTotalPages(calculatedPages);
 
           if (platformBreakdown) {
             setStats({
@@ -96,7 +139,15 @@ const ActiveUsersPage = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [dateFilter, page, limit, auth.accessToken]);
+  }, [
+    page,
+    limit,
+    selectedFilter,
+    sortConfig.field,
+    sortConfig.direction,
+    auth.accessToken,
+    setTotalPages,
+  ]);
 
   if (!isClient) return null;
 
@@ -111,33 +162,13 @@ const ActiveUsersPage = () => {
                 Telemetry engagement metrics
               </p>
             </div>
-
-            <div className="flex items-center space-x-1 rounded-lg bg-gray-100 p-1">
-              {(['24h', '7d', '30d', 'all'] as DateRangeFilter[]).map(
-                (range) => (
-                  <button
-                    key={range}
-                    type="button"
-                    onClick={() => handleFilterChange(range)}
-                    className={`rounded-md px-3 py-1 text-xs font-semibold transition-all ${
-                      dateFilter === range
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700'
-                    }`}
-                  >
-                    {range.toUpperCase()}
-                  </button>
-                )
-              )}
-            </div>
           </div>
 
-          {/* KPI Stat Cards Summary Row */}
           <ActiveUserStats
             stats={stats}
             isLoading={isLoading}
             selectedFilter={selectedFilter}
-            onSelectFilter={setSelectedFilter}
+            onSelectFilter={handleSelectFilter}
           />
 
           {selectedUser ? (
@@ -151,6 +182,9 @@ const ActiveUsersPage = () => {
                   onSelectUser={setSelectedUser}
                   selectedFilter={selectedFilter}
                   onClearFilter={handleClearFilter}
+                  sortConfig={sortConfig}
+                  onSortChange={handleSortChange}
+                  onClearSort={handleClearSort}
                 />
               }
               secondScreen={
@@ -170,21 +204,14 @@ const ActiveUsersPage = () => {
                   onSelectUser={setSelectedUser}
                   selectedFilter={selectedFilter}
                   onClearFilter={handleClearFilter}
+                  sortConfig={sortConfig}
+                  onSortChange={handleSortChange}
+                  onClearSort={handleClearSort}
                 />
               </div>
 
               <div className="mt-4">
-                <PaginationFooter
-                  page={page}
-                  limit={limit}
-                  totalCount={totalCount}
-                  totalPages={totalPages}
-                  onPageChange={(newPage) => setPage(newPage)}
-                  onLimitChange={(newLimit) => {
-                    setLimit(newLimit);
-                    setPage(1);
-                  }}
-                />
+                <Pagination onPageChange={handlePageChange} />
               </div>
             </div>
           )}
@@ -193,6 +220,4 @@ const ActiveUsersPage = () => {
       <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
     </>
   );
-};
-
-export default ActiveUsersPage;
+}
