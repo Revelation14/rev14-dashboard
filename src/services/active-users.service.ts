@@ -62,7 +62,7 @@ export async function getActiveUsers(
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: token,
         },
       }
     );
