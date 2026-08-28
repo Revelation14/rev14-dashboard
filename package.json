@@ -1,20 +1,9 @@
 {
-  "name": "grace_dashboard",
-  "version": "3.10.0",
-  "scripts": {
-    "dev": "next dev -p 4000",
-    "build": "next build",
-    "start": "next start -p 4000",
-    "build-stats": "cross-env ANALYZE=true npm run build",
-    "export": "next export",
-    "build-prod": "run-s clean build",
-    "clean": "rimraf .next .swc out coverage",
-    "lint": "next lint",
-    "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
-    "check-types": "tsc --noEmit --pretty",
-    "commit": "cz",
-    "prepare": "husky install",
-    "postbuild": "next-sitemap"
+  "author": "knowbee (https://github.com/knowbee)",
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
   },
   "dependencies": {
     "@internationalized/date": "^3.7.0",
@@ -74,11 +63,7 @@
     "tailwindcss": "^3.3.2",
     "typescript": "^4.9.5"
   },
-  "config": {
-    "commitizen": {
-      "path": "@commitlint/cz-commitlint"
-    }
-  },
+  "name": "grace_dashboard",
   "release": {
     "branches": [
       "main"
@@ -97,5 +82,21 @@
       "@semantic-release/github"
     ]
   },
-  "author": "knowbee (https://github.com/knowbee)"
+  "scripts": {
+    "build": "next build",
+    "build-prod": "run-s clean build",
+    "build-stats": "cross-env ANALYZE=true npm run build",
+    "check-types": "tsc --noEmit --pretty",
+    "clean": "rimraf .next .swc out coverage",
+    "commit": "cz",
+    "dev": "next dev -p 4000",
+    "export": "next export",
+    "format": "next lint --fix \u0026\u0026 prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
+    "lint": "next lint",
+    "postbuild": "next-sitemap",
+    "prepare": "husky install",
+    
+    "start": "next start -p 4000"
+  },
+  "version": "3.10.0"
 }
