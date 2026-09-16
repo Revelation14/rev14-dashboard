@@ -1,5 +1,4 @@
 import type {
-  DateRangeFilter,
   IActiveUsersResponse,
   PlatformFilter,
   SortDirection,
@@ -8,7 +7,6 @@ import type {
 import type { IHttpException } from '@/types/common.types';
 
 export interface IGetActiveUsersParams {
-  filter?: DateRangeFilter;
   page?: number;
   limit?: number;
   token?: string;
@@ -23,28 +21,18 @@ export async function getActiveUsers(
   const {
     page = 1,
     limit = 10,
-    filter = '7d',
     token,
     platform = 'ALL',
     sortBy = null,
     sortDir = null,
   } = params;
 
-  if (!token) {
-    return {
-      statusCode: 401,
-      message: 'Authorization token is missing',
-    };
-  }
-
   try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321';
+    const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
     const query = new URLSearchParams({
       page: String(page),
       limit: String(limit),
-      dateRange: filter,
     });
 
     if (platform !== 'ALL') {
@@ -62,7 +50,7 @@ export async function getActiveUsers(
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: token,
+          Authorization: token ?? '',
         },
       }
     );

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import { ActiveUserDetail } from '@/components/active-users/active-users-detail';
@@ -28,6 +28,7 @@ export default function ActiveUsersPage() {
   const [stats, setStats] = useState<IUserStats | null>(null);
   const [selectedUser, setSelectedUser] = useState<IActiveUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   const [page, setPage] = useState(1);
@@ -38,6 +39,89 @@ export default function ActiveUsersPage() {
     direction: null,
   });
 
+  const fetchUsers = useCallback(
+    async (showRefreshIndicator = false) => {
+      if (!auth.accessToken) return;
+
+      if (showRefreshIndicator) {
+        setIsRefreshing(true);
+      } else {
+        setIsLoading(true);
+      }
+
+      try {
+        const response = await getActiveUsers({
+          page,
+          limit,
+          token: auth.accessToken,
+          platform: selectedFilter,
+          sortBy: sortConfig.field,
+          sortDir: sortConfig.direction,
+        });
+
+        if ('data' in response && response.data) {
+          const {
+            users: rawUsers,
+            totalActiveUsers,
+            totalFiltered,
+            platformBreakdown,
+          } = response.data;
+
+          setUsers(Array.isArray(rawUsers) ? rawUsers : []);
+
+          const countForPaging = totalFiltered ?? totalActiveUsers ?? 0;
+          setTotalPages(Math.max(1, Math.ceil(countForPaging / limit)));
+
+          if (platformBreakdown) {
+            setStats({
+              totalActive: totalActiveUsers ?? 0,
+              androidCount: platformBreakdown.android ?? 0,
+              iosCount: platformBreakdown.ios ?? 0,
+              webCount: platformBreakdown.web ?? 0,
+              verifiedCount: 0,
+            });
+          }
+
+          if (showRefreshIndicator) {
+            toast.success('Active users refreshed');
+          }
+        } else {
+          toast.error(response.message || 'Failed to load active users');
+        }
+      } catch (err: unknown) {
+        const errorMessage =
+          err instanceof Error
+            ? err.message
+            : 'An error occurred while fetching';
+        toast.error(errorMessage);
+        setUsers([]);
+      } finally {
+        setIsLoading(false);
+        setIsRefreshing(false);
+      }
+    },
+    [
+      auth.accessToken,
+      page,
+      limit,
+      selectedFilter,
+      sortConfig.field,
+      sortConfig.direction,
+      setTotalPages,
+    ]
+  );
+
+  useEffect(() => {
+    setIsClient(true);
+    if (!auth.user) {
+      router.push('/auth/login');
+    }
+  }, [auth.user, router]);
+
+  useEffect(() => {
+    fetchUsers(false);
+  }, [fetchUsers]);
+
   const handleSelectFilter = (filter: PlatformFilter) => {
     setSelectedFilter(filter);
     setPage(1);
@@ -47,17 +131,10 @@ export default function ActiveUsersPage() {
   const handleClearFilter = () => handleSelectFilter('ALL');
 
   const handleSortChange = (field: SortField) => {
-    setSortConfig((prevConfig: ISortConfig): ISortConfig => {
-      if (prevConfig.field !== field) {
-        return { field, direction: 'asc' };
-      }
-      if (prevConfig.direction === 'asc') {
-        return { field, direction: 'desc' };
-      }
-      if (prevConfig.direction === 'desc') {
-        return { field: null, direction: null };
-      }
-      return { field, direction: 'asc' };
+    setSortConfig((prev) => {
+      if (prev.field !== field) return { field, direction: 'asc' };
+      if (prev.direction === 'asc') return { field, direction: 'desc' };
+      return { field: null, direction: null };
     });
     setPage(1);
     setCurrentPage(1);
@@ -69,85 +146,9 @@ export default function ActiveUsersPage() {
     setCurrentPage(1);
   };
 
-  useEffect(() => {
-    setIsClient(true);
-    if (!auth.user) {
-      router.push('/auth/login');
-    }
-  }, [auth.user, router]);
-
-  const handlePageChange = (newPage: number) => {
-    if (isLoading) return;
-    setPage(newPage);
+  const handleManualRefresh = () => {
+    fetchUsers(true);
   };
-
-  useEffect(() => {
-    if (!auth.accessToken) return;
-
-    setIsLoading(true);
-
-    getActiveUsers({
-      page,
-      limit,
-      token: auth.accessToken,
-      platform: selectedFilter,
-      sortBy: sortConfig.field,
-      sortDir: sortConfig.direction,
-    })
-      .then((response) => {
-        if ('data' in response && response.data) {
-          const {
-            users: rawUsers,
-            totalActiveUsers,
-            totalFiltered,
-            platformBreakdown,
-          } = response.data;
-
-          if (Array.isArray(rawUsers)) {
-            setUsers(rawUsers);
-          } else {
-            setUsers([]);
-            toast.error('Invalid user array structure received from backend.');
-          }
-
-          const countForPaging = totalFiltered ?? totalActiveUsers ?? 0;
-          const calculatedPages = Math.max(
-            1,
-            Math.ceil(countForPaging / limit)
-          );
-          setTotalPages(calculatedPages);
-
-          if (platformBreakdown) {
-            setStats({
-              totalActive: totalActiveUsers ?? 0,
-              androidCount: platformBreakdown.android ?? 0,
-              iosCount: platformBreakdown.ios ?? 0,
-              webCount: platformBreakdown.web ?? 0,
-              verifiedCount: 0,
-            });
-          }
-        } else {
-          toast.error(response.message || 'Failed to load active users');
-        }
-      })
-      .catch((err: unknown) => {
-        const errorMessage =
-          err instanceof Error ? err.message : 'An unexpected error occurred';
-        toast.error(errorMessage);
-        setUsers([]);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [
-    page,
-    limit,
-    selectedFilter,
-    sortConfig.field,
-    sortConfig.direction,
-    auth.accessToken,
-    setTotalPages,
-  ]);
 
   if (!isClient) return null;
 
@@ -155,13 +156,36 @@ export default function ActiveUsersPage() {
     <>
       <Layout>
         <div className="space-y-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          {/* Header section with title and manual Refresh action */}
+          <div className="flex items-center justify-between">
             <div>
               <h1 className="text-xl font-bold text-gray-900">Active Users</h1>
               <p className="text-xs text-gray-500">
-                Telemetry engagement metrics
+                Live app engagement & recency telemetry
               </p>
             </div>
+
+            <button
+              type="button"
+              onClick={handleManualRefresh}
+              disabled={isLoading || isRefreshing}
+              className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-indigo-500 disabled:opacity-50"
+            >
+              <svg
+                className={`size-4 ${isRefreshing ? 'animate-spin' : ''}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+              {isRefreshing ? 'Refreshing...' : 'Refresh Data'}
+            </button>
           </div>
 
           <ActiveUserStats
@@ -211,7 +235,7 @@ export default function ActiveUsersPage() {
               </div>
 
               <div className="mt-4">
-                <Pagination onPageChange={handlePageChange} />
+                <Pagination onPageChange={(p) => setPage(p)} />
               </div>
             </div>
           )}

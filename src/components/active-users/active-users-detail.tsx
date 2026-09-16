@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type { IActiveUser } from '@/types/active-users.types';
+import { formatLastSeen } from '@/utils/date';
 
 interface IActiveUserDetailProps {
   user: IActiveUser;
@@ -65,7 +66,10 @@ export const ActiveUserDetail: React.FC<IActiveUserDetailProps> = ({
         <DetailItem label="Email" value={user.email} />
         <DetailItem label="Mobile Platform" value={user.os ?? 'UNKNOWN'} />
         <DetailItem label="Role" value={user.role ?? 'STANDARD_USER'} />
-        <DetailItem label="Last Active Timestamp" value={user.lastSeenAt} />
+        <DetailItem
+          label="Last Active Timestamp"
+          value={formatLastSeen(user.lastSeenAt)}
+        />
         <DetailItem
           label="Detected Region"
           value={user.location ?? 'Unknown'}

@@ -8,12 +8,12 @@ export interface IActiveUser {
   role?: EUserRole;
   os?: 'IOS' | 'ANDROID' | 'WEB' | 'UNKNOWN';
   status?: EStatus;
-  lastSeenAt: string;
+  lastSeenAt: string | null;
   location?: string;
   isVerified?: boolean;
 }
 
-export type DateRangeFilter = '24h' | '7d' | '30d' | 'all';
+export type DateRangeFilter = '24h' | '7d' | '30d' | '6m' | 'ytd' | 'all';
 export type PlatformFilter = 'ALL' | 'ANDROID' | 'IOS';
 export type SortField = 'name' | 'role' | 'location' | 'lastSeenAt';
 export type SortDirection = 'asc' | 'desc';
