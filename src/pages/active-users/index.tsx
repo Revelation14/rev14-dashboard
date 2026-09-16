@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import { ActiveUserDetail } from '@/components/active-users/active-users-detail';
 import { ActiveUserList } from '@/components/active-users/active-users-list';
 import { ActiveUserStats } from '@/components/active-users/active-users-stats';
+import { DateRangeDropdown } from '@/components/active-users/DateRangeDropdown';
 import Pagination from '@/components/common/Pagination';
 import SplitScreens from '@/components/common/SplitScreens';
 import Layout from '@/layouts/dashboard/Layout';
@@ -12,6 +13,7 @@ import { getActiveUsers } from '@/services/active-users.service';
 import { useAuth } from '@/store/auth.store';
 import usePaginationStore from '@/store/pagination';
 import type {
+  DateRangeFilter,
   IActiveUser,
   ISortConfig,
   IUserStats,
@@ -33,11 +35,21 @@ export default function ActiveUsersPage() {
 
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
+  const [dateRange, setDateRange] = useState<DateRangeFilter>('7d');
   const [selectedFilter, setSelectedFilter] = useState<PlatformFilter>('ALL');
   const [sortConfig, setSortConfig] = useState<ISortConfig>({
     field: null,
     direction: null,
   });
+
+  const [refreshTick, setRefreshTick] = useState(0);
+  const pendingManualRefreshRef = useRef(false);
+
+  const handleDateRangeChange = (range: DateRangeFilter) => {
+    setDateRange(range);
+    setPage(1);
+    setCurrentPage(1);
+  };
 
   const fetchUsers = useCallback(
     async (showRefreshIndicator = false) => {
@@ -55,6 +67,7 @@ export default function ActiveUsersPage() {
           limit,
           token: auth.accessToken,
           platform: selectedFilter,
+          filter: dateRange,
           sortBy: sortConfig.field,
           sortDir: sortConfig.direction,
         });
@@ -104,6 +117,7 @@ export default function ActiveUsersPage() {
       auth.accessToken,
       page,
       limit,
+      dateRange,
       selectedFilter,
       sortConfig.field,
       sortConfig.direction,
@@ -119,8 +133,10 @@ export default function ActiveUsersPage() {
   }, [auth.user, router]);
 
   useEffect(() => {
-    fetchUsers(false);
-  }, [fetchUsers]);
+    const isManualRefresh = pendingManualRefreshRef.current;
+    pendingManualRefreshRef.current = false;
+    fetchUsers(isManualRefresh);
+  }, [fetchUsers, refreshTick]);
 
   const handleSelectFilter = (filter: PlatformFilter) => {
     setSelectedFilter(filter);
@@ -147,7 +163,14 @@ export default function ActiveUsersPage() {
   };
 
   const handleManualRefresh = () => {
-    fetchUsers(true);
+    pendingManualRefreshRef.current = true;
+    setSelectedUser(null);
+    setSelectedFilter('ALL');
+    setSortConfig({ field: null, direction: null });
+    setDateRange('7d');
+    setPage(1);
+    setCurrentPage(1);
+    setRefreshTick((tick) => tick + 1);
   };
 
   if (!isClient) return null;
@@ -165,29 +188,36 @@ export default function ActiveUsersPage() {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={handleManualRefresh}
-              disabled={isLoading || isRefreshing}
-              className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-sm transition-all hover:bg-indigo-500 disabled:opacity-50"
-            >
-              <svg
-                className={`size-4 ${isRefreshing ? 'animate-spin' : ''}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleManualRefresh}
+                disabled={isLoading || isRefreshing}
+                title="Refresh data"
+                aria-label="Refresh data"
+                className="flex size-9 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-sm transition-all hover:bg-indigo-500 disabled:opacity-50"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                />
-              </svg>
-              {isRefreshing ? 'Refreshing...' : 'Refresh Data'}
-            </button>
-          </div>
+                <svg
+                  className={`size-4 ${isRefreshing ? 'animate-spin' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+              </button>
 
+              <DateRangeDropdown
+                value={dateRange}
+                onChange={handleDateRangeChange}
+              />
+            </div>
+          </div>
           <ActiveUserStats
             stats={stats}
             isLoading={isLoading}
@@ -209,6 +239,7 @@ export default function ActiveUsersPage() {
                   sortConfig={sortConfig}
                   onSortChange={handleSortChange}
                   onClearSort={handleClearSort}
+                  dateRange={dateRange}
                 />
               }
               secondScreen={
@@ -231,6 +262,7 @@ export default function ActiveUsersPage() {
                   sortConfig={sortConfig}
                   onSortChange={handleSortChange}
                   onClearSort={handleClearSort}
+                  dateRange={dateRange}
                 />
               </div>
 

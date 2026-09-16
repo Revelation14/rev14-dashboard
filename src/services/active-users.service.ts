@@ -1,4 +1,5 @@
 import type {
+  DateRangeFilter,
   IActiveUsersResponse,
   PlatformFilter,
   SortDirection,
@@ -8,6 +9,7 @@ import type { IHttpException } from '@/types/common.types';
 
 export interface IGetActiveUsersParams {
   page?: number;
+  filter?: DateRangeFilter;
   limit?: number;
   token?: string;
   platform?: PlatformFilter;
@@ -22,6 +24,7 @@ export async function getActiveUsers(
     page = 1,
     limit = 10,
     token,
+    filter = '7d',
     platform = 'ALL',
     sortBy = null,
     sortDir = null,
@@ -33,6 +36,7 @@ export async function getActiveUsers(
     const query = new URLSearchParams({
       page: String(page),
       limit: String(limit),
+      filter,
     });
 
     if (platform !== 'ALL') {
@@ -42,6 +46,9 @@ export async function getActiveUsers(
     if (sortBy) {
       query.set('sortBy', sortBy);
       query.set('sortDir', sortDir ?? 'asc');
+    }
+    if (filter) {
+      query.set('dateRange', filter);
     }
 
     const response = await fetch(

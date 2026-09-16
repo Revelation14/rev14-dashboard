@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type {
+  DateRangeFilter,
   IActiveUser,
   ISortConfig,
   PlatformFilter,
@@ -18,6 +19,7 @@ interface IActiveUserListProps {
   sortConfig: ISortConfig;
   onSortChange: (field: SortField) => void;
   onClearSort: () => void;
+  dateRange: DateRangeFilter;
 }
 
 interface ISortIndicatorProps {
@@ -75,6 +77,24 @@ function EmptyStateMessage({ onClearFilter }: { onClearFilter?: () => void }) {
   );
 }
 
+function getDateRangeClause(range: DateRangeFilter): string {
+  switch (range) {
+    case '24h':
+      return 'in the last 24 hours';
+    case '7d':
+      return 'from the last 7 days';
+    case '30d':
+      return 'from the last 30 days';
+    case '6m':
+      return 'from the last 6 months';
+    case 'ytd':
+      return 'so far this year';
+    case 'all':
+    default:
+      return '';
+  }
+}
+
 export function ActiveUserList({
   users,
   isLoading,
@@ -85,6 +105,7 @@ export function ActiveUserList({
   onSortChange,
   onClearSort,
   selectedFilter,
+  dateRange,
 }: IActiveUserListProps) {
   if (isLoading) {
     return <ListSkeleton />;
@@ -98,9 +119,13 @@ export function ActiveUserList({
     <div className="space-y-2">
       <div className="flex h-6 items-center justify-between">
         <div className="text-xs font-medium text-indigo-600">
-          {selectedFilter !== 'ALL'
-            ? `Showing all users on ${selectedFilter}`
-            : 'Showing All Users'}
+          {(() => {
+            const rangeClause = getDateRangeClause(dateRange);
+            const platformClause =
+              selectedFilter !== 'ALL' ? ` on ${selectedFilter}` : '';
+            const base = `Showing all users${platformClause}`;
+            return rangeClause ? `${base} ${rangeClause}` : base;
+          })()}
         </div>
         {sortConfig.field && (
           <button
