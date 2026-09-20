@@ -95,7 +95,6 @@
     "lint": "next lint",
     "postbuild": "next-sitemap",
     "prepare": "husky install",
-    
     "start": "next start -p 4000"
   },
   "version": "3.10.0"
