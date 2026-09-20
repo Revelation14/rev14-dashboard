@@ -17,7 +17,7 @@ cypress/videos
 
 # next.js
 # /.next
-# /out
+/out
 
 # next-sitemap
 public/robots.txt
@@ -59,3 +59,4 @@ temp_interactive_push.bat
 
 # Local Netlify folder
 .netlify
+branch_structure.json
