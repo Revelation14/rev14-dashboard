@@ -83,19 +83,19 @@
     ]
   },
   "scripts": {
-    "build": "next build",
+    "build": "node api.js && next build",
     "build-prod": "run-s clean build",
     "build-stats": "cross-env ANALYZE=true npm run build",
     "check-types": "tsc --noEmit --pretty",
     "clean": "rimraf .next .swc out coverage",
     "commit": "cz",
-    "dev": "next dev -p 4000",
+    "dev": "node api.js && next dev -p 4000",
     "export": "next export",
-    "format": "next lint --fix \u0026\u0026 prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
+    "format": "next lint --fix && prettier '**/*.{json,yaml}' --write --ignore-path .gitignore",
     "lint": "next lint",
     "postbuild": "next-sitemap",
     "prepare": "husky install",
-    "start": "next start -p 4000"
+    "start": "node api.js && next start -p 4000"
   },
   "version": "3.10.0"
 }
